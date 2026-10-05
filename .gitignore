@@ -54,3 +54,6 @@ models/*
 projects/*/*
 !projects/*/film.yaml
 !projects/test_story/script.txt
+# Clips a slide shows instead of its picture (spec.Shot.clip). Made by
+# ai-manim from its own scenes; rebuilt from there, so not tracked here.
+clips/

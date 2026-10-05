@@ -4,6 +4,13 @@ Every session reads this first. A fault stays here until it is fixed AND
 Jacek has seen the fix work in a real render. Newest first. When fixed:
 move it to the bottom section with the commit id — do not delete it.
 
+- 2026-10-05 NEW: a slide can show a clip instead of its picture
+  (`clip: clips/NN_name.mp4`; spec.Shot.clip, render.picture_of). The
+  slide keeps its words, length and captions; the clip plays from its
+  first frame at speed 1, full frame, camera still. Made by ai-manim,
+  timed to the slide's captions. Proved on a throwaway project: draft
+  8.4 s shows the 4 animation steps in order, last frame held 7.5-8.4 s.
+  Not yet seen by Jacek on a narrated film.
 - 2026-10-05 NEW: `film check` names passages said twice in OTHER words
   (checks.paraphrased_captions: 3 captions vs 3, >=60% and >=5 shared
   content words; intro<->closing named as a possible recap). Calibrated on

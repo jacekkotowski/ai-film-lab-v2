@@ -22,7 +22,7 @@ import math
 from bisect import bisect_right
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import cv2
@@ -308,7 +308,19 @@ def should_memoise(shot) -> bool:
     on its own, so reusing a frame freezes it. There is no cheap key that
     says "the video has not moved", because the video has always moved.
     """
-    return shot.kind == "still"
+    return shot.kind == "still" and not shot.clip
+
+
+def picture_of(shot: Shot) -> Shot:
+    """What is SHOWN for a shot: itself, or the clip a slide shows in
+    place of its picture (spec.Shot.clip) -- from the clip's first frame,
+    at normal speed. ai-manim made the clip in the film's own seconds, so
+    the slide's `in` and `speed` (which belong to the words) do not
+    apply to it."""
+    if not shot.clip:
+        return shot
+    return replace(shot, src=shot.clip, kind="video", tin=0.0, tout=None,
+                   speed=1.0, voice=None, depth=0.0, bokeh=0.0)
 
 
 def motion_px(shot, i: int, n: int, seed: int, ow: int, oh: int) -> float:
@@ -535,6 +547,7 @@ class VideoSource:
 
 
 def open_source(film: Film, shot: Shot, ow: int, oh: int, max_scale: float):
+    shot = picture_of(shot)
     path = film.resolve(shot.src)
     if shot.kind == "video":
         return VideoSource(path, shot, ow, oh, max_scale, film.bokeh_for(shot),

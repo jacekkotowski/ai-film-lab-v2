@@ -170,6 +170,10 @@ def windows_for(shot: Shot, seed: int = 0) -> tuple[Window, Window]:
     """
     if shot.frm is not None and shot.to is not None:
         return shot.frm, shot.to
+    # A clip shown on a slide is already framed and already moving: it is
+    # the film's own shape, made to be seen whole (spec.Shot.clip).
+    if shot.clip:
+        return Window(), Window()
 
     rng = random.Random(f"{shot.id}{shot.src}{seed}")
     fx, fy = shot.focus if shot.focus else (0.5, 0.5)

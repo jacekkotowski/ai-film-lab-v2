@@ -228,6 +228,16 @@ class Shot:
     # everything and cannot be edited at all.
     voice: str | None = None
 
+    # A slide that SHOWS a clip instead of its picture. Everything else
+    # stays the slide's: `src` (what was narrated over, and what the
+    # cues name), `voice`, `in`/`out`, `duration`, captions. The clip
+    # plays from its first frame at normal speed, full frame, the camera
+    # still (render.picture_of, moves.windows_for). ai-manim makes it:
+    # the same slide animated, timed to these captions, in the film's
+    # own seconds. Kept in clips/, never media/, so ingest and init do
+    # not take it for footage.
+    clip: str | None = None
+
     # camera
     move: str = "auto"
     focus: tuple[float, float] | None = None
@@ -309,6 +319,7 @@ class Shot:
             tin=tin,
             tout=tout,
             voice=voice,
+            clip=str(d["clip"]) if d.get("clip") else None,
             speed=float(d.get("speed", 1.0)),
             move=str(d.get("move", "auto")),
             focus=focus,
@@ -637,6 +648,8 @@ class Film:
                 problems.append(f"[{s.id}] file not found: {p}")
             if s.duration <= 0:
                 problems.append(f"[{s.id}] duration must be positive.")
+            if s.clip and check_files and not self.resolve(s.clip).exists():
+                problems.append(f"[{s.id}] clip not found: {self.resolve(s.clip)}")
             if s.voice:
                 v = self.resolve(s.voice)
                 if check_files and not v.exists():

@@ -34,6 +34,7 @@ in time with a video.
 | Skill            | Use it when                                                    |
 |------------------|----------------------------------------------------------------|
 | `new-scene`      | I describe a problem → spec, scene.py, and the still to narrate over |
+| `slide-layout`   | before writing or fixing any scene: sizes, rules, the kit; grows with every fix |
 | `time-to-words`  | I have narrated over the still → the clip, timed to my sentences |
 | `deliver`        | the clip is approved → say exactly what to copy where           |
 
@@ -47,8 +48,10 @@ uv run --extra render manim -s -r 540,960   scenes/<slug>/scene.py Slide   the s
 uv run --extra render manim -s -r 1080,1920 scenes/<slug>/scene.py Slide   the still to narrate over
 uv run --extra render manim    -r 540,960   scenes/<slug>/scene.py Slide   draft clip, half size
 uv run --extra render manim    -r 1080,1920 scenes/<slug>/scene.py Slide   final clip. ONLY when I ask
-python -m aimanim.beats "<film-lab project>" <picture N> > scenes/<slug>/timing.json
-python -m unittest discover tests                                          tests, no install needed
+python -m aimanim.film <film>                        gather the film's stills/clips, numbered, into films/<film>/
+python -m aimanim.film <film> --to "<project>"       ... and print the copy command for me
+python -m aimanim.film <film> --timing "<project>"   timing.json for every slide of the film
+python -m unittest discover tests                    tests, no install needed
 ```
 
 Never use `-ql`/`-qm`/`-qh` alone: they reset the size to landscape
@@ -64,6 +67,12 @@ Never use `-ql`/`-qm`/`-qh` alone: they reset the size to landscape
 - Settings as UPPER_CASE constants at the top of `scene.py`; content
   (numbers, labels) in `spec.md`, copied into those constants.
 - The class is always called `Slide`. One scene file = one slide.
+- New scene = copy `scenes/_template/`. Layout: load the `slide-layout`
+  skill first; `kit.run` prints `[layout]` notes — fix or explain each.
+- Every slide belongs to a film: `films/<film>.txt` (picture number +
+  scene, in order) and `films/<film>.script.txt` (the narration, kept
+  current whenever a slide changes what I say).
+- Metric only on screen.
 - Formulas: `Text` with Unicode for plain ones; `MathTex` renders
   (measured 2026-10-05, TinyTeX packages in `docs/tech/manim.md`).
 - Every animation step names the sentence it belongs to (`BEAT_LINES`).
@@ -75,7 +84,8 @@ same message. Unchecked parts go in the FIRST line.
 
 ## Never
 
-- Add a dependency besides `manim`. Helpers in `aimanim/` use the stdlib.
+- Add a dependency besides `manim`. Helpers in `aimanim/` use the stdlib,
+  except `aimanim/kit.py`, the one module that imports Manim (decision 0002).
 - Add effects, transitions or polish I didn't ask for.
 - Render the full-size clip unless I ask.
 - Edit ai-film-lab or ai-3d-studio from here. A need goes into
@@ -88,4 +98,6 @@ same message. Unchecked parts go in the FIRST line.
 | what is broken / not yet known | `docs/OPEN.md` — read it at the start of every session |
 | why things are the way they are | `docs/decisions/`        |
 | measured facts about Manim here | `docs/tech/manim.md`     |
+| layout rules, sizes, lessons   | `.claude/skills/slide-layout/SKILL.md` + `aimanim/kit.py` |
+| a film: order and script       | `films/<film>.txt`, `films/<film>.script.txt` |
 | the plan and its status        | `PLAN.md`                 |

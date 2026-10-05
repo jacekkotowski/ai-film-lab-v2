@@ -14,7 +14,7 @@ from manim import FadeIn, Line, Scene, Text, VGroup, VMobject
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
-from aimanim import beats, frame  # noqa: E402
+from aimanim import frame, kit  # noqa: E402
 
 # ---- content (from spec.md) ---------------------------------------------
 TARGET_CM = 50
@@ -82,16 +82,9 @@ def metres_label(i: int) -> Text:
 
 class Slide(Scene):
     def construct(self):
-        title = Text(TITLE, font_size=frame.TITLE_FONT, color=frame.INK)
-        self.add(title.move_to((0, frame.TOP - title.height / 2, 0)))
+        background = [kit.title(TITLE)]
         steps = [self.step_marks, self.step_first, self.step_rest]
-        p = beats.for_scene(HERE, BEAT_LINES, RUN_TIMES)
-        for wait, step, rt in zip(p.waits, steps, RUN_TIMES):
-            if wait >= beats.MIN_WAIT:
-                self.wait(wait)
-            self.play(*step(), run_time=rt)
-        if p.tail >= beats.MIN_WAIT:
-            self.wait(p.tail)
+        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background)
 
     # ---- one method per step; each returns its animations ----------------
     def step_marks(self):

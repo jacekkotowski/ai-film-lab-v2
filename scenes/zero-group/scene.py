@@ -13,7 +13,7 @@ from manim import (Arrow, Circle, Dot, FadeIn, GrowArrow, Line, Scene, Text,
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
-from aimanim import beats, frame  # noqa: E402
+from aimanim import frame, kit  # noqa: E402
 
 # ---- content (from spec.md) ---------------------------------------------
 # cm from the aim point at 100 m, + = right / up
@@ -44,15 +44,9 @@ def at(cm_x: float, cm_y: float) -> tuple[float, float, float]:
 
 class Slide(Scene):
     def construct(self):
-        self.add(*self.background())
+        background = self.background()
         steps = [self.step_holes, self.step_centre, self.step_offset]
-        p = beats.for_scene(HERE, BEAT_LINES, RUN_TIMES)
-        for wait, step, rt in zip(p.waits, steps, RUN_TIMES):
-            if wait >= beats.MIN_WAIT:
-                self.wait(wait)
-            self.play(*step(), run_time=rt)
-        if p.tail >= beats.MIN_WAIT:
-            self.wait(p.tail)
+        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background)
 
     # ---- on screen before the first word ---------------------------------
     def background(self):

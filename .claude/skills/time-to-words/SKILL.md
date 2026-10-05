@@ -7,14 +7,16 @@ description: After Jacek has narrated over a scene's still in an ai-film-lab pro
 
 ## Steps
 
-1. **Find the picture.** Which film-lab project, and which picture number
-   the still is in the narration. Ask if not said. Read only the two
-   files allowed in decision 0001.
+1. **Find the film.** Which film-lab project; the picture numbers are in
+   `films/<film>.txt`. Ask only if the film is not clear. Read only the two
+   files allowed in decision 0001. Load `slide-layout` before editing a scene.
 
-2. **Write the timing:**
+2. **Write the timing** — every slide of the film at once:
    ```
-   python -m aimanim.beats "<film-lab project>" <N> > scenes/<slug>/timing.json
+   python -m aimanim.film <film> --timing "<film-lab project>"
    ```
+   (one slide: `python -m aimanim.beats "<project>" <N> > scenes/<slug>/timing.json`)
+   It prints each slide's lines with their start times.
    If it says the take is not transcribed, the film's edit has not been
    made yet: he runs `film go` / `film init` there first. Do not run
    ai-film-lab commands from here.

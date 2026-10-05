@@ -14,7 +14,7 @@ from manim import (Arrow, Circle, Create, Dot, FadeIn, GrowArrow, Line,
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
-from aimanim import beats, frame  # noqa: E402
+from aimanim import frame, kit  # noqa: E402
 
 # ---- content (from spec.md) ---------------------------------------------
 MILS = 6400
@@ -51,14 +51,9 @@ def plus(p, v, k=1.0):
 
 class Slide(Scene):
     def construct(self):
+        background = []
         steps = [self.step_circle, self.step_forward, self.step_back, self.step_sum]
-        p = beats.for_scene(HERE, BEAT_LINES, RUN_TIMES)
-        for wait, step, rt in zip(p.waits, steps, RUN_TIMES):
-            if wait >= beats.MIN_WAIT:
-                self.wait(wait)
-            self.play(*step(), run_time=rt)
-        if p.tail >= beats.MIN_WAIT:
-            self.wait(p.tail)
+        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background)
 
     # ---- one method per step; each returns its animations ----------------
     def step_circle(self):

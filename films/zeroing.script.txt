@@ -1,0 +1,47 @@
+ZEROING -- final script (2026-10-05)
+[NN] = the picture you narrate over (films/zeroing.txt). 01 and 06 are your photos.
+
+
+[01] Intro (photo)
+
+Zeroing a rifle sight comes down to one division, and I'll show it on two optics, a Vortex Triumph red dot and a Primary Arms SLx five-power MicroPrism. One minute of angle, or MOA, is 2.9 centimetres at 100 metres. A mil, the unit on the SLx reticle, is 10 centimetres at the same distance.
+
+
+[02] 1. Find the centre of the group   (slide zero-group)
+
+Fire four shots at the same point from a sandbag or bipod. Mark the middle of the four holes, because that middle is where the rifle really shoots while single shots scatter. Then measure how far it sits from your aim point. If one hole strays far from the rest, fire a fresh group.
+
+
+[03] 2. Turn centimetres into clicks   (slide zero-clicks)
+
+Divide each distance by what one click moves. At 100 metres the Triumph's half-MOA click moves the impact 1.45 centimetres, and the SLx's quarter-MOA click moves it 0.73. A group five centimetres low and four and a half to the left needs about three clicks each way on the Triumph, but seven and six on the SLx.
+
+
+[04] 3. Read the mil reticle   (slide zero-mil)
+
+The SLx turrets count in MOA. But its Aurora reticle counts in mils. And one mil equals about fourteen clicks.
+
+
+[05] (continued)   (slide zero-range)
+
+Its width marks also range targets. A target fifty centimetres wide fills the central arrowhead at 300 metres, and the next three marks at 400, 500 and 600 metres.
+
+
+[06] Outro (photo)
+
+Before shooting, set the SLx diopter, the ring that focuses the reticle. Stare at a blank wall, close your eyes, glance through the sight and turn the ring until the reticle looks sharp at once. Then turning the elevation turret counterclockwise raises the impact, and the windage turret counterclockwise moves it right.
+
+
+-----------------------------------------------------------------------
+What changed from your draft, and why
+- Intro: "five-power prism sight" -> "five-power MicroPrism" (your model).
+- 2: "four to the left" -> "four and a half"; "seven and five" -> "seven and six"
+  (4.5 / 0.727 = 6.19 clicks; 4 / 0.727 was exactly 5.5).
+- 3: one long sentence split into three, so each step of slide 04 has its own.
+  Say it as one if you prefer; the slide is then re-timed (BEAT_LINES = [0, 0, 0]).
+- 3 (ranging): 18 inches / yards -> 50 centimetres / metres. Same marks: 18 in is
+  half a yard, 50 cm is half a metre (1.667 / 1.25 / 1.00 / 0.833 mil).
+- Outro: unchanged. Elevation counterclockwise = up is confirmed on your cap and in
+  the newer SLx manual. Windage counterclockwise = right: the newer manual says so,
+  your cap is NOT yet checked.
+- Every number is checked: scenes/zero-*/spec.md (maths and sources).

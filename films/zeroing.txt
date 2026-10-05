@@ -1,0 +1,8 @@
+# zeroing -- one slide per line: picture number in the film, then the scene.
+# The number is the picture's place in the narration; gaps are photos made
+# elsewhere (01 = intro photo, 06 = outro photo). Edit the numbers if the
+# film changes; `python -m aimanim.film zeroing` names the files after them.
+02 zero-group
+03 zero-clicks
+04 zero-mil
+05 zero-range

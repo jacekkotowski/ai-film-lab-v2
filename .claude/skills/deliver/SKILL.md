@@ -10,15 +10,19 @@ says, with numbers, what he copies.
 
 ## Steps
 
-1. Find the full-size files under `scenes/<slug>/out/` (Glob `**/*.mp4`,
-   `**/*.png`). If only the half-size draft exists, say so and stop: the
-   full size is rendered only when he asks.
-2. ffprobe each: width × height, fps, duration. They must be 1080×1920 at
-   24 fps; anything else is named in the first line.
-3. Tell him, in one block:
-   - the file → `<film-lab project>/media/<NN>_<slug>.mp4`
-     (the `NN_` keeps its place among the pictures)
-   - its length vs the narrated span in `timing.json`
+1. Gather the film, in its order:
+   ```
+   python -m aimanim.film <film> --to "<film-lab project>"
+   ```
+   It copies each scene's FULL-SIZE still (and clip, once made) to
+   `films/<film>/<NN>_<scene>.png|.mp4` — NN = picture number from
+   `films/<film>.txt` — refuses half-size stills, and prints ONE copy
+   command for him. It never copies into ai-film-lab.
+2. Anything it names as missing or not full size goes in the first line.
+   Full-size clips are rendered only when he asks.
+3. Tell him: the copy command, the table it printed, each clip's length
+   vs `total` in its `timing.json`, and where the film's script is
+   (`films/<film>.script.txt`).
 4. If ai-film-lab still cannot play narration over a clip (`docs/OPEN.md`),
    say that first: only the still can go in for now.
 

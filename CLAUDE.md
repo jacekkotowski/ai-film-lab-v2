@@ -59,7 +59,8 @@ Never use `-ql`/`-qm`/`-qh` alone: they reset the size to landscape
 - Vertical 1080×1920, 24 fps, dark background — `manim.cfg`, `aimanim/frame.py`.
 - **One idea per slide.** At most 3 objects moving at once.
 - Text at least `frame.MIN_FONT` — readable on a phone at arm's length.
-  Keep 1 unit from the top and 3 from the bottom (captions sit there).
+  Keep 1 unit from the top and the bottom quarter (4 units, 480 px) clear:
+  captions sit there.
 - Settings as UPPER_CASE constants at the top of `scene.py`; content
   (numbers, labels) in `spec.md`, copied into those constants.
 - The class is always called `Slide`. One scene file = one slide.

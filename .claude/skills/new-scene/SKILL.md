@@ -31,7 +31,7 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    ```
    uv run --extra render manim -s -r 540,960 --media_dir scenes/<slug>/out scenes/<slug>/scene.py Slide
    ```
-   Check: vertical, nothing in the bottom 3 units, text not touching an
+   Check: vertical, nothing in the bottom 4 units (a quarter), text not touching an
    edge, nothing overlapping. Fix and re-render until it is clean.
 
 7. **Render the still at full size** (`-r 1080,1920`) — that one is the

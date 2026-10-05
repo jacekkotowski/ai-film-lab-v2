@@ -39,4 +39,8 @@ Only the first two packages were shown to be needed; the rest is Manim's
 usual list, installed on Jacek's choice. Tested with one formula only
 (`\theta_{back} = \theta + 3200 \pmod{6400}`).
 
+## On the phone
+`MIN_FONT` 56 is readable on Jacek's phone (back-azimuth still, 1080×1920,
+2026-10-05). Smaller sizes not tried.
+
 Known before measuring (Jacek's films): ai-film-lab films are 1080×1920 at 24 fps.

@@ -1,6 +1,6 @@
 # ai-manim plan (status 2026-10-05, trial run)
 
-Step 1 measured 2026-10-05 except the phone check (numbers: docs/tech/manim.md).
+Step 1 done 2026-10-05 (numbers: docs/tech/manim.md).
 Every other number below is a target until a step says "measured".
 
 ## Step 1 — the trial (measure before building more)
@@ -10,7 +10,7 @@ One scene, `scenes/back-azimuth/` (already written, never run).
 - [x] draft clip at 540×960: render time per second of animation
 - [x] full clip at 1080×1920: render time; ffprobe size, fps, length
 - [x] `MathTex` with TinyTeX: one formula renders, or the missing package is named (go: works after TinyTeX packages, docs/tech/manim.md)
-- [ ] the text is readable on the phone (Jacek looks at the still on his phone)
+- [x] the text is readable on the phone (Jacek, 2026-10-05: readable at MIN_FONT 56)
 Done when: four numbers in `docs/tech/manim.md`, and a go / no-go on MathTex.
 
 ## Step 2 — the narration loop, end to end

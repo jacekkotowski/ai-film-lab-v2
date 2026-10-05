@@ -12,11 +12,14 @@ WIDTH, HEIGHT, FPS = 1080, 1920, 24
 FRAME_W, FRAME_H = 9.0, 16.0
 
 TOP = FRAME_H / 2 - 1.0         # keep 1 unit clear at the top
-BOTTOM = -FRAME_H / 2 + 3.0     # keep 3 units clear: film-lab's captions sit there
+# Keep the bottom quarter clear: film-lab's captions sit there. Jacek,
+# 2026-10-05: assume the caption is within 1/4 (maybe 1/5) of the height.
+# Not measured in ai-film-lab.
+BOTTOM = -FRAME_H / 2 + FRAME_H / 4     # -4.0: 480 px of 1920
 SIDE = FRAME_W / 2 - 0.5
 
-# Smallest text worth putting on a phone. A guess until Jacek has seen
-# the trial's still on his phone (PLAN step 1).
+# Smallest text worth putting on a phone. Readable on Jacek's phone at
+# 1080x1920 (back-azimuth still, 2026-10-05). Smaller is untested.
 MIN_FONT = 56
 TITLE_FONT = 80
 

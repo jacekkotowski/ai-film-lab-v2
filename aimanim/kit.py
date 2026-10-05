@@ -77,12 +77,14 @@ def toward(turns: float) -> tuple[float, float, float]:
 
 # ---- the steps, on the words ------------------------------------------------
 
-def run(scene, here: Path, steps, beat_lines, run_times, background=()):
-    """Add the background, play each step on its sentence, hold to the end
-    of the words, then check the still. `background` is what is on screen
-    before the first word (title, grid...): it may lie under other things."""
+def run(scene, here: Path, steps, beat_lines, run_times, background=(),
+        beat_words=None):
+    """Add the background, play each step on its word (`beat_words`) or
+    its sentence (`beat_lines`), hold to the end of the words, then check
+    the still. `background` is what is on screen before the first word
+    (title, grid...): it may lie under other things."""
     scene.add(*background)
-    p = beats.for_scene(here, beat_lines, run_times)
+    p = beats.for_scene(here, beat_lines, run_times, beat_words)
     for wait, step, rt in zip(p.waits, steps, run_times):
         if wait >= beats.MIN_WAIT:
             scene.wait(wait)

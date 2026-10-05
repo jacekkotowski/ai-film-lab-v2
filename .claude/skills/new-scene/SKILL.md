@@ -49,9 +49,9 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    narration in one file, sections marked `[NN]` by picture.
 
 9. **Tell him the next step in one line**:
-   `python -m aimanim.film <film> --to "<film-lab project>"` gathers the
-   numbered stills and prints his copy command; then narrate, then
-   `time-to-words`.
+   run `python -m aimanim.film <film> publish` yourself (the project gets
+   the stills and his words), then tell him: narrate in film-lab, `film go`,
+   then say "narrated".
 
 ## Done when
 A full-size still exists, he has its path, and the maths in the answer

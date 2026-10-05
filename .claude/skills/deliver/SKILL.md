@@ -1,31 +1,23 @@
 ---
 name: deliver
-description: Say exactly which rendered file goes where in ai-film-lab once Jacek has approved a slide -- the full-size clip and still, their paths, sizes and lengths. Never copies into ai-film-lab itself. Use when he says "it's good", "send it to the film", "where is the file".
+description: Say where a film's slides and clips are in its ai-film-lab project and whether they are current -- paths, sizes, lengths. Use when he says "it's good", "is it in the film", "where is the file".
 ---
 
-# Deliver: what to copy where
+# Deliver: what is in the film, and is it current
 
-ai-manim never writes into ai-film-lab (decision 0001). This skill only
-says, with numbers, what he copies.
+ai-manim puts its files into the film's own project (decision 0003);
+nothing is copied by hand.
 
 ## Steps
 
-1. Gather the film, in its order:
-   ```
-   python -m aimanim.film <film> --to "<film-lab project>"
-   ```
-   It copies each scene's FULL-SIZE still (and clip, once made) to
-   `films/<film>/<NN>_<scene>.png|.mp4` — NN = picture number from
-   `films/<film>.txt` — refuses half-size stills, and prints ONE copy
-   command for him. It never copies into ai-film-lab.
-2. Anything it names as missing or not full size goes in the first line.
-   Full-size clips are rendered only when he asks.
-3. Tell him: the copy command, the table it printed, each clip's length
-   vs `total` in its `timing.json`, and where the film's script is
-   (`films/<film>.script.txt`).
-4. If ai-film-lab still cannot play narration over a clip (`docs/OPEN.md`),
-   say that first: only the still can go in for now.
+1. `films/<film>.txt` names the project. List
+   `<project>/media/NN_<scene>.png` and `<project>/clips/NN_<scene>.mp4`.
+2. ffprobe each: 1080x1920, 24 fps, and each clip's length against its
+   slide's duration in film.yaml (within 2 frames). Anything else goes in
+   the first line.
+3. A scene changed since its clip was made -> say so and run
+   `python -m aimanim.film <film> clips` again.
+4. The final render is his, in film-lab (`film final`), only when he asks.
 
 ## Done when
-He has the exact path to copy, and the numbers that show it is the
-right file.
+He knows which files the film uses and that they match the scenes.

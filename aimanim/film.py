@@ -1,41 +1,56 @@
-"""film.py -- the order of a film's slides, and its files gathered in that order.
+"""film.py -- a film's slides, in order, straight into its ai-film-lab project.
 
-A film is `films/<name>.txt`: one line per slide, "<picture> <scene>",
-where <picture> is the slide's place in the narration (photos made
-elsewhere fill the gaps). This module
+A film is `films/<name>.txt`:
 
-  - gathers each scene's FULL-SIZE still (and clip, once made) into
-    `films/<name>/<NN>_<scene>.png|.mp4`, refusing anything not 1080x1920;
-  - with --timing "<film-lab project>", writes each scene's timing.json
-    from the narration (aimanim.beats, the two files decision 0001 allows);
-  - with --to "<film-lab project>", PRINTS the one copy command for Jacek.
-    It never copies into ai-film-lab itself (decision 0001).
+    project: Zeroing a Rifle Sight     # ai-film-lab/projects/<this>
+    01 zero-group                      # picture number, scene
+    02 zero-clicks
 
-Standard library only.
+and its words are `films/<name>.script.txt`, sections marked `[intro]`,
+`[01]`, `[02]`... `[outro]`. Two moments, one command each:
 
-    python -m aimanim.film zeroing
-    python -m aimanim.film zeroing --timing "<film-lab project>"
-    python -m aimanim.film zeroing --to "<film-lab project>"
+  publish   before narrating. Creates the film-lab project if needed
+            (film-lab's own `film new`), puts each FULL-SIZE still into
+            its media/ as NN_<scene>.png, and the words where the
+            recording window shows them: narration.txt (one paragraph per
+            picture), script_intro.txt, script_outro.txt. A script file
+            changed in film-lab since the last publish is left alone.
+
+  clips     after narrating and `film go`. Reads each slide's captions
+            from film.yaml -- film-lab writes them in the film's own
+            seconds from the start of the shot, after pause-cutting and
+            speed -- writes the scene's timing.json, renders the clip at
+            full size, puts it in clips/NN_<scene>.mp4 and adds
+            `clip: clips/NN_<scene>.mp4` under the slide in film.yaml.
+
+Decision 0003 (ai-manim writes into its film-lab project). Standard
+library only; film.yaml is read by film-lab's own Python.
+
+    python -m aimanim.film zeroing publish
+    python -m aimanim.film zeroing clips
 """
 
 from __future__ import annotations
 
 import json
+import os
+import re
 import shutil
 import struct
 import subprocess
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from aimanim import beats, frame
 
 ROOT = Path(__file__).resolve().parents[1]
+FILMLAB = Path(os.environ.get("AIMANIM_FILMLAB", ROOT.parent / "ai-film-lab"))
 
 
 @dataclass
 class Slide:
-    picture: int          # place in the narration, 1-based
+    picture: int          # place among the pictures narrated over, 1-based
     scene: str            # folder under scenes/
 
     @property
@@ -43,24 +58,97 @@ class Slide:
         return f"{self.picture:02d}_{self.scene}"
 
 
-def parse(text: str) -> list[Slide]:
-    """The film file: '<picture> <scene>' per line, '#' starts a comment."""
-    slides = []
+@dataclass
+class Film:
+    project: str = ""                 # folder name under ai-film-lab/projects
+    slides: list[Slide] = field(default_factory=list)
+
+
+# ---- pure: the two text files ----------------------------------------------
+
+def parse(text: str) -> Film:
+    """The film file: 'project: <name>', then '<picture> <scene>' per line."""
+    f = Film()
     for n, raw in enumerate(text.splitlines(), 1):
         line = raw.split("#", 1)[0].strip()
         if not line:
             continue
+        if line.lower().startswith("project:"):
+            f.project = line.split(":", 1)[1].strip()
+            continue
         parts = line.split()
         if len(parts) != 2 or not parts[0].isdigit():
             raise ValueError(f"line {n}: want '<picture> <scene>', got {raw!r}")
-        slides.append(Slide(int(parts[0]), parts[1]))
-    pics = [s.picture for s in slides]
+        f.slides.append(Slide(int(parts[0]), parts[1]))
+    pics = [s.picture for s in f.slides]
     if len(set(pics)) != len(pics):
         raise ValueError(f"a picture number is used twice: {pics}")
     if pics != sorted(pics):
         raise ValueError(f"picture numbers must go up: {pics}")
-    return slides
+    return f
 
+
+MARK = re.compile(r"^\[(intro|outro|\d+)\]", re.I)
+
+
+def script_parts(text: str) -> dict[str, str]:
+    """The script's sections: 'intro', 'outro', '01', '02'... -> words.
+    A line of dashes ends the script (notes may follow it)."""
+    parts: dict[str, list[str]] = {}
+    key = None
+    for raw in text.splitlines():
+        if raw.startswith("-----"):
+            break
+        m = MARK.match(raw.strip())
+        if m:
+            k = m.group(1).lower()
+            key = k if not k.isdigit() else f"{int(k):02d}"
+            parts.setdefault(key, [])
+            continue
+        if key is not None:
+            parts[key].append(raw)
+    return {k: " ".join(" ".join(v).split()) for k, v in parts.items()}
+
+
+def narration_text(film: Film, parts: dict[str, str]) -> str:
+    """narration.txt as film-lab reads it: one paragraph per picture, in
+    picture order; a picture with no words is '-'."""
+    return "\n\n".join(parts.get(f"{s.picture:02d}", "") or "-"
+                       for s in film.slides) + "\n"
+
+
+def with_clip(yaml_text: str, picture: str, clip: str) -> str:
+    """film.yaml AS TEXT with `clip:` under the slide whose src is
+    `picture` -- added, or corrected if it names another clip. Comments
+    and layout stay as they were."""
+    lines = yaml_text.splitlines(keepends=True)
+    for i, ln in enumerate(lines):
+        m = re.match(r"^(\s*)(- )?src:\s*(\S+)\s*$", ln.rstrip("\r\n"))
+        if not m or m.group(3).strip("'\"") != picture:
+            continue
+        indent = m.group(1) + ("  " if m.group(2) else "")
+        nl = "\r\n" if ln.endswith("\r\n") else "\n"
+        j = i + 1                                  # this shot's other keys
+        while j < len(lines) and lines[j].startswith(indent) and \
+                not lines[j].lstrip().startswith("- "):
+            if re.match(rf"^{indent}clip:", lines[j]):
+                lines[j] = f"{indent}clip: {clip}{nl}"
+                return "".join(lines)
+            j += 1
+        lines.insert(i + 1, f"{indent}clip: {clip}{nl}")
+        return "".join(lines)
+    raise LookupError(f"no shot with src: {picture} in film.yaml")
+
+
+def timing_from(shot: dict) -> beats.Timing:
+    """A film-lab slide (as read_slides gives it) -> the scene's timing."""
+    lines = [beats.Line(c["text"], round(c["at"], 3), round(c["at"] + c["dur"], 3),
+                        [round(c["at"] + w, 3) for w in c.get("words") or []])
+             for c in shot["captions"]]
+    return beats.Timing(lines, round(shot["duration"], 3), f"film.yaml {shot['id']}")
+
+
+# ---- files ------------------------------------------------------------------
 
 def png_size(path: Path) -> tuple[int, int]:
     """Width and height from a PNG's header (IHDR is always first)."""
@@ -71,19 +159,14 @@ def png_size(path: Path) -> tuple[int, int]:
     return struct.unpack(">II", head[16:24])
 
 
-def clip_size(path: Path) -> tuple[int, int, float] | None:
-    """Width, height, seconds by ffprobe; None if ffprobe is not here."""
+def seconds(path: Path) -> float | None:
     try:
-        out = subprocess.run(
-            ["ffprobe", "-v", "error", "-select_streams", "v:0",
-             "-show_entries", "stream=width,height:format=duration",
-             "-of", "json", str(path)],
-            capture_output=True, text=True, check=True).stdout
-    except (FileNotFoundError, subprocess.CalledProcessError):
+        out = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
+                              "format=duration", "-of", "csv=p=0", str(path)],
+                             capture_output=True, text=True, check=True).stdout
+        return float(out.strip())
+    except (FileNotFoundError, subprocess.CalledProcessError, ValueError):
         return None
-    d = json.loads(out)
-    s = d["streams"][0]
-    return s["width"], s["height"], float(d["format"]["duration"])
 
 
 def still_of(scene_dir: Path) -> Path | None:
@@ -91,75 +174,148 @@ def still_of(scene_dir: Path) -> Path | None:
     return found[-1] if found else None
 
 
-def clip_of(scene_dir: Path) -> Path | None:
-    p = scene_dir / "out" / "videos" / "scene" / f"{frame.HEIGHT}p{frame.FPS}" / "Slide.mp4"
-    return p if p.exists() else None
+def clip_of(scene_dir: Path) -> Path:
+    return (scene_dir / "out" / "videos" / "scene" /
+            f"{frame.HEIGHT}p{frame.FPS}" / "Slide.mp4")
 
 
-def gather(film: str, root: Path = ROOT) -> list[str]:
-    """Copy the full-size files into films/<film>/, numbered. Returns the
-    report lines; a slide that is missing or the wrong size is named there
-    and nothing is copied for it."""
-    slides = parse((root / "films" / f"{film}.txt").read_text(encoding="utf-8"))
-    out = root / "films" / film
-    out.mkdir(parents=True, exist_ok=True)
-    for old in list(out.glob("*.png")) + list(out.glob("*.mp4")):
-        old.unlink()                      # only what this command made
+def load(name: str, root: Path = ROOT) -> tuple[Film, dict[str, str]]:
+    film = parse((root / "films" / f"{name}.txt").read_text(encoding="utf-8"))
+    sp = root / "films" / f"{name}.script.txt"
+    parts = script_parts(sp.read_text(encoding="utf-8")) if sp.exists() else {}
+    return film, parts
+
+
+def project_dir(film: Film) -> Path:
+    if not film.project:
+        raise SystemExit("the film file has no 'project: <name>' line")
+    return FILMLAB / "projects" / film.project
+
+
+def render(scene: str, still: bool) -> list[str]:
+    """Render a scene at full size; return its [beats]/[layout] notes."""
+    cmd = ["uv", "run", "--extra", "render", "manim"] + (["-s"] if still else []) + [
+        "-r", f"{frame.WIDTH},{frame.HEIGHT}",
+        "--media_dir", f"scenes/{scene}/out", f"scenes/{scene}/scene.py", "Slide"]
+    r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace")
+    if r.returncode != 0:
+        raise SystemExit(f"{scene}: manim failed\n{r.stderr[-2000:]}")
+    return [ln.strip() for ln in (r.stdout + r.stderr).splitlines()
+            if ln.strip().startswith(("[beats]", "[layout]"))]
+
+
+# ---- the two moments -----------------------------------------------------------
+
+def publish(name: str, root: Path = ROOT) -> list[str]:
+    film, parts = load(name, root)
+    proj = project_dir(film)
     report = []
-    for s in slides:
+    if not proj.exists():
+        subprocess.run(["uv", "run", "film", "new", film.project], cwd=FILMLAB,
+                       check=True, capture_output=True)
+        report.append(f"created {proj}")
+    (proj / "media").mkdir(parents=True, exist_ok=True)
+
+    for s in film.slides:
         d = root / "scenes" / s.scene
-        if not d.is_dir():
-            report.append(f"{s.name}: NO SCENE scenes/{s.scene}")
-            continue
         png = still_of(d)
-        if png is None:
-            report.append(f"{s.name}: no still -- render it: "
-                          f"manim -s -r {frame.WIDTH},{frame.HEIGHT}")
-        elif png_size(png) != (frame.WIDTH, frame.HEIGHT):
-            w, h = png_size(png)
-            report.append(f"{s.name}: still is {w}x{h}, not full size -- "
-                          f"re-render with -r {frame.WIDTH},{frame.HEIGHT}")
-        else:
-            shutil.copy2(png, out / f"{s.name}.png")
-            report.append(f"{s.name}.png  {frame.WIDTH}x{frame.HEIGHT}  "
-                          f"{png.stat().st_size // 1024} KB")
-        mp4 = clip_of(d)
-        if mp4 is not None:
-            info = clip_size(mp4)
-            shutil.copy2(mp4, out / f"{s.name}.mp4")
-            tail = (f"{info[0]}x{info[1]}  {info[2]:.3f} s" if info
-                    else "(ffprobe not found: size unchecked)")
-            report.append(f"{s.name}.mp4  {tail}")
+        if png is None or png_size(png) != (frame.WIDTH, frame.HEIGHT):
+            notes = render(s.scene, still=True)
+            png = still_of(d)
+            report += [f"  {s.name}: {n}" for n in notes]
+        shutil.copy2(png, proj / "media" / f"{s.name}.png")
+        report.append(f"media/{s.name}.png  {png_size(png)[0]}x{png_size(png)[1]}")
+
+    # the words, where the recording window shows them -- never over a
+    # file Jacek changed in film-lab since the last publish
+    stamp = root / "films" / name / "published.json"
+    last = json.loads(stamp.read_text(encoding="utf-8")) if stamp.exists() else {}
+    files = {"narration.txt": narration_text(film, parts)}
+    if parts.get("intro"):
+        files["script_intro.txt"] = parts["intro"] + "\n"
+    if parts.get("outro"):
+        files["script_outro.txt"] = parts["outro"] + "\n"
+    for fname, text in files.items():
+        p = proj / fname
+        if p.exists():
+            now = p.read_text(encoding="utf-8")
+            if now == text:
+                report.append(f"{fname}  unchanged")
+                continue
+            if now != last.get(fname):
+                report.append(f"{fname}  NOT written: changed in film-lab "
+                              f"since the last publish")
+                continue
+        p.write_text(text, encoding="utf-8")
+        last[fname] = text
+        report.append(f"{fname}  written")
+    stamp.parent.mkdir(parents=True, exist_ok=True)
+    stamp.write_text(json.dumps(last, indent=2, ensure_ascii=False), encoding="utf-8")
     return report
 
 
-def write_timings(film: str, project: Path, root: Path = ROOT) -> list[str]:
-    """timing.json for every slide of the film, from the narration."""
-    slides = parse((root / "films" / f"{film}.txt").read_text(encoding="utf-8"))
+READ_SLIDES = r"""
+import json, sys
+from pathlib import Path
+from ffilm.spec import Film
+f = Film.load(Path(sys.argv[1]))
+print(json.dumps([{"id": s.id, "src": s.src, "duration": s.duration,
+                   "clip": s.clip, "captions": [{"text": c.text, "at": c.at,
+                   "dur": c.dur, "words": c.words} for c in s.captions]}
+                  for s in f.shots if s.voice]))
+"""
+
+
+def read_slides(proj: Path) -> list[dict]:
+    """The narrated slides of film.yaml, read by film-lab's own loader."""
+    r = subprocess.run(["uv", "run", "python", "-c", READ_SLIDES,
+                        str(proj / "film.yaml")], cwd=FILMLAB,
+                       capture_output=True, text=True, encoding="utf-8")
+    if r.returncode != 0:
+        raise SystemExit(f"film-lab could not read {proj / 'film.yaml'}:\n"
+                         f"{r.stderr[-1500:]}")
+    return json.loads(r.stdout.strip().splitlines()[-1])
+
+
+def clips(name: str, root: Path = ROOT) -> list[str]:
+    film, _ = load(name, root)
+    proj = project_dir(film)
+    if not (proj / "film.yaml").exists():
+        raise SystemExit(f"no film.yaml in {proj} yet: narrate, then `film go` there")
+    shots = {Path(s["src"]).name: s for s in read_slides(proj)}
+    (proj / "clips").mkdir(exist_ok=True)
     report = []
-    for s in slides:
-        t = beats.timing_for(project, s.picture)
+    yml = proj / "film.yaml"
+    for s in film.slides:
+        shot = shots.get(f"{s.name}.png")
+        if shot is None:
+            report.append(f"{s.name}: not a narrated slide in film.yaml")
+            continue
+        t = timing_from(shot)
         (root / "scenes" / s.scene / "timing.json").write_text(
             t.to_json() + "\n", encoding="utf-8")
-        report.append(f"{s.name}: {len(t.lines)} lines, {t.total:.2f} s")
-        for i, line in enumerate(t.lines):
-            report.append(f"    {i}  {line.start:6.2f}  {line.text}")
+        notes = render(s.scene, still=False)
+        clip = proj / "clips" / f"{s.name}.mp4"
+        shutil.copy2(clip_of(root / "scenes" / s.scene), clip)
+        rel = f"clips/{s.name}.mp4"
+        text = yml.read_bytes().decode("utf-8")      # keeps CRLF as it is
+        new = with_clip(text, f"media/{s.name}.png", rel)
+        if new != text:
+            yml.write_bytes(new.encode("utf-8"))
+        got = seconds(clip)
+        report.append(f"{s.name}: {len(t.lines)} lines, slide {t.total:.2f} s, "
+                      f"clip {got:.2f} s" if got is not None else
+                      f"{s.name}: clip written (ffprobe missing: length unchecked)")
+        report += [f"    {n}" for n in notes]
     return report
 
 
 def main(argv: list[str]) -> int:
-    if not argv or argv[0].startswith("-"):
-        print(__doc__.strip().splitlines()[-3].strip(), file=sys.stderr)
+    if len(argv) != 2 or argv[1] not in ("publish", "clips"):
+        print("python -m aimanim.film <film> publish | clips", file=sys.stderr)
         return 2
-    film, rest = argv[0], argv[1:]
-    if rest[:1] == ["--timing"] and len(rest) == 2:
-        print("\n".join(write_timings(film, Path(rest[1]))))
-        return 0
-    print("\n".join(gather(film)))
-    if rest[:1] == ["--to"] and len(rest) == 2:
-        src = ROOT / "films" / film
-        print("\nCopy into the film (you run this; ai-manim does not):")
-        print(f'Copy-Item "{src}\\*" "{Path(rest[1]) / "media"}\\"')
+    print("\n".join((publish if argv[1] == "publish" else clips)(argv[0])))
     return 0
 
 

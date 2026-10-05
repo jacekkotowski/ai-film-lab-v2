@@ -26,6 +26,9 @@ ROW = {"first": 5.5, "second": 4.6}   # baselines
 # ---- timing --------------------------------------------------------------
 # Step i belongs to sentence BEAT_LINES[i] of the narration over this
 # picture (0-based). Change these after narrating, not the waits.
+# Better: the word each step starts on, as he says it in the film's script
+# ("a|b" accepts either). Used when given; BEAT_LINES otherwise.
+BEAT_WORDS: list[str] = []
 BEAT_LINES = [0, 1]
 RUN_TIMES = [1.0, 1.0]
 
@@ -34,7 +37,8 @@ class Slide(Scene):
     def construct(self):
         background = [kit.title(TITLE)]          # on screen before the first word
         steps = [self.step_one, self.step_two]
-        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background)
+        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background,
+                beat_words=BEAT_WORDS)
 
     # ---- one method per step; each returns its animations (<= 3 moving) --
     def step_one(self):

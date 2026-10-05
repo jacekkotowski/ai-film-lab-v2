@@ -36,6 +36,10 @@ ROW = {"head": 6.3, "unit": 5.45, "cm": 4.6, "result": -2.95}
 # ---- timing --------------------------------------------------------------
 # Step i belongs to sentence BEAT_LINES[i] of the narration over this
 # picture (0-based). Change these after narrating, not the waits.
+# Each step starts on its word (beats.starts_by_words): the word as he
+# says it in films/zeroing.script.txt. "a|b" accepts either. Not heard ->
+# the step starts with the one before, and [beats] says so.
+BEAT_WORDS = ["turrets", "reticle", "fourteen|14"]
 BEAT_LINES = [0, 1, 2]
 RUN_TIMES = [1.5, 1.0, 1.0]
 
@@ -58,7 +62,8 @@ class Slide(Scene):
     def construct(self):
         background = []
         steps = [self.step_turret, self.step_reticle, self.step_result]
-        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background)
+        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background,
+                beat_words=BEAT_WORDS)
 
     # ---- one method per step; each returns its animations ----------------
     def step_turret(self):

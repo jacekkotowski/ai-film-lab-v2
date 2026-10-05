@@ -3,3 +3,4 @@ __pycache__/
 media/
 scenes/*/out/
 films/*/
+.claude/settings.local.json

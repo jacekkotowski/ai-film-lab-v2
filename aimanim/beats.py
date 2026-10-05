@@ -13,6 +13,7 @@ and neither should need Manim installed to know when to move.
 from __future__ import annotations
 
 import json
+import re
 import sys
 import wave
 from dataclasses import asdict, dataclass, field
@@ -32,6 +33,9 @@ class Line:
     text: str
     start: float          # seconds from the start of THIS picture
     end: float
+    # when each word of `text` starts, same clock as `start`; empty when
+    # the source gave no word times (ai-film-lab's captions do)
+    words: list[float] = field(default_factory=list)
 
 
 @dataclass
@@ -115,6 +119,44 @@ def placeholder(run_times: list[float]) -> tuple[list[float], float]:
     return starts, t + PLACEHOLDER_GAP
 
 
+def _token(w: str) -> str:
+    return re.sub(r"[^\w]", "", w.lower())
+
+
+def starts_by_words(timing: Timing, cues: list[str]) -> tuple[list[float], list[str]]:
+    """Step i starts on the word cues[i]: the first time it is said after
+    the step before's word. "fourteen|14" accepts either; case and
+    punctuation are ignored, and a cue matches the start of a word
+    ("Triumph" finds "Triumph's").
+
+    Whisper's lines are pieces of speech, not the script's sentences, so
+    a sentence number is a guess; a word is not. A word never said is
+    returned in `missing` and its step starts with the one before.
+    """
+    starts, missing = [], []
+    li, wi, t = 0, 0, 0.0
+    for cue in cues:
+        alts = [_token(a) for a in cue.split("|") if _token(a)]
+        hit = None
+        for i in range(li, len(timing.lines)):
+            ln = timing.lines[i]
+            toks = [_token(w) for w in ln.text.split()]
+            for k in range(wi if i == li else 0, len(toks)):
+                if toks[k] and any(toks[k].startswith(a) for a in alts):
+                    times = ln.words if len(ln.words) == len(toks) else []
+                    hit = (i, k, times[k] if times else ln.start)
+                    break
+            if hit:
+                break
+        if hit is None:
+            missing.append(cue)
+            starts.append(t)
+            continue
+        li, wi, t = hit[0], hit[1] + 1, hit[2]
+        starts.append(t)
+    return starts, missing
+
+
 def starts_for(timing: Timing, beat_lines: list[int]) -> list[float]:
     """beat_lines[i] = which sentence (0-based) step i belongs to."""
     if beat_lines and max(beat_lines) >= len(timing.lines):
@@ -161,14 +203,22 @@ def timing_for(project: Path, n: int) -> Timing:
 
 
 def for_scene(scene_dir: Path, beat_lines: list[int],
-              run_times: list[float]) -> Plan:
+              run_times: list[float], beat_words: list[str] | None = None) -> Plan:
     """The plan for one scene: timed to timing.json if it exists, spaced
-    evenly if not. Problems are printed, because Manim's own log is where
-    Jacek is looking while it renders."""
+    evenly if not. With `beat_words`, each step starts on its word;
+    otherwise on the line `beat_lines` names. Problems are printed,
+    because Manim's own log is where Jacek is looking while it renders."""
     path = Path(scene_dir) / "timing.json"
     if path.exists():
         timing = Timing.from_json(path.read_text(encoding="utf-8"))
-        p = plan(starts_for(timing, beat_lines), run_times, timing.total)
+        if beat_words:
+            starts, missing = starts_by_words(timing, beat_words)
+            p = plan(starts, run_times, timing.total)
+            for w in missing:
+                p.notes.insert(0, f"the word {w!r} was not heard: its step "
+                                  f"starts with the one before")
+        else:
+            p = plan(starts_for(timing, beat_lines), run_times, timing.total)
     else:
         starts, total = placeholder(run_times)
         p = plan(starts, run_times, total)

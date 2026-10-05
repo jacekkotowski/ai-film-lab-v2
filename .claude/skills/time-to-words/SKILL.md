@@ -1,48 +1,36 @@
 ---
 name: time-to-words
-description: After Jacek has narrated over a scene's still in an ai-film-lab project, read where his sentences fell and render the animation timed to them -- each step on its sentence, the clip as long as the words. Use when he says "I narrated it", "time it", "make the clip", "sync the animation".
+description: After Jacek has narrated a film's slides in ai-film-lab (and run `film go` there), time every animation to his words and put the clips into the film -- each step on its word, each clip as long as its slide. Use when he says "I narrated it", "narrated", "time it", "make the clips", "sync the animation".
 ---
 
-# Time to words: his narration -> the clip
+# Time to words: his narration -> the clips, in the film
 
 ## Steps
 
-1. **Find the film.** Which film-lab project; the picture numbers are in
-   `films/<film>.txt`. Ask only if the film is not clear. Read only the two
-   files allowed in decision 0001. Load `slide-layout` before editing a scene.
+1. **Which film?** `films/<film>.txt` names the film-lab project. Load
+   `slide-layout` before changing any scene.
 
-2. **Write the timing** — every slide of the film at once:
+2. **One command does it all:**
    ```
-   python -m aimanim.film <film> --timing "<film-lab project>"
+   python -m aimanim.film <film> clips
    ```
-   (one slide: `python -m aimanim.beats "<project>" <N> > scenes/<slug>/timing.json`)
-   It prints each slide's lines with their start times.
-   If it says the take is not transcribed, the film's edit has not been
-   made yet: he runs `film go` / `film init` there first. Do not run
-   ai-film-lab commands from here.
+   For every slide it reads the slide's captions from film.yaml (film-lab
+   writes them in the film's own seconds: after pause-cutting and speed),
+   writes `scenes/<scene>/timing.json`, renders the clip at full size,
+   copies it to `<project>/clips/NN_<scene>.mp4` and adds the `clip:` line.
+   "not a narrated slide in film.yaml" -> he has not run `film go` yet.
 
-3. **Check the timing by eye before trusting it.** Show him the lines
-   with their start times. Whisper's lines are pieces of speech, not
-   always whole sentences ("…until someone" / "inserts a region column").
-   Also check the first line really is this picture's words and not the
-   end of the one before.
+3. **Read every note it prints.** `[beats] the word 'x' was not heard`
+   -> he said it differently: look at the slide's captions in film.yaml
+   and change that scene's BEAT_WORDS (e.g. "fourteen|14"). `starts
+   ...after its sentence` / `runs past the words` -> shorten that step's
+   RUN_TIMES. `[layout]` -> slide-layout. Then run `clips` again.
 
-4. **Set `BEAT_LINES`** in scene.py: for each step, the index of the line
-   it belongs to. Show the mapping as a table (step → line text → start).
-   Leave `RUN_TIMES` alone unless a step overruns.
-
-5. **Render the draft** and read the `[beats]` notes it prints:
-   ```
-   uv run --extra render manim -r 540,960 --media_dir scenes/<slug>/out scenes/<slug>/scene.py Slide
-   ```
-   A step "starts late" or "runs past the words" → shorten that step's
-   `RUN_TIMES`, never move the narration.
-
-6. **Measure the clip:** ffprobe duration must equal `total` in
-   timing.json within one frame (0.042 s). Report both numbers.
-
-7. Full size only when he asks: `-r 1080,1920`.
+4. **Report as a table:** slide, its length, the clip's length (they
+   differ by at most 2 frames: film-lab holds the last frame), and which
+   word each step starts on. Then he renders a draft in film-lab
+   (`film draft`) and watches.
 
 ## Done when
-A draft clip whose length equals the narrated span (both numbers shown),
-with no `[beats]` warning, or each warning explained.
+Every slide has a clip whose length is the slide's (within 2 frames),
+no unexplained note, and he has been told to watch the draft.

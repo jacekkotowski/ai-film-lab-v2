@@ -16,12 +16,16 @@ stage 1  ai-film-lab    I narrate over the still; the film is cut there
 stage 2  ai-3d-studio   effects and navigation over the finished film
 ```
 
-- **ai-manim never writes into ai-film-lab.** I copy the PNG / MP4 into a
-  film's `media/` myself, like any photograph.
-- **It may READ two files of a film-lab project**, and only these:
-  `media/voiceover_*.cues.json` and `analysis/transcript.json` — to time
-  the animation to my words. Pinned by `tests/test_film_lab_files_still_read.py`.
-- Why it is its own repo: `docs/decisions/0001`.
+- **ai-manim writes into ONE film-lab project, the film's own**
+  (decision 0003): its stills into `media/NN_<scene>.png`, my words into
+  `narration.txt` / `script_intro.txt` / `script_outro.txt` (never over a
+  file I changed there), clips into `clips/`, and `clip:` lines into its
+  film.yaml. Nothing else in ai-film-lab. I never copy files by hand.
+- **Timing comes from film.yaml**: each slide's captions are in the film's
+  own seconds (after pause-cutting and speed), read by film-lab's loader.
+- The loop: I describe → slides + script → `publish` → I narrate and run
+  `film go` there → "narrated" → `clips` → I watch the draft there.
+- Why two repos: `docs/decisions/0001`.
 
 ## The one rule
 
@@ -48,9 +52,8 @@ uv run --extra render manim -s -r 540,960   scenes/<slug>/scene.py Slide   the s
 uv run --extra render manim -s -r 1080,1920 scenes/<slug>/scene.py Slide   the still to narrate over
 uv run --extra render manim    -r 540,960   scenes/<slug>/scene.py Slide   draft clip, half size
 uv run --extra render manim    -r 1080,1920 scenes/<slug>/scene.py Slide   final clip. ONLY when I ask
-python -m aimanim.film <film>                        gather the film's stills/clips, numbered, into films/<film>/
-python -m aimanim.film <film> --to "<project>"       ... and print the copy command for me
-python -m aimanim.film <film> --timing "<project>"   timing.json for every slide of the film
+python -m aimanim.film <film> publish   stills + my words into the film-lab project (creates it)
+python -m aimanim.film <film> clips     after I narrated + `film go`: time, render, put the clips in
 python -m unittest discover tests                    tests, no install needed
 ```
 

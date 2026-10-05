@@ -33,6 +33,10 @@ CROSS = 0.3                      # half-length of the aim cross, frame units
 # ---- timing --------------------------------------------------------------
 # Step i belongs to sentence BEAT_LINES[i] of the narration over this
 # picture (0-based). Change these after narrating, not the waits.
+# Each step starts on its word (beats.starts_by_words): the word as he
+# says it in films/zeroing.script.txt. "a|b" accepts either. Not heard ->
+# the step starts with the one before, and [beats] says so.
+BEAT_WORDS = ["Fire", "Mark", "measure"]
 BEAT_LINES = [0, 1, 2]
 RUN_TIMES = [1.0, 1.0, 1.5]
 
@@ -46,7 +50,8 @@ class Slide(Scene):
     def construct(self):
         background = self.background()
         steps = [self.step_holes, self.step_centre, self.step_offset]
-        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background)
+        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background,
+                beat_words=BEAT_WORDS)
 
     # ---- on screen before the first word ---------------------------------
     def background(self):

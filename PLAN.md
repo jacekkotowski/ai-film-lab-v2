@@ -1,15 +1,15 @@
-# ai-manim plan (status 2026-10-05)
+# ai-manim plan (status 2026-10-05, trial run)
 
-Nothing here has been rendered yet. Every number below is a target, not
-a measurement, until a step says "measured".
+Step 1 measured 2026-10-05 except the phone check (numbers: docs/tech/manim.md).
+Every other number below is a target until a step says "measured".
 
 ## Step 1 — the trial (measure before building more)
 One scene, `scenes/back-azimuth/` (already written, never run).
-- [ ] `uv sync --extra render` — record install size (MB) and time in `docs/tech/manim.md`
-- [ ] still at 540×960: render time; is the frame vertical? (the `-r` question in OPEN)
-- [ ] draft clip at 540×960: render time per second of animation
-- [ ] full clip at 1080×1920: render time; ffprobe size, fps, length
-- [ ] `MathTex` with TinyTeX: one formula renders, or the missing package is named
+- [x] `uv sync --extra render` — record install size (MB) and time in `docs/tech/manim.md`
+- [x] still at 540×960: render time; is the frame vertical? (the `-r` question in OPEN)
+- [x] draft clip at 540×960: render time per second of animation
+- [x] full clip at 1080×1920: render time; ffprobe size, fps, length
+- [x] `MathTex` with TinyTeX: one formula renders, or the missing package is named (go: works after TinyTeX packages, docs/tech/manim.md)
 - [ ] the text is readable on the phone (Jacek looks at the still on his phone)
 Done when: four numbers in `docs/tech/manim.md`, and a go / no-go on MathTex.
 

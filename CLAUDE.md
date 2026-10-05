@@ -52,7 +52,7 @@ python -m unittest discover tests                                          tests
 ```
 
 Never use `-ql`/`-qm`/`-qh` alone: they reset the size to landscape
-(16:9). Always give `-r` (unverified until the trial: `docs/OPEN.md`).
+(16:9). Always give `-r` (measured: `-ql` gives 854×480).
 
 ## Scene rules (a phone, scrolled past)
 
@@ -63,8 +63,8 @@ Never use `-ql`/`-qm`/`-qh` alone: they reset the size to landscape
 - Settings as UPPER_CASE constants at the top of `scene.py`; content
   (numbers, labels) in `spec.md`, copied into those constants.
 - The class is always called `Slide`. One scene file = one slide.
-- Formulas: `Text` with Unicode first. `MathTex` only after the trial
-  says TinyTeX renders it.
+- Formulas: `Text` with Unicode for plain ones; `MathTex` renders
+  (measured 2026-10-05, TinyTeX packages in `docs/tech/manim.md`).
 - Every animation step names the sentence it belongs to (`BEAT_LINES`).
 
 ## Proof, always

@@ -19,4 +19,4 @@ Stage 0 of three: **ai-manim** makes slides → **ai-film-lab** cuts the film
 uv sync --extra render        # Manim; not yet measured on this machine
 python -m unittest discover tests
 ```
-Status: PLAN.md. Nothing rendered yet.
+Status: PLAN.md. Trial scene rendered 2026-10-05 (docs/tech/manim.md).

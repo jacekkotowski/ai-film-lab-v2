@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 from manim import (Arrow, Circle, Create, Dot, FadeIn, GrowArrow, Line,
-                   Scene, Text, VGroup, Write, UP)
+                   Scene, Text, VGroup, Write, LEFT, UP)
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
@@ -22,10 +22,14 @@ FORWARD_MIL = 1200
 BACK_MIL = (FORWARD_MIL + MILS // 2) % MILS
 
 # ---- layout --------------------------------------------------------------
-RADIUS = 3.0
+# Tick labels are 1.9 wide at MIN_FONT (measured), so a label beside the
+# circle at 1600/4800 fits inside frame.SIDE only if RADIUS <= 2.0.
+RADIUS = 2.0
 CENTRE = (0.0, 2.0, 0.0)
-WALK = 3.6                       # A to B, in frame units
+WALK = 3.6                       # A to B, in frame units; B stays inside SIDE
 TICKS = (0, 1600, 3200, 4800)
+TICK_BUFF = 0.1                  # label to circle
+BACK_SHIFT = 0.3                 # the way back, drawn beside the way there
 
 # ---- timing --------------------------------------------------------------
 # Step i belongs to sentence BEAT_LINES[i] of the narration over this
@@ -37,7 +41,8 @@ RUN_TIMES = [1.5, 1.2, 1.5, 1.0]
 def towards(mil: float) -> tuple[float, float, float]:
     """A bearing in mils -> a unit vector. 0 is north (up), clockwise."""
     a = 2 * math.pi * mil / MILS
-    return (math.sin(a), math.cos(a), 0.0)
+    # Rounded: sin(pi) is 1.2e-16, which next_to reads as "to the right".
+    return (round(math.sin(a), 9), round(math.cos(a), 9), 0.0)
 
 
 def plus(p, v, k=1.0):
@@ -59,8 +64,9 @@ class Slide(Scene):
     def step_circle(self):
         ring = Circle(radius=RADIUS, color=frame.DIM).move_to(CENTRE)
         labels = VGroup(*[
-            Text(str(m), font_size=frame.MIN_FONT * 0.6, color=frame.DIM)
-            .move_to(plus(CENTRE, towards(m), RADIUS + 0.6))
+            Text(str(m), font_size=frame.MIN_FONT, color=frame.DIM)
+            .next_to(plus(CENTRE, towards(m), RADIUS), towards(m),
+                     buff=TICK_BUFF)
             for m in TICKS])
         title = Text(f"{MILS} mil", font_size=frame.TITLE_FONT,
                      color=frame.INK).move_to((0, frame.TOP - 0.3, 0))
@@ -76,10 +82,14 @@ class Slide(Scene):
                 FadeIn(label)]
 
     def step_back(self):
-        north = Line(self.b, plus(self.b, (0, 1, 0), 1.2), color=frame.DIM)
-        arrow = Arrow(self.b, self.a, buff=0.15, color=frame.SECOND)
+        # Shifted to the right of the way there (clockwise of the forward
+        # bearing), so the two arrows do not lie on one line.
+        side = towards(FORWARD_MIL + MILS // 4)
+        b, a = plus(self.b, side, BACK_SHIFT), plus(self.a, side, BACK_SHIFT)
+        north = Line(b, plus(b, (0, 1, 0), 1.2), color=frame.DIM)
+        arrow = Arrow(b, a, buff=0, color=frame.SECOND)
         label = Text(f"{BACK_MIL}", font_size=frame.MIN_FONT,
-                     color=frame.SECOND).next_to(self.b, UP * 2.2)
+                     color=frame.SECOND).next_to(north.get_end(), LEFT)
         return [Create(north), GrowArrow(arrow), FadeIn(label)]
 
     def step_sum(self):

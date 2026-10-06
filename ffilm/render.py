@@ -850,6 +850,25 @@ def lit_word(cap, t: float) -> int | None:
     return min(shown - 1, heard * shown // len(cap.words))
 
 
+def caption_top(pos: str, h: int, block_h: float, line_h: float) -> float:
+    """y of the TOP of a caption's block of lines, `h` px tall frame.
+
+    For "bottom" the block ends at a fixed place, so a caption that wrapped
+    to three lines still ends where a one-line caption would. A
+    "lower_third" block starts one LINE below 72 % of the height: Jacek
+    asked for the captions one line lower (2026-10-06), and at 72 % a
+    three-line caption (1382-1752 px of 1920) ran into the ai-manim slides,
+    which keep only the bottom 480 px clear. Now 1490-1860.
+    """
+    if pos == "top":
+        return h * 0.08
+    if pos == "center":
+        return (h - block_h) / 2
+    if pos == "lower_third":
+        return h * 0.72 + line_h
+    return h - h * 0.10 - block_h               # bottom
+
+
 def caption_art(cap, w: int, h: int, font_override: str | None,
                 lit: int | None = None):
     """The pixels of one caption at full opacity, cropped to the box the
@@ -884,17 +903,8 @@ def caption_art(cap, w: int, h: int, font_override: str | None,
     step = int(lh * CAPTION_LINE_SPACING)
     block_h = step * (len(lines) - 1) + lh
 
-    # y0 is the TOP of the whole block, so a caption that wrapped to
-    # three lines still ends where a one-line caption would.
     left_aligned = cap.pos == "lower_third"
-    if cap.pos == "top":
-        y0 = h * 0.08
-    elif cap.pos == "center":
-        y0 = (h - block_h) / 2
-    elif left_aligned:
-        y0 = h * 0.72
-    else:                                       # bottom
-        y0 = h - h * 0.10 - block_h
+    y0 = caption_top(cap.pos, h, block_h, lh)
 
     first = 0                                   # index of this line's first word
     for i, line in enumerate(lines):

@@ -122,12 +122,29 @@ def slides_using(film, path: Path) -> list[str]:
     out: list[str] = []
     for s in film.shots:
         if s.voice and s.voice not in out:
+            # A shortened copy (tighten.py) is the same recording. Compared
+            # by path alone, a narration whose slides all play its copy was
+            # quoted by none, and never listened to (Zeroing a Rifle Sight,
+            # 2026-10-06: five slides, no captions).
             try:
-                if film.resolve(s.voice).resolve() == want:
-                    out.append(s.voice)
+                played_here = film.resolve(s.voice)
+                same = want in (played_here.resolve(),
+                                kinds.recording_of(played_here).resolve())
             except OSError:
                 continue
+            if same:
+                out.append(s.voice)
     return out
+
+
+def played(film, path: Path, quoted: list[str]) -> Path:
+    """The file to transcribe for a recording its slides quote: the one
+    they play. Their `in`/`out` are on a shortened copy's clock when they
+    play the copy, and captions timed off the original would land late by
+    every pause cut out before them. More than one file (an old film.yaml
+    brought back by `undo` beside a new one): the original, as before."""
+    files = {film.resolve(v) for v in quoted} if film is not None else set()
+    return files.pop() if len(files) == 1 else path
 
 
 def voice_sources(project: Path, film=None) -> list[VoiceSource]:
@@ -169,13 +186,13 @@ def voice_sources(project: Path, film=None) -> list[VoiceSource]:
     clips = [p for p in here if p.suffix.lower() in VIDEO_EXT]
     if pick is not None and pick.name.lower().startswith("voiceover"):
         quoted = slides_using(film, pick)
-        narration = [VoiceSource(pick, pick.name, quoted)]
+        narration = [VoiceSource(played(film, pick, quoted), pick.name, quoted)]
         # A picture said again (`record --voice --picture N`) is its own
         # file under its own shot; listened to only if a shot uses it.
         for p in here:
             if kinds.is_picture_retake(p) and slides_using(film, p):
-                narration.append(VoiceSource(p, p.name,
-                                             slides_using(film, p)))
+                q = slides_using(film, p)
+                narration.append(VoiceSource(played(film, p, q), p.name, q))
         if not quoted:
             # Slides that carry `voice:` and none of them quote this
             # narration: every picture was said again, and the narration
@@ -210,7 +227,8 @@ def voice_sources(project: Path, film=None) -> list[VoiceSource]:
                   "narration. If that")
             print("  file is music, move it to the music\\ folder next door "
                   "and run this again.")
-        return [VoiceSource(pick, pick.name, slides_using(film, pick))]
+        quoted = slides_using(film, pick)
+        return [VoiceSource(played(film, pick, quoted), pick.name, quoted)]
 
     return _clip_sources(project, clips)
 

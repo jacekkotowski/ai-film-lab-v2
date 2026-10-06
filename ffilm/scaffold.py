@@ -1097,7 +1097,10 @@ def cut_by_hand(film) -> bool:
     """
     for s in film.shots:
         if s.voice:
-            cued = read_cues(film.resolve(s.voice))
+            # Beside the recording, not beside its shortened copy: read
+            # off the copy, a film cut by pressing Next was re-cut by
+            # paragraph (Zeroing a Rifle Sight, 2026-10-06).
+            cued = read_cues(kinds.recording_of(film.resolve(s.voice)))
             if cued and cued["cues"]:
                 return True
     return False

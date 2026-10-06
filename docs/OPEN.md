@@ -4,6 +4,26 @@ Every session reads this first. A fault stays here until it is fixed AND
 Jacek has seen the fix work in a real render. Newest first. When fixed:
 move it to the bottom section with the commit id — do not delete it.
 
+- 2026-10-06 FIXED, waiting for Jacek to see it in a render: slides
+  narrated over came out of `film go` with NO captions (Zeroing a Rifle
+  Sight: 5 slides, 0 captions; the intro and closing had theirs). Cause:
+  `go` shortens the pauses into a copy, analysis/tight/<take>__tight_<8
+  hex>.wav, and points each slide's `voice:` at it. Two places then
+  compared the copy with the recording in media/ and found nothing:
+  (1) voice.slides_using -- no slide "quoted" the narration, so it was
+  taken for one replaced by retakes and never listened to; (2)
+  scaffold.cut_by_hand read the presses of Next beside the copy, found
+  none, and `caption` re-cut the slides by paragraph with the FIRST
+  slide's voice (a retake) for all -- 0 captions placed. Fix:
+  kinds.recording_of (the copy -> its recording in media/), used by both,
+  and the copy is what is transcribed (the slides' in/out are on its
+  clock). Test: test_a_shortened_narration_is_still_the_narration.py (6;
+  the cut-by-hand one seen failing without the fix). On his film, dry run
+  then --apply per take: 22 captions on s03-s06, 6 on s02, cuts kept;
+  `film check` ok. Since 2026-10-05 (bfc57a2) EVERY narrated film was
+  hit; a plain `film caption --apply` would also re-caption the camera
+  takes (duplicates), so captioning an already-made film needs
+  `--audio analysis/tight/<copy>.wav` per take.
 - 2026-10-05 NEW: a slide can show a clip instead of its picture
   (`clip: clips/NN_name.mp4`; spec.Shot.clip, render.picture_of). The
   slide keeps its words, length and captions; the clip plays from its

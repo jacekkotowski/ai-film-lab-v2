@@ -156,6 +156,33 @@ VOICEOVER_PREFIX = "voiceover_"
 # in the film on the day it was recorded.
 PICTURE_RETAKE = re.compile(r"^picture\d+_", re.IGNORECASE)
 
+# tighten.tight_name: analysis/tight/<stem>__tight_<8 hex>.wav, a shorter
+# copy of the recording <stem> in media/.
+TIGHT_COPY = re.compile(r"__tight_[0-9a-f]{8}$")
+
+
+def original_stem(path) -> str:
+    """The stem of the recording this file is, or is a shortened copy of.
+    `go` points the slides at the copy; the recording in media/ is still
+    the narration (Zeroing a Rifle Sight, 2026-10-06: not captioned)."""
+    return TIGHT_COPY.sub("", Path(path).stem)
+
+
+def recording_of(path) -> Path:
+    """The recording in media/ that this file is, or is a shortened copy
+    of. What was written BESIDE a take -- the presses of Next
+    (`.cues.json`), a retake's words (`.picture.json`) -- is beside the
+    original, never beside the copy in analysis/tight/."""
+    path = Path(path)
+    if TIGHT_COPY.search(path.stem) is None:
+        return path
+    media = path.parent.parent.parent / "media"
+    stem = original_stem(path)
+    for f in sorted(media.glob(stem + ".*")) if media.is_dir() else []:
+        if f.suffix.lower() in AUDIO:
+            return f
+    return path
+
 
 def is_picture_retake(path) -> bool:
     return (Path(path).suffix.lower() in AUDIO

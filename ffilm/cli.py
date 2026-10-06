@@ -411,8 +411,10 @@ def cmd_caption(args) -> None:
         retake = kinds.is_picture_retake(src.audio_path)
         if retake:
             from .record import read_retake
-            script = (read_retake(src.audio_path) or {}).get(
-                "words", "")
+            # Its words are written beside the take in media/, not
+            # beside the shortened copy that is transcribed.
+            script = (read_retake(kinds.recording_of(src.audio_path))
+                      or {}).get("words", "")
         lines = voice.transcribe(src.audio_path, model_size=args.model,
                                  language=args.lang, script=script)
         # A camera take's sound starts late against its picture (see

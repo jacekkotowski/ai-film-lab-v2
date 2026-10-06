@@ -82,7 +82,9 @@ The worked example used in the film (100 m; cm, + = right / up):
 ## 5. The Aurora MIL reticle, exactly
 
 The geometry is code: `aimanim/aurora.py` (in mil, y up, origin at the
-chevron tip). Its checks are in `tests/test_a_renumbered_slide_leaves_no_old_still.py`.
+chevron tip); a slide draws it with `kit.reticle`. Reference stills of the
+whole reticle and its enlarged parts (centre, chevron, stadia, line), with
+the scale each uses: `docs/aurora/` (README.md). Its checks are in `tests/test_a_renumbered_slide_leaves_no_old_still.py`.
 It was measured from the manual's picture (13.6 px per mil) and checked
 against the manual's numbers; the details are in `scenes/zero-reticle/spec.md`.
 
@@ -147,7 +149,33 @@ target, or a target at double the distance.
 - One sentence per animation step. Split long script sentences; numbers in
   narration are said the way they are rounded on screen.
 
-## 9. Growing this file
+## 9. What the reticle measures (mil-measure film, 2026-10-06)
+
+One formula, four uses; the film's rows are TARGET → MIL → FORMULA → RESULT.
+- **Range from height** (mil-man): distance (m) = size (m) × 1000 ÷ mil.
+  A 1.78 m man at 6 / 4 / 3 / 2 mil = **297 / 445 / 593 / 890 m**
+  (1780 ÷ 6 = 296.7; small-angle error < 1e-5). Read on the **centre
+  ladder**: head on the chevron tip, feet on bar n = n mil (bars 2–10).
+- **The stadia numbers are not mils.** "2-4-6" are hundreds of yards; the
+  "4" stadia is 4.86 mil tall. Never put "4 MIL" next to them.
+- **Range from a known size** (mil-plate): 0.50 m plate filling dot −1 to
+  dot +1 = 2 mil → **250 m**.
+- **A mil is an angle** (mil-angle): it covers distance ÷ 1000, so 10 / 20 /
+  30 cm at 100 / 200 / 300 m.
+- **Speed** (mil-speed, chosen numbers): mil/s × distance ÷ 1000 = m/s. A car
+  2 m long at 200 m is 10 mil long; nose 0 → 5 → 10 mil in 0 → 0.5 → 1 s =
+  10 mil/s → **2 m/s = 7.2 km/h**. Still no lead without a time of flight (§7).
+- **Drop** (mil-drop): ½ g t² with g = 9.81: 0.5 s → **1.23 m**, 1 s →
+  **4.91 m**. It is the drop **below the bore line**, valid with drag for
+  flat fire if t is the real time of flight. **The reticle hold is smaller**
+  (the sight is zeroed). Times chosen, no cartridge.
+- **Wind** (mil-wind): **drift = crosswind × lag, lag = t − D ÷ v₀** (Didion's
+  lag rule; McCoy, Modern Exterior Ballistics; Litz). Not "the wind pushes
+  for the whole flight": with no air there is no drift. No drift number from
+  a bullet without a measured t. Conversion, exact: 30 cm at 300 m =
+  30 × 10 ÷ 300 = **1.0 mil**, held upwind.
+
+## 10. Growing this file
 
 A new optic, reticle or calculation: add the formula, the computed number
 (computed, not typed from memory), the source with its date, and the

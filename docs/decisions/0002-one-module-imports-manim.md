@@ -23,6 +23,10 @@ without Manim installed.
 `text` (baselines), `title` (fits under TOP), `fits` (measure a string),
 `toward` (rounded directions), `run` (steps on the beats, then the
 layout check), `check` (safe area, text on text, text on a drawing).
+Added 2026-10-06: `mil_to` + `reticle` (the Aurora MIL from `aurora.py`,
+whole or a window; 5 scenes), `chain` (target → MIL → formula → result
+rows; 5 scenes), `man` (a silhouette of a given height; mil-man only, put
+in kit at Jacek's request to keep reticle pieces reusable).
 The rules and measured sizes that go with it: the `slide-layout` skill.
 
 ## How it was proved

@@ -9,7 +9,7 @@ Slide 4 of the zeroing film; zero-range (5) then ranges with its centre.
 import sys
 from pathlib import Path
 
-from manim import Arrow, Dot, FadeIn, Line, Rectangle, Scene, VGroup, VMobject
+from manim import Arrow, FadeIn, Rectangle, Scene, VGroup
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
@@ -42,21 +42,11 @@ BEAT_LINES = [0, 1, 2, 3, 4]
 RUN_TIMES = [1.0, 1.0, 1.5, 1.0, 1.0]
 
 
-def at(x, y):
-    """A point of the reticle (mil) on the slide."""
-    return (AIM[0] + x * S, AIM[1] + y * S, 0)
+at = kit.mil_to(S, AIM)              # a point of the reticle (mil) on the slide
 
 
 def reticle() -> VGroup:
-    lines = [Line(at(*a), at(*b)) for a, b in aurora.segments()]
-    lines.append(VMobject().set_points_as_corners([at(*p) for p in aurora.chevron()]))
-    dots = [Dot(at(x, y), radius=DOT_R * (1.8 if heavy else 1), color=frame.INK)
-            for x, y, heavy in aurora.dots()]
-    numbers = [kit.text(s, at(side * x, 0)[0],
-                        at(0, aurora.stadia_mil(x) / 2)[1] + 0.12)
-               for side in (-1, 1) for x, s in aurora.NUMBERS.items()]
-    return VGroup(VGroup(*lines).set_stroke(frame.INK, width=STROKE),
-                  VGroup(*dots), VGroup(*numbers))
+    return kit.reticle(at, stroke=STROKE, dot_r=DOT_R)
 
 
 def name(lines, x, rows, tip, start) -> VGroup:

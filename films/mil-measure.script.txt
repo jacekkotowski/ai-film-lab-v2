@@ -1,0 +1,80 @@
+MIL-MEASURE -- draft script (2026-10-06), from Jacek's plan (~2:30)
+Sections: intro and outro are your camera takes (film-lab shows them as
+script_intro.txt / script_outro.txt); 01..08 are the slides you narrate over,
+one paragraph each (narration.txt).
+`python -m aimanim.film mil-measure publish` puts them there. A line starting
+with a section mark in brackets starts a section. One sentence per step.
+
+
+[intro]
+
+Most shooters use the reticle only to aim. But the Aurora MIL etchig on my Primary Arms SLx prism is also a measuring tool. With one rule it tells you how far a target is, how big it is, and how fast it moves. Here's how.
+
+
+[01] What a mil is   (slide mil-unit)
+
+This is the Aurora MIL reticle, and in practice it is a small angle calculator. One mil covers ten centimetres at a hundred metres.
+
+
+[02] Range from a man's height   (slide mil-man)
+
+Take a man one metre seventy-eight tall. Put his head on the tip of the chevron and read his feet on the ladder: six mils. Further away he shrinks to four mils, three, two. His distance is his height times a thousand, divided by the mils. Four mils: one point seven eight times a thousand, over four, is four hundred and forty-five metres.
+
+
+[03] Range from a known size   (slide mil-plate)
+
+A plate fifty centimetres wide works the same way. It fills two mils, from dot to dot. Half a metre times a thousand, divided by two: two hundred and fifty metres.
+
+
+[04] A mil is an angle   (slide mil-angle)
+
+Why does it work? A mil is not a length, it is an angle. At a hundred metres it spans ten centimetres. At two hundred, twenty; at three hundred, thirty. The further the target, the more centimetres one mil covers.
+
+
+[05] A moving target   (slide mil-speed)
+
+A target car two metres long is pulled on a rope, two hundred metres away. Hold the reticle still and watch its nose: after half a second it is at five mils, after one second at ten. Ten mils per second is its angular speed. Times the distance, divided by a thousand: two metres per second, seven point two kilometres an hour.
+
+
+[06] Drop   (slide mil-drop)
+
+Gravity pulls the bullet down for the whole time it flies. Below the line of the barrel it drops one half g t squared. Half a second: one point two metres; a full second: four point nine. Twice the time, four times the drop. A faster bullet spends less time in the air, so it drops less. The bullet's shape, the temperature and the air pressure change that time, and a ballistic app works it out.
+
+
+[07] Wind   (slide mil-wind)
+
+Wind from the side makes the bullet drift. The drift is not the wind pushing for the whole flight: it is the wind speed times the lag, how much longer the flight takes than it would without air. Thirty centimetres of drift at three hundred metres is thirty times ten over three hundred: one mil to hold into the wind.
+
+
+[08] The instrument   (slide mil-finale)
+
+So this reticle measures size, distance, angle, movement and trajectory. A MIL reticle is a measuring instrument.
+
+
+[outro]
+
+To sum up. One mil is ten centimetres at a hundred metres. A target's size times a thousand, divided by the mils it fills, is its distance. Mils per second times the distance, divided by a thousand, is its speed. Drop and wind come from the time of flight: take that from a ballistic app, and the reticle turns the centimetres into a hold in mils.
+
+
+-----------------------------------------------------------------------
+What changed from your plan, and why (every number: scenes/mil-*/spec.md)
+- 0:00 and 1:05 both showed 10 / 20 / 30 cm. Slide 01 now gives only the
+  rule (1 mil = 10 cm at 100 m); slide 04 shows 10 / 20 / 30 as the angle
+  widening. Put 200 / 300 / 400 back on 01 if you want the repeat.
+- 0:15 "Aurora has ready stadia for this": left out. Their numbers 2-4-6
+  are hundreds of YARDS, not mils (the "4" stadia is 4.86 mil tall), so
+  next to "4 mils" on this slide they mislead. The zeroing film covers them.
+  Heights here are read on the centre ladder: chevron tip to bar n = n mil.
+- 0:15 the four readings are 297 / 445 / 593 / 890 m (1780 / 6 = 296.7).
+- 1:25 car: your 2 m, at 200 m = 10 mil long. Its nose moves 0 -> 5 -> 10
+  mil in 0 -> 0.5 -> 1.0 s: 10 mil/s x 200 / 1000 = 2 m/s = 7.2 km/h.
+  These are chosen numbers, not a measured target. No lead: we have no
+  measured time of flight (shooting-optics §7).
+- 1:45 drop = 1/2 g t^2 is below the BORE line (the barrel's line). The
+  hold on the reticle is smaller: the sight looks down onto the zero.
+  0.5 s -> 1.23 m, 1.0 s -> 4.90 m (g = 9.81). Times chosen, no cartridge.
+- 2:05 "the longer it flies, the longer the wind pushes" is the popular
+  explanation but not the physics: without air there would be no drift at
+  all. Drift = crosswind x lag, lag = time of flight - distance / muzzle
+  velocity (the Didion "lag rule"). Same intuition in the end: slower,
+  more drag -> more drift. 30 cm at 300 m = 1 mil is geometry, exact.

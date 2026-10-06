@@ -34,6 +34,13 @@ the layout check). Never copy an older scene's construct loop.
 | "Triumph" | 3.35 | 0.75 (descender) |
 | TITLE_FONT 80: "Group centre" | 7.38 | 1.06 |
 | TITLE_FONT 80: "Range by width" | 8.74 → too wide | |
+| any text at 56: tallest glyph / deepest descender | | 0.59 above / 0.17 below the baseline |
+| "1.78 × 1000 ÷ 4", "0.50 × 1000 ÷ 2" | 6.36–6.37 (7.28 at 64) | |
+| "2 m/s = 7.2 km/h", "10 × 200 ÷ 1000" | 6.60–6.67 | |
+| "10 MIL per second" | 7.33 | |
+| "drop ≈ ½ g t²" at 72, "drift = wind × lag" | 6.77, 7.07 | |
+| "measuring instrument" | 8.74 → too wide | |
+| "TRAJECTORY" | 5.37 | |
 Rule of thumb: ~17 digits/characters fill the safe width at 56; ~11 at 80.
 Measure anything new with `kit.fits("text")` BEFORE placing it.
 
@@ -45,6 +52,13 @@ Consequences already paid for:
   the "2" above the 14-mil stadia pokes 0.10 past SIDE (zero-reticle).
   Its centre, to range on, goes on its own slide at 1.6/mil (zero-range):
   both on one slide left the labels crowded.
+- **reticle parts and their scales**: `docs/aurora/README.md` (the table
+  of units/mil, aim point, window, stroke, dot radius per part).
+- **a chain (`kit.chain`) of 4 rows**: step 1.25 at 56 = 3.75 units; at
+  1.1 the arrows are 0.2 long and read as dots (mil-speed). Plan the free
+  height for it first, then the drawing above it.
+- **heights read on the ladder** (mil-man): 0.7 units/mil, so rows at
+  2, 3, 4 mil are 0.7 apart; at 0.6 their labels touched.
 - **bar scales**: pick units/cm so the longest bar fits the free height;
   10 cm at 0.6 = 6 units (zero-mil), 5 cm at 1.0 (zero-clicks).
 
@@ -70,6 +84,17 @@ Consequences already paid for:
   slides cannot drift apart.
 - **Static things** (title, grid, axes) go in `background`: on screen before
   the first word, and labels may lie on them without a `[layout]` note.
+- **The Aurora reticle, whole or a part: `kit.reticle(kit.mil_to(scale,
+  aim), window)`**, never drawn by hand. A window without the aim point
+  leaves the chevron out (docs/aurora/stadia.png).
+- **TARGET → MIL READING → FORMULA → RESULT: `kit.chain`**, one row per
+  word, colours ACCENT / SECOND / INK / ACCENT. Its arrows are placed from
+  the baselines (0.17 + 0.06 under, 0.59 + 0.08 over), never from the text
+  boxes: a row with a descender ("per") left the box-placed arrow a dot.
+- **`kit.chain(items, top, step=...)`**: give `step=` by name; positionally
+  it is `x`, and the chain moved right (mil-drop).
+- **A target behind the reticle** (plate, car): `set_z_index(-1)` and a fill
+  of opacity 0.35–0.6, so the reticle lines stay on top.
 - At most 3 objects move in one step: group parts with `VGroup`.
 - No effects or polish Jacek didn't ask for.
 
@@ -86,7 +111,8 @@ Consequences already paid for:
 - Then still look at the half-size PNG (Read it): the check cannot see
   meaning (wrong label on an arrow, a confusing picture).
 - For the bottom margin of an existing PNG, measure pixels: lowest ink must
-  be ≥ 480 px from the bottom at full size.
+  be ≥ 480 px from the bottom at full size, and side margins ≥ 60 px. The
+  box check missed "300 m" at 55 px from the edge (mil-angle): measure.
 
 ## 6. Units and words
 - Metric only on screen (Jacek, 2026-10-05). Imperial sources are converted

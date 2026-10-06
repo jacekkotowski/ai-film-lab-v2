@@ -34,6 +34,15 @@ Done when: one clip whose length equals the narrated picture's span (measured). 
 - a small library of reusable pieces (compass rose, mil circle, table, code block)
   → `aimanim/` only after the same piece appeared in 2 scenes
   (first one: the Aurora MIL reticle, `aimanim/aurora.py`, zero-reticle + zero-range)
+- [x] 2026-10-06: the reticle drawn by `kit.reticle` (whole or a window), the
+      TARGET → MIL → FORMULA → RESULT rows by `kit.chain`, a man by `kit.man`;
+      zero-reticle and zero-range switched, stills pixel-identical. Reference
+      stills of the reticle and its parts: `docs/aurora/`
+
+## Film 2 — mil-measure (what the Aurora MIL measures), from Jacek's plan
+- [x] 8 slides, specs with the maths, stills, script; published 2026-10-06
+- [ ] Jacek reads the script's notes (corrections to the plan), narrates, `film go`
+- [ ] `clips`
 - R / Excel code shown as it is typed (code slides)
 
 ## Ideas for scenes (Jacek's subjects)

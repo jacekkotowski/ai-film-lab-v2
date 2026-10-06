@@ -18,8 +18,10 @@ import math
 import sys
 from pathlib import Path
 
-from manim import Group, Mobject, Text, VGroup
+from manim import (Arrow, Circle, Dot, Group, Line, Mobject, RoundedRectangle,
+                   Text, VGroup, VMobject)
 
+from aimanim import aurora as _aurora
 from aimanim import beats, frame
 
 # Measured at frame.MIN_FONT (56) in Manim's default font, in frame units
@@ -73,6 +75,87 @@ def toward(turns: float) -> tuple[float, float, float]:
     and shifts a label sideways."""
     a = 2 * math.pi * turns
     return (round(math.sin(a), 9), round(math.cos(a), 9), 0.0)
+
+
+# ---- the Aurora MIL reticle and the measuring chain -------------------------
+# Every slide about the reticle draws it from aimanim/aurora.py through
+# these, so the slides cannot drift apart. Reference stills of the whole
+# reticle and its enlarged parts: docs/aurora/ (README.md says which is which).
+
+def mil_to(scale: float, aim) -> callable:
+    """A function (x, y) in mil -> a point on the slide: the aim point
+    (chevron tip) at `aim`, `scale` frame units per mil."""
+    def at(x, y):
+        return (aim[0] + x * scale, aim[1] + y * scale, 0)
+    return at
+
+
+def reticle(at, window=None, stroke=3, dot_r=0.035, heavy=1.8,
+            numbers=True, color=frame.INK) -> VGroup:
+    """The Aurora MIL reticle, to scale: VGroup(lines, dots, numbers).
+    `window` = (x0, x1, y0, y1) in mil draws only that part (enlargements).
+    Sizes that read on the phone: whole reticle at 0.27/mil -> stroke 3,
+    dot_r 0.035 (zero-reticle); centre at 1.6/mil -> stroke 6, dot_r 0.08
+    (zero-range)."""
+    lines = [Line(at(*a), at(*b)) for a, b in _aurora.segments(window)]
+    if window is None or (window[0] <= 0 <= window[1] and window[2] <= 0 <= window[3]):
+        lines.append(VMobject().set_points_as_corners([at(*p) for p in _aurora.chevron()]))
+    dots = [Dot(at(x, y), radius=dot_r * (heavy if h else 1), color=color)
+            for x, y, h in _aurora.dots(window)]
+    nums = []
+    if numbers:
+        for side in (-1, 1):
+            for x, s in _aurora.NUMBERS.items():
+                if window is None or window[0] <= side * x <= window[1]:
+                    nums.append(text(s, at(side * x, 0)[0],
+                                     at(0, _aurora.stadia_mil(x) / 2)[1] + 0.12, color))
+    return VGroup(VGroup(*lines).set_stroke(color, width=stroke),
+                  VGroup(*dots), VGroup(*nums))
+
+
+def man(height: float, feet, color=frame.ACCENT, width: float = 0.2) -> VGroup:
+    """A standing man, `height` frame units tall from `feet` (x, y) up to
+    the top of his head: head 0.13 of the height, body `width` of it."""
+    head_r = height * 0.065
+    body_h = height - 2 * head_r - height * 0.02
+    body = RoundedRectangle(width=height * width, height=body_h,
+                            corner_radius=min(height * 0.08, body_h / 2))
+    body.move_to((feet[0], feet[1] + body_h / 2, 0))
+    head = Circle(radius=head_r).move_to((feet[0], feet[1] + height - head_r, 0))
+    return VGroup(body, head).set_fill(color, opacity=0.8).set_stroke(width=0)
+
+
+# The worked example in one picture language for the whole film:
+# TARGET -> MIL READING -> FORMULA -> RESULT, top to bottom.
+CHAIN_COLORS = (frame.ACCENT, frame.SECOND, frame.INK, frame.ACCENT)
+CHAIN_STEP = 1.25     # baseline to baseline at MIN_FONT: arrows 0.35 long
+# Measured at MIN_FONT: tallest glyph 0.59 above the baseline, deepest
+# descender 0.17 below ("per second", "7.2 km/h"). Scale with the size.
+ASCENT, DESCENT = 0.59, 0.17
+
+
+def chain(items, top_baseline: float, x: float = 0.0, step: float = CHAIN_STEP,
+          colors=CHAIN_COLORS, size: int = frame.MIN_FONT) -> VGroup:
+    """Rows of text, one under the other, a short arrow between each.
+    Returns VGroup(row 0, row 1, ...); row i > 0 is VGroup(arrow, text),
+    so each row can appear on its own word. The arrows are placed from the
+    baselines, not the text boxes, so all are equally long whether a row
+    has a descender ("per") or not; at step 1.1 a box-placed arrow under
+    "10 MIL per second" shrank to a dot (mil-speed)."""
+    k = size / frame.MIN_FONT
+    below, above = DESCENT * k + 0.06, ASCENT * k + 0.08   # clear of both rows
+    rows = []
+    for i, s in enumerate(items):
+        b = top_baseline - i * step
+        t = text(s, x, b, colors[i % len(colors)], size)
+        if i == 0:
+            rows.append(VGroup(t))
+            continue
+        a = Arrow((x, b + step - below, 0), (x, b + above, 0), buff=0,
+                  stroke_width=4, color=frame.DIM,
+                  max_tip_length_to_length_ratio=0.5, tip_length=0.15)
+        rows.append(VGroup(a, t))
+    return VGroup(*rows)
 
 
 # ---- the steps, on the words ------------------------------------------------

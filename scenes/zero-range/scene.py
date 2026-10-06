@@ -10,7 +10,7 @@ import math
 import sys
 from pathlib import Path
 
-from manim import Dot, FadeIn, Line, Scene, VGroup, VMobject
+from manim import FadeIn, Line, Scene, VGroup
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
@@ -46,16 +46,11 @@ BEAT_LINES = [0, 1, 2]
 RUN_TIMES = [1.0, 1.0, 1.5]
 
 
-def at(x, y):
-    return (AIM[0] + x * S, AIM[1] + y * S, 0)
+at = kit.mil_to(S, AIM)
 
 
 def centre() -> VGroup:
-    lines = [Line(at(*a), at(*b)) for a, b in aurora.segments(WINDOW)]
-    lines.append(VMobject().set_points_as_corners([at(*p) for p in aurora.chevron()]))
-    dots = [Dot(at(x, y), radius=0.08, color=frame.INK)
-            for x, y, _ in aurora.dots(WINDOW)]
-    return VGroup(VGroup(*lines).set_stroke(frame.INK, width=6), *dots)
+    return kit.reticle(at, WINDOW, stroke=6, dot_r=0.08, numbers=False)
 
 
 def band(i: int) -> VGroup:

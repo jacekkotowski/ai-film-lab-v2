@@ -11,6 +11,11 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    `slide-layout` skill** (sizes, rules, the kit). If Manim has not been
    measured yet (PLAN step 1), say so in the first line.
 
+1a. **Reuse before drawing.** `docs/films/README.md` says what every slide
+   made so far shows; a subject with its own skill (sights and reticles:
+   `shooting-optics`) has its checked numbers and its reusable drawings
+   there (the Aurora: `docs/aurora/`, `kit.reticle`, `kit.chain`).
+
 1b. **Which film?** Every slide belongs to a film: `films/<film>.txt`
    (one line per slide: picture number, scene). New film → new file.
    Add the slide's line now, with its picture number among his photos.

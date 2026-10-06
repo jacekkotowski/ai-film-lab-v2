@@ -11,16 +11,20 @@ yards BDC Aurora that most web pictures show (`shooting-optics` §4).
   `VGroup(lines, dots, numbers)`.
 - **These stills:** `scenes/_aurora/scene.py`, one class each, 1080×1920, made by
   `kit.reticle` itself, so they are what a slide gets with the same numbers.
-  Re-render: `uv run --extra render manim -s -r 1080,1920 --media_dir scenes/_aurora/out scenes/_aurora/scene.py Full Centre Chevron Stadia Line`
+  Re-render: `uv run --extra render manim -s -r 1080,1920 --media_dir scenes/_aurora/out scenes/_aurora/scene.py Full Centre Chevron Stadia Line Ladder Close Wide Pieces`
   then copy `scenes/_aurora/out/images/scene/<Class>_ManimCE_v0.21.0.png` here.
 
 | still | what | units/mil | aim point | window (mil) | stroke, dot r | used by |
 |---|---|---|---|---|---|---|
 | `full.png` | whole reticle, numbers 6-4-2 | 0.27 (max: the "2" at 14 mil reaches SIDE at 0.28) | (0, 3.3) | — | 3, 0.035 | zero-reticle, mil-unit, mil-finale |
-| `centre.png` | chevron, ladder, MIL grid 2–10 | 0.74 | (0, 5.6) | ±5.3, −10.3…0.4 | 4, 0.06 | — |
+| `centre.png` | chevron, ladder, MIL grid 2–10 | 0.74 | (0, 5.6) | ±5.3, −10.3…0.4 | 4, 0.06 | — (holds: drop / wind, not yet drawn) |
 | `chevron.png` | chevron and bars 2–4 (width ranging) | 1.6 | (0, 4.4) | ±1.3, −4.4…0.35 | 6, 0.08 | zero-range |
 | `stadia.png` | right side: line 6–14, man stadia, numbers | 0.85 | (−8.4, 1.5) | 5.5…14.3, ±5 | 4, 0.06 | — |
 | `line.png` | horizontal line, dots 1–5 (5th heavy) | 0.6 | (0, 1.5) | ±6.6, ±0.5 | 4, 0.06 | — |
+| `ladder.png` | chevron and centre ladder to 6 mil, no dots: heights | 0.7 | (0, 5.3) | ±0.9, −6.1…0.2 | 5, 0.07 | mil-man |
+| `close.png` | line dots ±3 and chevron, big: a width in whole mils | 1.1 | (0, 3.9) | ±3.4, −0.85…0.4 | 6, 0.09 | mil-plate |
+| `wide.png` | horizontal line ±10.6, stadia cut: movement across | 0.37 | (0, 4.8) | ±10.6, ±0.7 | 4, 0.05 | mil-speed (×3, one per moment) |
+| `pieces.png` | `kit.man` (heights 4/3/2/1) and `kit.chain` | — | — | — | — | mil-man; the chain on 5 slides |
 
 The parts, the manual's names:
 - **Chevron** ("Infinitely Precise Chevron"): its tip is the aim point; 1.667 mil wide
@@ -37,3 +41,15 @@ The parts, the manual's names:
 
 Left out at every size so far: the small brackets at the 5th and 10th mil, the
 half-mil ticks, the grid's own "5" and "0".
+
+## Other pieces for reticle films (in `aimanim/kit.py`)
+- **`kit.chain(rows, top, step=)`** — the film's one picture language:
+  TARGET → MIL READING → FORMULA → RESULT, colours ACCENT / SECOND / INK /
+  ACCENT. Step 1.25 at 56 (1.4 at 64); give `step=` by name.
+- **`kit.man(height, feet)`** — a 1.78 m man is `kit.man(mil * scale, ...)`;
+  head on the chevron's tip, feet on the ladder bar (mil-man).
+- **A target behind the reticle** (plate, car): `set_z_index(-1)`, fill
+  opacity 0.35–0.6. The car is drawn in `scenes/mil-speed/scene.py`
+  (`car()`); move it to kit if a second slide needs it.
+
+What each film already shows: `docs/films/README.md`.

@@ -1,6 +1,6 @@
 ---
 name: shooting-optics
-description: Sport shooting optics calculations, checked and metric -- MOA and mil, clicks per correction, zeroing from a group, the Primary Arms ACSS Aurora MIL reticle (its exact geometry, ranging by width and height), the Vortex Triumph and PA SLx 5x MicroPrism facts, and the metric conversions that come out sensible. Use when Jacek writes a script or slide about a rifle sight, reticle, zeroing, clicks, MOA, mil, ranging, holdovers, leads or turrets.
+description: Sport shooting optics calculations, checked and metric -- MOA and mil, clicks per correction, zeroing from a group, the Primary Arms ACSS Aurora MIL reticle (its exact geometry, reusable drawings, ranging by width and height, speed, drop and wind in mils), the Vortex Triumph and PA SLx 5x MicroPrism facts, and the metric conversions that come out sensible. Use when Jacek writes a script or slide about a rifle sight, reticle, zeroing, clicks, MOA, mil, ranging, target speed, bullet drop, wind drift, holdovers, leads or turrets.
 ---
 
 # Shooting optics: the numbers we have checked
@@ -148,6 +148,14 @@ target, or a target at double the distance.
   manual's numbers, and use the picture only where the manual gives none.
 - One sentence per animation step. Split long script sentences; numbers in
   narration are said the way they are rounded on screen.
+- **Check a pasted plan's physics before drawing it** (mil-measure,
+  2026-10-06; three of eight sections needed a correction): stadia numbers
+  read as mils; ½gt² read as the hold (it is below the bore line); wind
+  drift explained as "more time to push" (it is the lag). Say each
+  correction in the script's notes, and keep his structure.
+- **Chosen numbers are labelled chosen** (the car's 2 m/s, the 0.5 s and
+  1 s, the 30 cm drift) in spec.md and the script notes; never presented
+  as a cartridge's data.
 
 ## 9. What the reticle measures (mil-measure film, 2026-10-06)
 
@@ -175,7 +183,19 @@ One formula, four uses; the film's rows are TARGET → MIL → FORMULA → RESUL
   a bullet without a measured t. Conversion, exact: 30 cm at 300 m =
   30 × 10 ÷ 300 = **1.0 mil**, held upwind.
 
-## 10. Growing this file
+## 10. Reuse: what exists already
+
+- **Films and their slides**, one contact sheet each: `docs/films/`
+  (README.md lists every slide's one idea). Check there before making a
+  slide that may exist.
+- **The reticle and its parts**, with the scale and window each slide used:
+  `docs/aurora/` (README.md). Draw with `kit.reticle`, never by hand.
+- **The worked-example rows** TARGET → MIL → FORMULA → RESULT: `kit.chain`;
+  **a man of known height**: `kit.man` (docs/aurora/pieces.png).
+- **Next films, natural**: holds on the MIL grid (drop and wind together),
+  leads once a time of flight is measured, MOA vs mil.
+
+## 11. Growing this file
 
 A new optic, reticle or calculation: add the formula, the computed number
 (computed, not typed from memory), the source with its date, and the

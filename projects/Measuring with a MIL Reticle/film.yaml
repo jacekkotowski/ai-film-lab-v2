@@ -102,6 +102,7 @@ shots:
 
   - id: s02
     src: media/01_mil-unit.png
+    clip: clips/01_mil-unit.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "00:03.60"
     out: "00:14.25"
@@ -128,6 +129,7 @@ shots:
 
   - id: s03
     src: media/02_mil-man.png
+    clip: clips/02_mil-man.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "00:18.60"
     out: "00:50.05"
@@ -189,6 +191,7 @@ shots:
 
   - id: s04
     src: media/03_mil-plate.png
+    clip: clips/03_mil-plate.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "00:54.65"
     out: "01:09.45"
@@ -215,6 +218,7 @@ shots:
 
   - id: s05
     src: media/04_mil-angle.png
+    clip: clips/04_mil-angle.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "01:10.60"
     out: "01:30.05"
@@ -256,6 +260,7 @@ shots:
 
   - id: s06
     src: media/05_mil-speed.png
+    clip: clips/05_mil-speed.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "01:34.65"
     out: "02:01.40"
@@ -312,6 +317,7 @@ shots:
 
   - id: s07
     src: media/06_mil-drop.png
+    clip: clips/06_mil-drop.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "02:07.20"
     out: "02:39.05"
@@ -368,6 +374,7 @@ shots:
 
   - id: s08
     src: media/07_mil-wind.png
+    clip: clips/07_mil-wind.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "02:43.75"
     out: "03:08.85"
@@ -414,6 +421,7 @@ shots:
 
   - id: s09
     src: media/08_mil-finale.png
+    clip: clips/08_mil-finale.mp4
     voice: analysis/tight/voiceover_20261006-211016__tight_fc93591d.wav
     in: "03:10.50"
     out: "03:21.70"

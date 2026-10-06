@@ -1,0 +1,106 @@
+{
+  "lines": [
+    {
+      "text": "This is the SLx's Aurora MIL reticle.",
+      "start": 0.24,
+      "end": 2.83,
+      "words": [
+        0.24,
+        0.46,
+        0.66,
+        0.85,
+        1.46,
+        1.94,
+        2.18
+      ]
+    },
+    {
+      "text": "The tip of the chevron is the aim point.",
+      "start": 3.24,
+      "end": 5.15,
+      "words": [
+        3.24,
+        3.38,
+        3.6,
+        3.74,
+        3.84,
+        4.18,
+        4.45,
+        4.72,
+        4.94
+      ]
+    },
+    {
+      "text": "The numbered bars range a man one metre seventy-eight tall:",
+      "start": 5.63,
+      "end": 9.16,
+      "words": [
+        5.63,
+        5.85,
+        6.21,
+        6.61,
+        7.13,
+        7.31,
+        7.47,
+        7.73,
+        7.97,
+        8.65
+      ]
+    },
+    {
+      "text": "the six fits him at 550 metres.",
+      "start": 9.64,
+      "end": 11.77,
+      "words": [
+        9.64,
+        9.76,
+        10.36,
+        10.53,
+        10.85,
+        11.18
+      ]
+    },
+    {
+      "text": "The dots below are one mil apart,",
+      "start": 13.0,
+      "end": 14.78,
+      "words": [
+        13.0,
+        13.06,
+        13.23,
+        13.55,
+        13.97,
+        14.27,
+        14.42
+      ]
+    },
+    {
+      "text": "for wind and drop holds.",
+      "start": 15.12,
+      "end": 16.6,
+      "words": [
+        15.12,
+        15.25,
+        15.57,
+        15.9,
+        16.19
+      ]
+    },
+    {
+      "text": "And the heavy dot marks five mils.",
+      "start": 17.04,
+      "end": 19.27,
+      "words": [
+        17.04,
+        17.14,
+        17.26,
+        17.47,
+        17.68,
+        18.02,
+        18.67
+      ]
+    }
+  ],
+  "total": 19.92,
+  "source": "film.yaml s05"
+}

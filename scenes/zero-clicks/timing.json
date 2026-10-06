@@ -1,0 +1,114 @@
+{
+  "lines": [
+    {
+      "text": "Divide each distance by what one click moves.",
+      "start": 0.24,
+      "end": 3.06,
+      "words": [
+        0.24,
+        0.7,
+        0.9,
+        1.34,
+        1.7,
+        2.1,
+        2.31,
+        2.57
+      ]
+    },
+    {
+      "text": "At 100 metres the Triumph's half-MOA click moves",
+      "start": 3.68,
+      "end": 6.98,
+      "words": [
+        3.68,
+        3.78,
+        4.18,
+        4.47,
+        4.86,
+        5.48,
+        5.82,
+        6.17,
+        6.55
+      ]
+    },
+    {
+      "text": "the impact 1.45 centimetres,",
+      "start": 6.98,
+      "end": 9.15,
+      "words": [
+        6.98,
+        7.38,
+        7.68,
+        7.92,
+        8.58
+      ]
+    },
+    {
+      "text": "and the SLx's quarter-MOA click moves it 0.73.",
+      "start": 9.8,
+      "end": 13.41,
+      "words": [
+        9.8,
+        9.99,
+        10.17,
+        10.74,
+        11.02,
+        11.43,
+        11.66,
+        12.04,
+        12.3,
+        12.73
+      ]
+    },
+    {
+      "text": "A group five centimetres low and four and a half to the left",
+      "start": 14.2,
+      "end": 17.55,
+      "words": [
+        14.2,
+        14.33,
+        14.8,
+        15.02,
+        15.4,
+        15.86,
+        16.15,
+        16.42,
+        16.82,
+        17.06,
+        17.22
+      ]
+    },
+    {
+      "text": "needs about three clicks each way on the Triumph,",
+      "start": 17.8,
+      "end": 20.74,
+      "words": [
+        17.8,
+        18.04,
+        18.49,
+        18.89,
+        19.21,
+        19.58,
+        19.9,
+        20.18,
+        20.33
+      ]
+    },
+    {
+      "text": "but seven and six on the SLx.",
+      "start": 21.04,
+      "end": 23.81,
+      "words": [
+        21.04,
+        21.22,
+        21.61,
+        22.1,
+        22.52,
+        22.95,
+        23.13
+      ]
+    }
+  ],
+  "total": 24.56,
+  "source": "film.yaml s03"
+}

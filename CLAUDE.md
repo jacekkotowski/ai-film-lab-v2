@@ -41,6 +41,7 @@ in time with a video.
 | `slide-layout`   | before writing or fixing any scene: sizes, rules, the kit; grows with every fix |
 | `time-to-words`  | I have narrated over the still → the clip, timed to my sentences |
 | `deliver`        | the clip is approved → say exactly what to copy where           |
+| `shooting-optics` | a script or slide about sights, reticles, zeroing, MOA, mil, ranging: the checked numbers |
 
 ## Commands
 

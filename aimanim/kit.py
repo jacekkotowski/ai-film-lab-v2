@@ -168,12 +168,16 @@ def run(scene, here: Path, steps, beat_lines, run_times, background=(),
     (title, grid...): it may lie under other things."""
     scene.add(*background)
     p = beats.for_scene(here, beat_lines, run_times, beat_words)
-    for wait, step, rt in zip(p.waits, steps, run_times):
-        if wait >= beats.MIN_WAIT:
-            scene.wait(wait)
+    # Waits in whole frames (beats.in_frames): Manim rounds each wait down,
+    # and the clips came out up to 4.6 frames short. n + 0.5 frames of
+    # seconds is drawn as exactly n frames.
+    waits, tail = beats.in_frames(p, run_times, frame.FPS)
+    for n, step, rt in zip(waits, steps, run_times):
+        if n:
+            scene.wait((n + 0.5) / frame.FPS)
         scene.play(*step(), run_time=rt)
-    if p.tail >= beats.MIN_WAIT:
-        scene.wait(p.tail)
+    if tail:
+        scene.wait((tail + 0.5) / frame.FPS)
     for note in check(scene.mobjects, under=background):
         print(f"[layout] {note}", file=sys.stderr)
 

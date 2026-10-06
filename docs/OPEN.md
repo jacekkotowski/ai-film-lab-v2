@@ -10,10 +10,12 @@ Newest first. An entry stays until it is measured or fixed AND Jacek has seen it
 - 2026-10-06 mil-angle prints 4 "touches a Line" notes: the cone's diagonal
   edges (box check). False alarm, checked on the still.
 
-- 2026-10-05 Caption zone ASSUMED, not measured: the bottom quarter (480 px
-  of 1920) is kept clear (`frame.BOTTOM` = −4). Jacek: captions sit within
-  1/4, maybe 1/5, of the height. ai-film-lab's real caption box is not
-  read from here (decision 0001). zero-clicks is closest: 496 px.
+- 2026-10-06 Caption zone MEASURED (was assumed): film-lab's captions are
+  all `lower_third`. Their top was at 72 % = 1382 px, a 3-line caption to
+  1752 px, so it reached 538 px from the bottom, into slides that keep only
+  480 px clear. Lowered one line in film-lab (eabe2af, Jacek's request):
+  1490-1860 px, so now 430 px from the bottom, 50 px inside our 480. Not
+  yet seen by Jacek in a draft.
 - 2026-10-06 back-azimuth is a TEST slide, in no film (Jacek): kept as it
   is, layout notes and all, as a known-bad case for the layout check
   (`kit.run` prints 8 notes on it). Its 1080×1920 clip in `out/` predates

@@ -26,9 +26,11 @@ description: After Jacek has narrated a film's slides in ai-film-lab (and run `f
    ...after its sentence` / `runs past the words` -> shorten that step's
    RUN_TIMES. `[layout]` -> slide-layout. Then run `clips` again.
 
-4. **Report as a table:** slide, its length, the clip's length (they
-   differ by at most 2 frames: film-lab holds the last frame), and which
-   word each step starts on. Then he renders a draft in film-lab
+4. **Report as a table:** slide, its length, the clip's length (under 1
+   frame shorter since `beats.in_frames`, 2026-10-06; film-lab holds the
+   last frame), and which word each step starts on, and whether that time
+   is the word's own or an estimate (a caption line whose word times do not
+   match its words: he dropped or merged a word; `beats._word_time`). Then he renders a draft in film-lab
    (`film draft`) and watches.
 
 ## Done when

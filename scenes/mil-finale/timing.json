@@ -1,0 +1,44 @@
+{
+  "lines": [
+    {
+      "text": "So this reticle measures size, distance,",
+      "start": 0.24,
+      "end": 3.19,
+      "words": [
+        0.24,
+        0.43,
+        1.1,
+        1.62,
+        2.02,
+        2.93
+      ]
+    },
+    {
+      "text": "angle, movement and trajectory.",
+      "start": 3.54,
+      "end": 5.46,
+      "words": [
+        3.54,
+        4.15,
+        4.37,
+        4.85
+      ]
+    },
+    {
+      "text": "A MIL reticle is a measuring instrument.",
+      "start": 6.1,
+      "end": 8.46,
+      "words": [
+        6.1,
+        6.2,
+        6.39,
+        6.9,
+        7.3,
+        7.49,
+        8.0
+      ]
+    }
+  ],
+  "total": 9.36,
+  "source": "film.yaml s09"
+}

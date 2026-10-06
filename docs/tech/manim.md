@@ -24,6 +24,11 @@ and 0.5 s per s at 1080×1920.
 - Output paths: `out/images/scene/Slide_ManimCE_v0.21.0.png` (the still;
   half and full size overwrite each other — same name) and
   `out/videos/scene/<H>p24/Slide.mp4` (half and full size kept apart).
+- A `wait` is drawn as `int(seconds × fps)` frames (rounded DOWN); a
+  `play` as `len(np.arange(0, run_time, 1/fps))` (0.5 / 1.0 / 1.5 s = 12 / 24 /
+  36). Eight mil-measure clips came out 1.0–4.6 frames short of their slides;
+  with the waits counted in whole frames (`beats.in_frames`) each is
+  floor(slide × 24) frames, under 1 frame short (ffprobe, 2026-10-06).
 - `pydub` prints `SyntaxWarning: invalid escape sequence` on every run. Harmless noise.
 
 ## TinyTeX for MathTex (installed 2026-10-05, Jacek's yes)

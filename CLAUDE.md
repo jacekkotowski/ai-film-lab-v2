@@ -20,7 +20,11 @@ stage 2  ai-3d-studio   effects and navigation over the finished film
   (decision 0003): its stills into `media/NN_<scene>.png`, my words into
   `narration.txt` / `script_intro.txt` / `script_outro.txt` (never over a
   file I changed there), clips into `clips/`, and `clip:` lines into its
-  film.yaml. Nothing else in ai-film-lab. I never copy files by hand.
+  film.yaml. I never copy files by hand.
+- **ai-film-lab's code may be changed from here** (standing permission,
+  Jacek 2026-10-06), by ITS rules: its `ffilm/CLAUDE.md` and
+  `change-the-machine` skill, a test first, its whole suite green, a
+  commit there of only the files I changed.
 - **Timing comes from film.yaml**: each slide's captions are in the film's
   own seconds (after pause-cutting and speed), read by film-lab's loader.
 - The loop: I describe → slides + script → `publish` → I narrate and run
@@ -92,8 +96,7 @@ same message. Unchecked parts go in the FIRST line.
   except `aimanim/kit.py`, the one module that imports Manim (decision 0002).
 - Add effects, transitions or polish I didn't ask for.
 - Render the full-size clip unless I ask.
-- Edit ai-film-lab or ai-3d-studio from here. A need goes into
-  ai-film-lab's `docs/OPEN.md`, and only when I agree.
+- Edit ai-3d-studio from here. (ai-film-lab: allowed, see Stage 0 above.)
 
 ## Where knowledge lives
 

@@ -23,7 +23,8 @@ LAST = ["A MIL reticle", "is a measuring", "instrument."]
 # Safe area: x in [-SIDE, SIDE] = [-4, 4]; y in [BOTTOM, TOP] = [-4, 7].
 S, AIM = 0.27, (0.0, 4.9)            # no title: the "2"s reach 6.93
 WORD_TOP, WORD_STEP = 1.4, 0.7       # capitals, no descenders
-LAST_TOP, LAST_STEP = -2.3, 0.75     # "instrument." ends on -3.8
+LAST_TOP, LAST_STEP = -2.3, 0.8      # "instrument." ends on -3.9; at 0.75 "measuring"
+                                     # touched it (descender 0.17 + capitals 0.59 > 0.75)
 
 # ---- timing --------------------------------------------------------------
 BEAT_WORDS = ["size", "distance", "angle", "movement", "trajectory", "MIL|mil"]

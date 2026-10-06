@@ -13,6 +13,7 @@ and neither should need Manim installed to know when to move.
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 import wave
@@ -109,6 +110,33 @@ def plan(starts: list[float], run_times: list[float], total: float) -> Plan:
     return Plan(waits, round(max(0.0, total - t), 3), round(late, 3), notes)
 
 
+def play_frames(run_time: float, fps: int) -> int:
+    """Frames Manim draws for a play: len(np.arange(0, run_time, 1/fps))."""
+    return math.ceil(run_time / (1 / fps))
+
+
+def in_frames(p: Plan, run_times: list[float], fps: int) -> tuple[list[int], int]:
+    """The plan's waits and its tail in WHOLE frames, so the clip ends on
+    the slide's last whole frame.
+
+    Manim draws a wait as int(seconds * fps) frames: it drops the part
+    frame every time. Eight clips of mil-measure came out 1.0-4.6 frames
+    short of their slides (ffprobe, 2026-10-06); the finale, with six
+    waits, lost the most. Here every step still starts on its word,
+    rounded to the nearest frame, the error is not carried on, and the
+    last frame is the last whole frame the words fill.
+    """
+    waits, t, done = [], 0.0, 0
+    for w, rt in zip(p.waits, run_times):
+        t += w
+        n = max(0, round(t * fps) - done)
+        waits.append(n)
+        done += n + play_frames(rt, fps)
+        t += rt
+    end = math.floor((t + p.tail) * fps + 1e-6)
+    return waits, max(0, end - done)
+
+
 def placeholder(run_times: list[float]) -> tuple[list[float], float]:
     """Starts and a total for a scene nobody has narrated yet."""
     starts, t = [], 0.0
@@ -117,6 +145,21 @@ def placeholder(run_times: list[float]) -> tuple[list[float], float]:
         starts.append(t)
         t += rt
     return starts, t + PLACEHOLDER_GAP
+
+
+def _word_time(ln: Line, k: int, n: int) -> float:
+    """When word k of n (the script's text) is said. film-lab's captions
+    carry the script's words but times for the words he actually said:
+    where he dropped or merged a word the counts differ ("One mil covers
+    ten centimetres at a hundred metres": 9 words, 6 times). Then take the
+    time at the same place in the line -- an estimate, within a word or
+    two, where the line's start was seconds early for a late word
+    ("angle", last of 10, came 2.0 s early on mil-angle)."""
+    if len(ln.words) == n:
+        return ln.words[k]
+    if not ln.words:
+        return ln.start
+    return ln.words[min(len(ln.words) - 1, round(k * len(ln.words) / n))]
 
 
 def _token(w: str) -> str:
@@ -130,7 +173,8 @@ def starts_by_words(timing: Timing, cues: list[str]) -> tuple[list[float], list[
     ("Triumph" finds "Triumph's").
 
     Whisper's lines are pieces of speech, not the script's sentences, so
-    a sentence number is a guess; a word is not. A word never said is
+    a sentence number is a guess; a word is not. A line whose word times
+    do not match its words gives an estimate (`_word_time`). A word never said is
     returned in `missing` and its step starts with the one before.
     """
     starts, missing = [], []
@@ -143,8 +187,7 @@ def starts_by_words(timing: Timing, cues: list[str]) -> tuple[list[float], list[
             toks = [_token(w) for w in ln.text.split()]
             for k in range(wi if i == li else 0, len(toks)):
                 if toks[k] and any(toks[k].startswith(a) for a in alts):
-                    times = ln.words if len(ln.words) == len(toks) else []
-                    hit = (i, k, times[k] if times else ln.start)
+                    hit = (i, k, _word_time(ln, k, len(toks)))
                     break
             if hit:
                 break

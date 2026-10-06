@@ -1,6 +1,6 @@
 MIL-MEASURE -- draft script (2026-10-06), from Jacek's plan (~2:30)
-Sections: intro and outro are your camera takes (film-lab shows them as
-script_intro.txt / script_outro.txt); 01..08 are the slides you narrate over,
+Sections: intro is your camera take (film-lab shows it as script_intro.txt);
+no outro (Jacek, 2026-10-06: the finale slide ends the film). 01..08 are the slides you narrate over,
 one paragraph each (narration.txt).
 `python -m aimanim.film mil-measure publish` puts them there. A line starting
 with a section mark in brackets starts a section. One sentence per step.
@@ -49,11 +49,6 @@ Wind from the side makes the bullet drift. The drift is not the wind pushing for
 [08] The instrument   (slide mil-finale)
 
 So this reticle measures size, distance, angle, movement and trajectory. A MIL reticle is a measuring instrument.
-
-
-[outro]
-
-To sum up. One mil is ten centimetres at a hundred metres. A target's size times a thousand, divided by the mils it fills, is its distance. Mils per second times the distance, divided by a thousand, is its speed. Drop and wind come from the time of flight: take that from a ballistic app, and the reticle turns the centimetres into a hold in mils.
 
 
 -----------------------------------------------------------------------

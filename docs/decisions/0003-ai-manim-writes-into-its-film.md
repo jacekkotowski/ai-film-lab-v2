@@ -3,6 +3,8 @@
 **Status:** accepted 2026-10-05 (Jacek: "I will die copying pasting";
 "yes you can"; "you are allowed to modify ai-film-lab to play videos").
 Replaces 0001's "ai-manim never writes into ai-film-lab".
+Amended 2026-10-06: Jacek gave standing permission to change ai-film-lab's
+code from here too, by its own rules (CLAUDE.md, Stage 0).
 
 ## The question
 Copying stills and clips between the two repos by hand, renaming them,

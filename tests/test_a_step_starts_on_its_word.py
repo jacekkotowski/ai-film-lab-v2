@@ -34,6 +34,13 @@ class AStepStartsOnItsWord(unittest.TestCase):
     def test_punctuation_and_case_do_not_matter(self):
         self.assertEqual(beats.starts_by_words(self.T, ["BIPOD"])[0], [3.1])
 
+    def test_fewer_times_than_words_gives_the_time_at_the_same_place(self):
+        # said with a word dropped: 10 words in the script, 9 times heard
+        t = beats.Timing([line("A mil is not a length, it is an angle.", 2.32, 4.6,
+                               [2.32, 2.46, 2.6, 3.08, 3.24, 3.38, 4.0, 4.2, 4.34])], 5.0)
+        self.assertEqual(beats.starts_by_words(t, ["angle", "A"])[0], [4.34, 4.34])
+        self.assertEqual(beats.starts_by_words(t, ["length"])[0], [3.24])
+
     def test_a_line_without_word_times_gives_its_own_start(self):
         self.assertEqual(beats.starts_by_words(self.T, ["sandbag"])[0], [3.1])
 

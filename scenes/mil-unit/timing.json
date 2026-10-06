@@ -1,0 +1,48 @@
+{
+  "lines": [
+    {
+      "text": "This is the Aurora MIL reticle,",
+      "start": 0.24,
+      "end": 2.19,
+      "words": [
+        0.24,
+        0.47,
+        0.65,
+        0.84,
+        1.24,
+        1.59
+      ]
+    },
+    {
+      "text": "and in practice it is a small angle calculator.",
+      "start": 2.38,
+      "end": 4.89,
+      "words": [
+        2.38,
+        2.59,
+        2.75,
+        3.08,
+        3.47,
+        3.56,
+        3.66,
+        3.87,
+        4.25
+      ]
+    },
+    {
+      "text": "One mil covers ten centimetres at a hundred metres.",
+      "start": 5.52,
+      "end": 7.32,
+      "words": [
+        5.52,
+        5.67,
+        5.88,
+        6.22,
+        6.52,
+        6.92
+      ]
+    }
+  ],
+  "total": 8.92,
+  "source": "film.yaml s02"
+}

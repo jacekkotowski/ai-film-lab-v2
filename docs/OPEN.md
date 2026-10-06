@@ -13,5 +13,3 @@ Newest first. An entry stays until it is measured or fixed AND Jacek has seen it
 - 2026-10-05 FIXED, waiting for Jacek to see it — `MathTex` failed
   (`standalone.cls`, then `preview.sty`). Packages installed into TinyTeX
   (list: `docs/tech/manim.md`); one formula now renders. Only one tested.
-- 2026-10-05 ai-film-lab cannot play narration over a clip, so a clip
-  cannot replace the narrated still (PLAN step 3).

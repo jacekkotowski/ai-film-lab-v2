@@ -1,6 +1,7 @@
-# ai-manim plan (status 2026-10-05, trial run)
+# ai-manim plan (status 2026-10-06: the loop works end to end)
 
-Step 1 done 2026-10-05 (numbers: docs/tech/manim.md).
+Step 1 done 2026-10-05 (numbers: docs/tech/manim.md). Steps 2 and 3 done
+2026-10-06 on the zeroing film (5 slides), not on back-azimuth (a test slide).
 Every other number below is a target until a step says "measured".
 
 ## Step 1 — the trial (measure before building more)
@@ -13,24 +14,26 @@ One scene, `scenes/back-azimuth/` (already written, never run).
 - [x] the text is readable on the phone (Jacek, 2026-10-05: readable at MIN_FONT 56)
 Done when: four numbers in `docs/tech/manim.md`, and a go / no-go on MathTex.
 
-## Step 2 — the narration loop, end to end
-- [ ] Jacek narrates over `back-azimuth.png` in a film-lab project (as a picture)
-- [ ] `python -m aimanim.beats` writes timing.json from that project; check it by hand against the take
-- [ ] clip rendered to that timing; each step lands within 0.3 s of its sentence (measured
-      from the clip's frame times vs the transcript's line starts)
-Done when: one clip whose length equals the narrated picture's span (measured).
+## Step 2 — the narration loop, end to end (done 2026-10-06, zeroing film)
+- [x] Jacek narrates over the stills in their film-lab project (5 slides)
+- [x] `python -m aimanim.film zeroing clips` reads each slide's captions from film.yaml
+      and writes timing.json; every step found its word (no "not heard")
+- [x] clips rendered to that timing: each clip 1.4–2.4 frames shorter than its slide
+      (ffprobe), the last frame held by film-lab. Steps start on their WORD by
+      construction; not measured from the clip's frames against the audio
+Done when: one clip whose length equals the narrated picture's span (measured). Yes.
 
-## Step 3 — the swap in ai-film-lab (needs Jacek's go-ahead there)
-ai-film-lab cannot yet play narration over a clip: one `in`/`out` serves
-both (`ffilm/spec.py`, Shot.parse). Until it can, the clip cannot replace
-the still. Proposed there: `voice_in` / `voice_out` on a video shot.
-- [ ] Jacek agrees → entry in ai-film-lab `docs/OPEN.md`, done in a film-lab session
-- [ ] one draft of a film with the clip in place of the still
+## Step 3 — the swap in ai-film-lab (done 2026-10-06)
+- [x] film-lab plays a clip in place of a slide's picture: `clip:` (2e7356a)
+- [x] one draft of a film with the clips in place of the stills — Jacek: "they
+      played", slide 04 legible on the phone. On the way: slides got no captions
+      from `film go` (shortened narration not recognised) — fixed there, 7e43083
 
 ## Later, only if used twice
-- word-level beats (film-lab's transcript has sentence times only)
+- [x] word-level beats: `beats.starts_by_words` (film-lab gives word times)
 - a small library of reusable pieces (compass rose, mil circle, table, code block)
   → `aimanim/` only after the same piece appeared in 2 scenes
+  (first one: the Aurora MIL reticle, `aimanim/aurora.py`, zero-reticle + zero-range)
 - R / Excel code shown as it is typed (code slides)
 
 ## Ideas for scenes (Jacek's subjects)

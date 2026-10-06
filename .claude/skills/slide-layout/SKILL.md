@@ -22,6 +22,7 @@ the layout check). Never copy an older scene's construct loop.
 | safe x | −4 … 4 (`SIDE`) | 0.5 unit margin each side |
 | safe y | −4 (`BOTTOM`) … 7 (`TOP`) | bottom quarter = captions (assumed, OPEN.md); 1 unit top |
 | text | ≥ `MIN_FONT` 56 | readable on Jacek's phone (checked 2026-10-05) |
+| fine drawing | lines width 3, dots r 0.035 at 0.27/mil | legible on his phone (zero-reticle, 2026-10-06) |
 | colours | INK, DIM, ACCENT (the thing explained), SECOND (what it's compared with) | |
 
 ## 3. Measured sizes at MIN_FONT (Manim default font) — plan with these

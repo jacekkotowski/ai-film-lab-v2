@@ -1,7 +1,7 @@
 """zero-range -- a 50 cm target fills a smaller mark the further it is.
 
-Content: spec.md. Slide 3b of 4 of the zeroing film. Mark WIDTHS are to
-scale; their vertical spacing is schematic (spec.md).
+Content: spec.md. Slide 5 of the zeroing film. The centre of the real
+Aurora MIL reticle (aimanim/aurora.py), enlarged, to scale.
 
     uv run --extra render manim -s -r 540,960 --media_dir scenes/zero-range/out scenes/zero-range/scene.py Slide
 """
@@ -10,15 +10,16 @@ import math
 import sys
 from pathlib import Path
 
-from manim import FadeIn, Line, Scene, Text, VGroup, VMobject
+from manim import Dot, FadeIn, Line, Scene, VGroup, VMobject
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
-from aimanim import frame, kit  # noqa: E402
+from aimanim import aurora, frame, kit  # noqa: E402
 
 # ---- content (from spec.md) ---------------------------------------------
 TARGET_CM = 50
-METRES = [300, 400, 500, 600]    # chevron, then the 2nd, 3rd, 4th MIL stadia
+METRES = [300, 400, 500, 600]        # the chevron, then bars 2, 3, 4
+BARS = [None, 2, 3, 4]               # mil below the aim point
 TITLE = "Ranging"
 
 
@@ -27,13 +28,12 @@ def width_mil(metres: float) -> float:
 
 
 # ---- layout --------------------------------------------------------------
-S = 2.4                          # frame units per mil
-MARK_X = -1.0                    # centre of the marks
-LABEL_X = 1.4                    # left edge of the "300 m" labels
-MARK_Y = [3.0, 1.4, -0.2, -1.8]  # base of the chevron, then the stadia (schematic)
-CHEVRON_H = 0.6
-BAND_GAP = 0.4                   # the target's width, drawn this far above its mark
-CAP = 0.15                       # half-height of the band's end caps
+S = 1.6                              # frame units per mil: 4.4 mil fills the free height
+AIM = (-0.8, 4.4)                    # the chevron's tip
+WINDOW = (-1.3, 1.3, -4.4, 0.35)     # the part of the reticle shown, mil
+LABEL_X = 1.5                        # left edge of the "300 m" labels
+BAND_GAP = 0.35                      # a 50 cm width, this far above its mark
+CAP = 0.15                           # half-height of the band's end caps
 
 # ---- timing --------------------------------------------------------------
 # Step i belongs to sentence BEAT_LINES[i] of the narration over this
@@ -46,42 +46,32 @@ BEAT_LINES = [0, 1, 2]
 RUN_TIMES = [1.0, 1.0, 1.5]
 
 
-def text(s, baseline, x, color=frame.INK, align="center"):
-    """Text with its baseline on y, centred on x (or starting at x). An
-    "H" is set after it to find the baseline (its bottom), then taken away."""
-    t = Text(s + "H", font_size=frame.MIN_FONT, color=color)
-    h = t[-1]
-    t.shift((0, baseline - h.get_bottom()[1], 0))
-    t.remove(h)
-    dx = x - (t.get_center()[0] if align == "center" else t.get_left()[0])
-    return t.shift((dx, 0, 0))
+def at(x, y):
+    return (AIM[0] + x * S, AIM[1] + y * S, 0)
 
 
-def mark(i: int) -> VMobject:
-    w, y = width_mil(METRES[i]) * S, MARK_Y[i]
-    if i == 0:                   # the chevron: a "^", as wide as its base
-        m = VMobject().set_points_as_corners([
-            (MARK_X - w / 2, y, 0), (MARK_X, y + CHEVRON_H, 0),
-            (MARK_X + w / 2, y, 0)])
-    else:
-        m = Line((MARK_X - w / 2, y, 0), (MARK_X + w / 2, y, 0))
-    return m.set_stroke(frame.INK, width=6)
+def centre() -> VGroup:
+    lines = [Line(at(*a), at(*b)) for a, b in aurora.segments(WINDOW)]
+    lines.append(VMobject().set_points_as_corners([at(*p) for p in aurora.chevron()]))
+    dots = [Dot(at(x, y), radius=0.08, color=frame.INK)
+            for x, y, _ in aurora.dots(WINDOW)]
+    return VGroup(VGroup(*lines).set_stroke(frame.INK, width=6), *dots)
 
 
 def band(i: int) -> VGroup:
     """The 50 cm target's width, above mark i."""
     w = width_mil(METRES[i]) * S
-    y = MARK_Y[i] + (CHEVRON_H if i == 0 else 0) + BAND_GAP
-    l, r = MARK_X - w / 2, MARK_X + w / 2
+    y = at(0, 0 if i == 0 else -BARS[i])[1] + BAND_GAP
+    l, r = AIM[0] - w / 2, AIM[0] + w / 2
     return VGroup(Line((l, y, 0), (r, y, 0)),
                   Line((l, y - CAP, 0), (l, y + CAP, 0)),
                   Line((r, y - CAP, 0), (r, y + CAP, 0)),
                   ).set_stroke(frame.ACCENT, width=5)
 
 
-def metres_label(i: int) -> Text:
-    y = MARK_Y[i] + (CHEVRON_H / 2 if i == 0 else 0)
-    return text(f"{METRES[i]} m", y - 0.25, LABEL_X, frame.SECOND, align="left")
+def metres_label(i: int):
+    y = at(0, -aurora.CHEVRON_H / 2 if i == 0 else -BARS[i])[1]
+    return kit.text(f"{METRES[i]} m", LABEL_X, y - 0.25, frame.SECOND, align="left")
 
 
 class Slide(Scene):
@@ -93,11 +83,11 @@ class Slide(Scene):
 
     # ---- one method per step; each returns its animations ----------------
     def step_marks(self):
-        return [FadeIn(VGroup(*[mark(i) for i in range(len(METRES))]))]
+        return [FadeIn(centre())]
 
     def step_first(self):
         b = band(0)
-        size = text(f"{TARGET_CM} cm", b.get_top()[1] + 0.2, MARK_X, frame.ACCENT)
+        size = kit.text(f"{TARGET_CM} cm", AIM[0], b.get_top()[1] + 0.2, frame.ACCENT)
         return [FadeIn(VGroup(b, size)), FadeIn(metres_label(0))]
 
     def step_rest(self):

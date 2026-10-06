@@ -6,4 +6,5 @@ project: Zeroing a Rifle Sight
 01 zero-group
 02 zero-clicks
 03 zero-mil
-04 zero-range
+04 zero-reticle
+05 zero-range

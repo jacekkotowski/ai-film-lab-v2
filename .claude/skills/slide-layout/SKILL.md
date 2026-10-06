@@ -40,6 +40,10 @@ Consequences already paid for:
 - **labels beside a circle**: a 4-digit label is 1.9 wide, so a circle with
   labels outside at 3 and 9 o'clock needs radius ≤ 2.0 (back-azimuth).
 - **two columns**: centres at x = ±2.2 hold texts ≤ 3.3 wide (zero-clicks).
+- **a whole reticle across the width**: ±14 mil at 0.27 units/mil; at 0.28
+  the "2" above the 14-mil stadia pokes 0.10 past SIDE (zero-reticle).
+  Its centre, to range on, goes on its own slide at 1.6/mil (zero-range):
+  both on one slide left the labels crowded.
 - **bar scales**: pick units/cm so the longest bar fits the free height;
   10 cm at 0.6 = 6 units (zero-mil), 5 cm at 1.0 (zero-clicks).
 
@@ -54,6 +58,15 @@ Consequences already paid for:
   (0.3 units), else it hides the first.
 - **A label for each arrow** goes on the side away from other labels: two
   labels stacked read as a list, not as two arrows (zero-group).
+- **A name with an arrow**: start the arrow 0.62 above the name's
+  baseline (the text top is ~0.45); at 0.5 the check says the name touches
+  its own arrow (zero-reticle). Put names in the empty corners of the
+  drawing, not over it.
+- **A table under a label** (zero-reticle): leave a blank row between, or
+  it reads as part of the label above.
+- **One drawing on two slides**: its geometry goes in a stdlib module
+  (`aimanim/aurora.py`, in its own units) and each scene scales it, so the
+  slides cannot drift apart.
 - **Static things** (title, grid, axes) go in `background`: on screen before
   the first word, and labels may lie on them without a `[layout]` note.
 - At most 3 objects move in one step: group parts with `VGroup`.

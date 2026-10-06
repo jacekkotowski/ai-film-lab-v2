@@ -205,6 +205,17 @@ def render(scene: str, still: bool) -> list[str]:
             if ln.strip().startswith(("[beats]", "[layout]"))]
 
 
+def stale_stills(media: Path, film: Film, root: Path = ROOT) -> list[Path]:
+    """Stills this repo published earlier that the film no longer has: named
+    NN_<one of our scenes>.png, but not a current slide's name. A slide
+    renumbered 04 -> 05 would otherwise stay in film-lab as an extra
+    picture. Anything not named after one of our scenes is never touched."""
+    ours = {d.name for d in (root / "scenes").iterdir() if d.is_dir()}
+    now = {f"{s.name}.png" for s in film.slides}
+    return sorted(p for p in media.glob("[0-9][0-9]_*.png")
+                  if p.name not in now and p.stem[3:] in ours)
+
+
 # ---- the two moments -----------------------------------------------------------
 
 def publish(name: str, root: Path = ROOT) -> list[str]:
@@ -226,6 +237,10 @@ def publish(name: str, root: Path = ROOT) -> list[str]:
             report += [f"  {s.name}: {n}" for n in notes]
         shutil.copy2(png, proj / "media" / f"{s.name}.png")
         report.append(f"media/{s.name}.png  {png_size(png)[0]}x{png_size(png)[1]}")
+
+    for old in stale_stills(proj / "media", film, root):
+        old.unlink()
+        report.append(f"media/{old.name}  removed: no longer in the film")
 
     # the words, where the recording window shows them -- never over a
     # file Jacek changed in film-lab since the last publish

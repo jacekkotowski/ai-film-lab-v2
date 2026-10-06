@@ -1,4 +1,4 @@
-# zero-mil — slide 3a of 4 of the zeroing film
+# zero-mil — slide 3 of 5 of the zeroing film
 
 **Problem (Jacek's script, section 3, first sentence):** the SLx turrets
 click in MOA, but the Aurora MIL reticle is marked in mils. How do the

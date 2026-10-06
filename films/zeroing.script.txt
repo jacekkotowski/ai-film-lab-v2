@@ -25,7 +25,12 @@ Divide each distance by what one click moves. At 100 metres the Triumph's half-M
 The SLx turrets count in MOA. But its Aurora reticle counts in mils. And one mil equals about fourteen clicks.
 
 
-[04] (continued)   (slide zero-range)
+[04] (continued)   (slide zero-reticle)
+
+This is the SLx's Aurora MIL reticle. The tip of the chevron is the aim point. The numbered bars range a man one metre seventy-eight tall: the six fits him at 550 metres. The dots below are one mil apart, for wind and drop holds. And the heavy dot marks five mils.
+
+
+[05] (continued)   (slide zero-range)
 
 Its width marks also range targets. A target fifty centimetres wide fills the central arrowhead at 300 metres, and the next three marks at 400, 500 and 600 metres.
 
@@ -44,7 +49,11 @@ What changed from your draft, and why
   Say it as one if you prefer; the slide is then re-timed (BEAT_LINES = [0, 0, 0]).
 - 3 (ranging): 18 inches / yards -> 50 centimetres / metres. Same marks: 18 in is
   half a yard, 50 cm is half a metre (1.667 / 1.25 / 1.00 / 0.833 mil).
-- Outro: unchanged. Elevation counterclockwise = up is confirmed on your cap and in
-  the newer SLx manual. Windage counterclockwise = right: the newer manual says so,
-  your cap is NOT yet checked.
+- Outro: unchanged. Elevation counterclockwise = up and windage counterclockwise =
+  right: both confirmed on your caps (windage 2026-10-06) and in the newer SLx manual.
+- 4 (new, 2026-10-06): the real Aurora MIL reticle, its parts named. The numbered
+  bars are for a 5'10" man at hundreds of YARDS; in metres for a 1.78 m man they
+  are 180 / 370 / 550 m (rounded to 10 m, error under 2 %). No speed dots: those
+  are on the yards BDC reticle, not yours.
+- 5: the width marks now drawn from the real reticle; words unchanged.
 - Every number is checked: scenes/zero-*/spec.md (maths and sources).

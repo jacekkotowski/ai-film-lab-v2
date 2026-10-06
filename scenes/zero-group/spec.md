@@ -36,7 +36,7 @@ right (the script's "seven and five" was for 4 cm; now "seven and six").
 - Primary Arms SLx 5x MicroPrism, Aurora MIL product page and both manuals: 0.25 MOA click
 - newer "5x MicroPrism Optic Manual": UP = elevation counterclockwise,
   RIGHT = windage counterclockwise (older manual says the opposite);
-  Jacek's own elevation cap: counterclockwise = up (windage cap: not yet checked)
+  Jacek's own elevation cap: counterclockwise = up (windage cap: counterclockwise = right, Jacek checked 2026-10-06)
 - ACSS Aurora MIL manual: chevron and 2nd/3rd/4th MIL stadia = 18 in at 300/400/500/600 yd
 
 **Status:** written 2026-10-05.

@@ -2,6 +2,15 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-07 Unify phases 2 and 4 DONE on branch `unify` (2a07fe1 move,
+  then the guide). Every film's files are in `projects/<Title>/` (slides.txt,
+  slides.script.txt, slides.published.json, fly/). Gate: same 2,100 files and
+  sizes, texts, 67 video lengths; 25 of 26 checks identical (test_story: only
+  the path). Suites film 1043, slides 86, fly 10. FILM.bat's guide now offers
+  publish / clips / fly / "explain a problem" where due. Not yet seen by
+  Jacek: FILM.bat double-click, a FLY render from the menu. Left behind:
+  4 old stills in slides/films/zeroing-a-rifle-sight/ (untracked, 2026-10-05).
+  Not merged into main. Phase 3 (remove fallbacks, prose) after his next film.
 - 2026-10-07 Unify (one projects folder): phases 0 and 1 done on branch
   `unify` (tag `pre-unify` = main before it). The code of all three stages
   now looks in `<repo>/projects/` first, falls back to today's folders; no

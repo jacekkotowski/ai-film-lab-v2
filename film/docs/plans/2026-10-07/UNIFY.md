@@ -41,6 +41,14 @@ test, no shared package); go for phases 0 and 1. Phase 4 and decisions 5–6 not
   `fly.existing('screening-95-percent-accurate')` → `projects/Screening - 95 Percent Accurate/fly`.
   LEFT BEHIND: `slides/films/zeroing-a-rifle-sight/0[2-5]_*.png` (4 untracked stills,
   2026-10-05, not in the plan's list; Jacek's to keep or drop).
+- **Phase 4 DONE** (film code, test first): `guide.with_stages`, tests
+  `test_the_guide_knows_all_three_stages.py` (9), suite 1043. Offers: Put the slides in
+  (slides.txt, never published), Time the animation to your words (narration in
+  film.yaml, clips older), ...or fly it in 3D (final.mp4 current), ...or explain a
+  problem with animated slides (empty film → C). Read off the 25 real films: 20 finished
+  ones offer the flight; none of the 3 slides films is due publish or clips (all
+  published, clips newer). NOT run from the menu: a real FLY render, a publish, clips.
+- **Phase 3 (tidy) not started:** after Jacek has made one film in the new layout.
 - **Phase 2 dry run (before):** `python film/docs/plans/2026-10-07/move.py`:
   51 moves (CLAUDE.md, 23 film folders, 6 slides texts + 3 published.json,
   17 fly folders, .lastfilm), 16 stops.json rewritten, "no problems". Still to do in

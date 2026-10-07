@@ -475,6 +475,10 @@ def state(project: Path) -> dict:
             # the first click of Save.
             "voice": s.voice,
             "tout": s.tout,
+            # ai-manim's animation shown in place of a slide's picture
+            # (spec.Shot.clip). Not carried, the next Save turned every
+            # animated slide back into a still (2026-10-07).
+            "clip": s.clip,
             "frm": None if s.frm is None else vars(s.frm),
             "to": None if s.to is None else vars(s.to),
             "captions": [{"text": c.text, "at": c.at, "dur": c.dur, "pos": c.pos,
@@ -532,6 +536,8 @@ def dump(project: Path, data: dict) -> str:
         L.append("")
         L.append(f"  - id: s{i:02d}")
         L.append(f"    src: {s['src']}")
+        if s.get("clip"):
+            L.append(f"    clip: {s['clip']}")
         if s["kind"] == "video":
             tin = max(0.0, float(s.get("tin", 0.0)))
             L.append(f'    in: "{int(tin // 60):02d}:{tin % 60:05.2f}"')
@@ -556,12 +562,21 @@ def dump(project: Path, data: dict) -> str:
                          else tin + dur)
             L.append(f'    in: "{int(tin // 60):02d}:{tin % 60:05.2f}"')
             L.append(f'    out: "{int(tout // 60):02d}:{tout % 60:05.2f}"')
+            # The same reason as the take's `speed:` above. A slide's
+            # speed plays its words faster and spec.py shortens the
+            # picture by the same factor; dropping it kept the short
+            # picture and played the words at 1.0, so every slide's voice
+            # ran on under the next one (Screening, 2026-10-07: 1.25 lost
+            # from five slides on one Save).
+            speed = float(s.get("speed", 1.0))
+            if abs(speed - 1.0) > 0.001:
+                L.append(f"    speed: {speed}")
             # Only when the picture is being held for something other
             # than its words plus a breath, which is what a slide does
             # on its own. Written at a hundredth, not a tenth like a
             # plain photograph: a tenth here moves the picture off the
             # end of the words it is timed to.
-            if abs(dur - ((tout - tin) + VOICE_TAIL)) > 0.005:
+            if abs(dur - ((tout - tin) / speed + VOICE_TAIL)) > 0.005:
                 L.append(f"    duration: {dur:.2f}")
         else:
             L.append(f"    duration: {dur:.1f}")

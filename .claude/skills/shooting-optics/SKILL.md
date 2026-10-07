@@ -5,6 +5,8 @@ description: Sport shooting optics calculations, checked and metric -- MOA and m
 
 # Shooting optics: the numbers we have checked
 
+> Stage **slides/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `slides/`; commands are written to run from the repo root.
+
 Every number here was computed or read from a manual, and each one says
 where it came from. Use them as they are. Anything new gets the same
 treatment: a formula, the computed value, and a source, and then it goes

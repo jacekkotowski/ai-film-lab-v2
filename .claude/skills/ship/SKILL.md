@@ -7,6 +7,8 @@ argument-hint: "[project name]"
 
 # Ship: the final render
 
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
 `final` is the slow one: full resolution, original media, 4 motion
 sub-frames. This skill can only be started by the user typing `/ship`.
 Claude cannot pick it by itself, because `disable-model-invocation: true`
@@ -20,13 +22,13 @@ and tells them nothing new.
    changes the user hasn't watched in a peek or draft, say so and ask
    whether to render anyway.
 
-2. **Check once more.** `uv run film check -p NAME`. Read the title,
+2. **Check once more.** `uv run --directory film film check -p NAME`. Read the title,
    music and thumbnail lines aloud to the user. They are the three things
    nobody typed and nobody sees until the end.
 
 3. **Render.** Run it in the background; it takes minutes.
    ```
-   uv run film final -p NAME
+   uv run --directory film film final -p NAME
    ```
    When it finishes, the command itself writes `out/cover.jpg` and
    `out/upload.txt` (the words to paste), then **opens the `out/` folder
@@ -37,7 +39,7 @@ and tells them nothing new.
    printed; those are what YouTube would reject. If the user wants a
    different title on the cover:
    ```
-   uv run film cover -p NAME --title "…"
+   uv run --directory film film cover -p NAME --title "…"
    ```
 
 ## Done when

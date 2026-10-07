@@ -11,9 +11,18 @@ Newest first. An entry stays until it is measured or fixed AND Jacek has seen it
   its film's slug). The 15 fly stops.json that pointed at the frozen
   ../ai-film-lab now point at film/projects (flight.py would have stopped
   on "film not found"; fly.py would have made a second project). Measured:
-  all 16 films with a timeline map to their fly folder by name. Not yet
-  done: `SLIDES.bat <slug> look` and a real FLY.bat run were not tried;
-  the .script.txt notes still show the old short names (his files, left).
+  all 16 films with a timeline map to their fly folder by name. Later the
+  same day: `film -p <slug>` (so FILM.bat <slug>) finds the titled folder
+  (timeline.project_by_slug; `film check -p screening-95-percent-accurate`
+  OK, 172.7 s; film suite 1029 passed); SLIDES.bat run three ways (no
+  argument lists the films, slug checks, old name gets a plain message);
+  skills' commands now run from the root and each names its stage; old
+  ../ai-film-lab / ../ai-3d-studio prose fixed in film/ and fly/ CLAUDE.md,
+  SETUP.md, decision 0014 (dated note). The post-commit qmd refresh WORKS:
+  075567b was in `v2-history` minutes after the commit, although
+  .local/knowledge.log was empty. Not yet tried: `SLIDES.bat <slug> look`,
+  a real FLY.bat render, FILM.bat by double-click. The .script.txt notes
+  still show the old short names (his files, left).
 
 - 2026-10-07 ai-film-lab-v2 is the one project (slides/, film/, fly/; root
   SLIDES/FILM/FLY.bat; one CLAUDE.md with the agreements; all 18 skills in

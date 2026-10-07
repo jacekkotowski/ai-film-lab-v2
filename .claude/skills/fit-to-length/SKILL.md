@@ -5,7 +5,9 @@ description: Cut a finished film down to a length (a YouTube Short is 3:00) by d
 
 # Fit to length: cut the repetition, not the words
 
-`uv run film go --target N` already shortens photographs and drops
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
+`uv run --directory film film go --target N` already shortens photographs and drops
 silent ones. It **never cuts anything spoken**, and in a narrated film
 the speech *is* the length. Past that point, deciding what goes is a
 judgement about meaning: which sentences say the same thing twice. That
@@ -18,17 +20,17 @@ cut.
 ## Steps
 
 1. **Try the machine first.** If the film has silent photographs, run
-   `uv run film go -p NAME --target 175` and check the new length. If
+   `uv run --directory film film go -p NAME --target 175` and check the new length. If
    that is enough, stop here.
 
 2. **Measure, don't estimate.**
-   - `uv run film check -p NAME` gives every shot's length. Their sum is
+   - `uv run --directory film film check -p NAME` gives every shot's length. Their sum is
      the film's length; dissolves do not overlap.
    - `analysis/transcript.txt` gives every sentence, with its times.
    - Leave margin: aim for **about 172 s** for a 180 s limit.
 
 2b. **Slightly over? Raise the speed, with `film fit`.**
-   `uv run film fit -p NAME --target 175 --dry-run` prints the one speed
+   `uv run --directory film film fit -p NAME --target 175 --dry-run` prints the one speed
    (rounded up, every sped-up shot, same number) and the new total.
    Propose it and wait for go, then run it without `--dry-run`. It moves
    every caption's `at`/`dur`/`words` with the voice and keeps
@@ -72,7 +74,7 @@ cut.
    - Add a `note:` to each trimmed shot saying what was cut and why.
 
 8. **`film check`** must say OK, and its total must match the proposal.
-   Then `uv run film peek`. `film final` only when the user asks.
+   Then `uv run --directory film film peek`. `film final` only when the user asks.
 
 ## Never
 

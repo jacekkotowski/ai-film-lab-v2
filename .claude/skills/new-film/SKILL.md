@@ -6,6 +6,8 @@ argument-hint: "[project name]"
 
 # New film: from a folder of media to a first peek
 
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
 The goal is a first cut the user can react to, not a finished film. Aim
 for "clearly intentional, easy to criticise".
 
@@ -18,14 +20,14 @@ Rules for this role: `projects/CLAUDE.md`.
 
 2. **Analyse the media.**
    ```
-   uv run film ingest -p NAME
+   uv run --directory film film ingest -p NAME
    ```
    *Why:* everything after this reads `analysis/`, not `media/`. It is
    cached per file, so re-running it is cheap.
 
 3. **Write the scaffold.**
    ```
-   uv run film init -p NAME
+   uv run --directory film film init -p NAME
    ```
    If a `film.yaml` already exists, **stop and ask.** `init --force`
    replaces it. *Why:* the existing file may hold hand-tuned work.
@@ -55,7 +57,7 @@ Rules for this role: `projects/CLAUDE.md`.
 
 8. **Peek.**
    ```
-   uv run film peek -p NAME
+   uv run --directory film film peek -p NAME
    ```
    Tell the user where the file is. Summarise the edit in at most five
    lines: how many shots, the runtime, and the one or two choices they

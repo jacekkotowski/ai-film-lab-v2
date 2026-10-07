@@ -6,6 +6,8 @@ description: Fix captions that flash and vanish, start late, or never show — u
 
 # Fix captions: put the words where they were actually said
 
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
 `film caption --apply` places every line by listening. The text comes
 from the script, so the *spelling* is always right. The *timing* comes
 from the transcriber, and where it did not hear a word it has nothing to

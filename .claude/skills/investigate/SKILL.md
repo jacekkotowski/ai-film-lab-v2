@@ -6,6 +6,8 @@ description: Find the cause of a fault before fixing anything — a noise in the
 
 # Investigate: measure, then explain, then propose
 
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
 In this repo, reasoning from the code alone has given four confident,
 wrong answers. Each one cost the user a whole instruction, because they
 act on numbers straight away. This skill exists to stop a fifth.

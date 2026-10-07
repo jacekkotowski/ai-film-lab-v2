@@ -10,8 +10,8 @@ the measured numbers are in `docs/tech/`. A fresh clone needs only this.
 | Python 3.13 (uv fetches it) | `uv sync --extra render` → `.venv`, 286 MB, ~19 s | `uv run --extra render manim --version` → v0.21.0 |
 | ffmpeg + ffprobe | any build on PATH | `ffprobe -version` |
 | TinyTeX (only for MathTex) | packages in `docs/tech/manim.md` | one MathTex renders |
-| Node ≥ 22 + qmd (local search) | `npm install -g @tobilu/qmd` **from a normal terminal**, not from the Claude app (it lands in the app's private folder: `../ai-film-lab/docs/tech/qmd.md`) | `qmd --version` |
-| ai-film-lab next to this repo | `../ai-film-lab` (or `AIMANIM_FILMLAB=<path>`) | `python -m aimanim.film <film> check` |
+| Node ≥ 22 + qmd (local search) | `npm install -g @tobilu/qmd` **from a normal terminal**, not from the Claude app (it lands in the app's private folder: `../film/docs/tech/qmd.md`) | `qmd --version` |
+| the film stage beside slides/ | `../film` in ai-film-lab-v2 (or `AIMANIM_FILMLAB=<path>`) | `python -m aimanim.film <film> check` |
 
 ## 2. In the repo (once)
 ```

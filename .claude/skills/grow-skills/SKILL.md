@@ -5,6 +5,8 @@ description: Turn repetition into tools -- when the same operation, check, calcu
 
 # Grow skills: the second time is the signal
 
+> Stage **slides/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `slides/`; commands are written to run from the repo root.
+
 Doing a thing once is work. Doing it a second time means the next session
 will do it a third time unless it is written down where that session
 looks. This repo's skills, `aimanim/` and CLAUDE.md are that place.
@@ -22,8 +24,8 @@ looks. This repo's skills, `aimanim/` and CLAUDE.md are that place.
 | Jacek corrects you on HOW to work | a rule in the skill that step belongs to, with the date, and in CLAUDE.md if it is general |
 | a run of steps you always do in order | a workflow skill (`new-scene`, `time-to-words`) |
 
-**End of every film** (or session): `python -m aimanim.patterns due`
-(entries seen often enough to climb), `python -m aimanim.look stats`
+**End of every film** (or session): `uv run --directory slides python -m aimanim.patterns due`
+(entries seen often enough to climb), `uv run --directory slides python -m aimanim.look stats`
 (which issue IDs came back), then this table.
 
 First time: just do it, and add one line to §5 below (what, which slide).
@@ -45,7 +47,7 @@ climb: name the inputs (sizes, counts, widths), not this slide's numbers.
    Manim (decision 0002) — with a test in `tests/` (stdlib, no Manim).
    Pure part separate from the file/tool part, so it can be tested.
 4. **A command** — a `main()` in that module, plain `python -m aimanim.<m>`
-   (or `uv run --extra render python -m aimanim.kit` if it needs Manim),
+   (or `uv run --directory slides --extra render python -m aimanim.kit` if it needs Manim),
    printing only what to act on, `PROBLEM` + exit 1 when something is wrong.
 5. **A new skill** — only when none of the above fits: a subject (its
    numbers and sources) or a workflow (its steps).

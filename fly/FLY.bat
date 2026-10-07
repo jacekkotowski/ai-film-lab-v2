@@ -6,8 +6,8 @@ REM    drag a film ONTO it    its final.timeline.json, final.mp4,
 REM                           out\ folder or project folder:
 REM                           makes a new project and its stills,
 REM                           then asks: draft, video or quit
-REM    FLY.bat 2026-09_what-is-love --draft    a project you have
-REM    FLY.bat 2026-09_what-is-love --video
+REM    FLY.bat what-is-love --draft    a project you have (the film's slug)
+REM    FLY.bat what-is-love --video
 REM
 REM  Works offline. Needs Python, Blender and ffmpeg (see README).
 REM ============================================================

@@ -5,10 +5,10 @@
 Local, minimal pipeline. Claude writes Python; Blender / Manim run it headless. No MCP, no plugins.
 
 ## Stage 2 of 2
-ai-film-lab (`../ai-film-lab`) is stage 1: it makes the film. This studio reads only its
+film/ (`../film`, was ai-film-lab) is stage 1: it makes the film. This studio reads only its
 hand-off, `out/final.mp4` + `out/final.timeline.json`. Never `film.yaml`, `analysis/`, `media/`.
 Edit ai-film-lab from here only when the user asks; otherwise a need goes into its `docs/OPEN.md`. The contract and the
-rules: ai-film-lab `docs/decisions/0014`. Tests: `python -m unittest discover tests`.
+rules: `film/docs/decisions/0014`. Tests: `python -m unittest discover tests`.
 
 ## Tools (CLI only)
 - `blender -b -P <script.py> -- <args>`: 3D (Blender 5.x, bpy)

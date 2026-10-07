@@ -6,9 +6,9 @@ description: Turn a project's input/idea.md into a buildable spec (stops.json or
 
 # Idea → spec
 
-1. Read `projects/<slug>/input/idea.md` and anything in `input/refs/`.
+1. Read `fly/projects/<slug>/input/idea.md` and anything in `input/refs/`.
 2. If the topic needs facts (tools, versions, how something works), research it briefly first.
-3. Pick the recipe from `recipes/`:
+3. Pick the recipe from `fly/recipes/`:
    - ideas, concepts, a talk → **presi-flight**
    - data, a function, a distribution → **plot3d**
    - an object, device, mechanism → **machine**

@@ -21,6 +21,9 @@ film.yaml -> film final ==> out/final.mp4          ==> stops.json -> flight
    `video_sha256`, and `fly.py` says so when the film changed since.
 4. **One name per film:** `slug`, written by stage 1
    (`timeline.slug`). Stage 2 files it as `<yyyy-mm>_<slug>`.
+   *2026-10-07 (ai-film-lab-v2, 075567b):* the slug is now the film's one
+   name in all three stages: `fly/projects/<slug>/` (no month),
+   `slides/films/<slug>.txt`.
 5. **The contract is owned here.** Adding a key keeps `VERSION`;
    renaming or dropping one bumps it. Stage 2 refuses a version it
    does not know.

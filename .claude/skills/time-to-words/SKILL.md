@@ -5,18 +5,20 @@ description: After Jacek has narrated a film's slides in ai-film-lab (and run `f
 
 # Time to words: his narration -> the clips, in the film
 
+> Stage **slides/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `slides/`; commands are written to run from the repo root.
+
 ## Steps
 
 1. **Which film?** `films/<film>.txt` names the film-lab project. Load
    `slide-layout` before changing any scene.
 
-1a. **Before he narrates** (any time): `python -m aimanim.film <film> check`
+1a. **Before he narrates** (any time): `uv run --directory slides python -m aimanim.film <film> check`
    rehearses every step's word at 2.5 words/s with the same matcher;
    fix its PROBLEM lines first (recipe T13, issues I16–I17), so `clips` has none.
 
 2. **One command does it all:**
    ```
-   python -m aimanim.film <film> clips
+   uv run --directory slides python -m aimanim.film <film> clips
    ```
    For every slide it reads the slide's captions from film.yaml (film-lab
    writes them in the film's own seconds: after pause-cutting and speed),

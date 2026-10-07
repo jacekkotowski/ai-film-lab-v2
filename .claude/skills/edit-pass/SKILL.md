@@ -7,6 +7,8 @@ argument-hint: "[project] [notes]"
 
 # Edit pass: notes in, small edits out, render again
 
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
 This loop *is* the system. It is expected to go round many times, so
 every pass must be small enough that the user can tell what each change
 did.
@@ -44,8 +46,8 @@ Rules for this role: `projects/CLAUDE.md`. Its taste defaults apply.
    edit. If it fails, fix that first.
 
 5. **Render the cheapest thing that shows the change.**
-   - order, durations, captions → `uv run film peek -p NAME` (seconds)
-   - moves, easing, motion → `uv run film draft -p NAME` (under a minute)
+   - order, durations, captions → `uv run --directory film film peek -p NAME` (seconds)
+   - moves, easing, motion → `uv run --directory film film draft -p NAME` (under a minute)
 
    *Why:* the user's time goes to looking, not waiting. Both commands
    open a player on the user's screen when they finish; that is intended.
@@ -60,7 +62,7 @@ Rules for this role: `projects/CLAUDE.md`. Its taste defaults apply.
 
 ## If the user says it got worse
 
-Offer `uv run film undo -p NAME` first; it puts back the last version they
+Offer `uv run --directory film film undo -p NAME` first; it puts back the last version they
 watched. Don't pile a repair edit on top of a bad edit.
 
 ## Done when

@@ -6,7 +6,9 @@ description: Say where a film stands in one screen — what is recorded, whether
 
 # Status: one screen, one next step
 
-The guide (`uv run film`) answers "what next?" from file times, and its
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
+The guide (`uv run --directory film film`) answers "what next?" from file times, and its
 "So far" line says what is recorded. It does not say **what on disk is
 out of date**, and that is what hurts a producer in a hurry: an old
 `final.mp4` looks exactly like a new one.
@@ -21,11 +23,11 @@ found:
 ## Steps (read only — change nothing)
 
 1. **Recorded.** Print the guide's own line, so the words match what the
-   user sees in `uv run film`:
+   user sees in `uv run --directory film film`:
    `guide.so_far([f.name for f in (project/'media').iterdir() if f.is_file()])`.
    Add which pictures carry words: the `voice:` shots in `film.yaml`.
 
-2. **Edit.** Run `uv run film check -p NAME` and take:
+2. **Edit.** Run `uv run --directory film film check -p NAME` and take:
    - the `OK` line (shots, seconds);
    - the `!!` lines;
    - media in no shot.

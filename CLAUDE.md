@@ -64,7 +64,8 @@ uv run --directory film --extra dev pytest                        film tests (~2
 uv run --directory slides python -m unittest discover tests       slides tests
 uv run --directory fly --no-project python -m unittest discover tests   fly tests
 ```
-A stage's skill or CLAUDE.md shows its commands as run from inside that
+Skills show their commands as run from here, and name the stage their plain
+paths are under. A stage's CLAUDE.md still shows them as run from inside that
 stage (`python -m aimanim.look …`); from here, prefix `uv run --directory <stage>`.
 
 ## Where things are

@@ -6,6 +6,8 @@ description: Before recording, turn the producer's notes and photos into three t
 
 # Write to fit: the length is decided before the microphone is on
 
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
 After recording, getting under 3:00 means cutting the user's words
 (`fit-to-length`). Before recording it is only writing. This skill
 prevents three faults found on 2026-09-19:
@@ -53,7 +55,7 @@ Re-measure on every new film and add a row.
 ## Steps
 
 1. **Look at the pictures**, `analysis/contact.jpg`. If the film hasn't
-   been ingested yet, run `uv run film ingest -p NAME` first.
+   been ingested yet, run `uv run --directory film film ingest -p NAME` first.
    - The order is `scaffold.pictures_in_order`, which the narration
      window also uses.
    - Say what each picture shows, in a few words.

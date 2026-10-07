@@ -5,6 +5,8 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
 
 # New scene: problem in words -> the still to narrate over
 
+> Stage **slides/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `slides/`; commands are written to run from the repo root.
+
 ## Steps
 
 1. **Read `docs/OPEN.md` and `docs/tech/manim.md`, and load the
@@ -51,10 +53,10 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
 
 6. **Render the still at half size** and look at it (Read the PNG):
    ```
-   python -m aimanim.look still <slug>
+   uv run --directory slides python -m aimanim.look still <slug>
    ```
    (prints only the [layout] notes, the size and the pixel margins). After
-   the steps are written, `python -m aimanim.film <film> check` rehearses
+   the steps are written, `uv run --directory slides python -m aimanim.film <film> check` rehearses
    every BEAT_WORD against the script; `look draft <slug>` shows the end
    of every step in `out/steps.png`.
    Fix every `[layout]` note it prints (or say why it is a false alarm),
@@ -70,7 +72,7 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    narration in one file, sections marked `[NN]` by picture.
 
 9. **Tell him the next step in one line**:
-   run `python -m aimanim.film <film> publish` yourself (the project gets
+   run `uv run --directory slides python -m aimanim.film <film> publish` yourself (the project gets
    the stills and his words), then tell him: narrate in film-lab, `film go`,
    then say "narrated".
 

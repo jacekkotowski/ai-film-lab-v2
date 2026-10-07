@@ -6,6 +6,8 @@ description: Make a change to the ffilm/ package itself — a bug fix, a new com
 
 # Change the machine: a rule, a test, a fix, a commit
 
+> Stage **film/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `film/`; commands are written to run from the repo root.
+
 Rules for this role: `ffilm/CLAUDE.md`. Read its "standing requests" and
 "the layers" before planning anything.
 
@@ -26,7 +28,7 @@ Rules for this role: `ffilm/CLAUDE.md`. Read its "standing requests" and
 4. **Write the failing test first**, in `tests/`, testing a pure function.
    Run it and see it fail for the right reason:
    ```
-   uv run --extra dev pytest tests/test_THE_RULE.py
+   uv run --directory film --extra dev pytest tests/test_THE_RULE.py
    ```
    *Why:* a test you never saw fail may not test anything.
 
@@ -37,7 +39,7 @@ Rules for this role: `ffilm/CLAUDE.md`. Read its "standing requests" and
    - A comment explains *why*, in the same plain voice as the docstrings
      around it: what broke, and what it looked like to the user.
 
-6. **Run the whole suite.** `uv run --extra dev pytest`. All green, or say
+6. **Run the whole suite.** `uv run --directory film --extra dev pytest`. All green, or say
    exactly what is red and why.
 
 7. **If it changes what a film looks or sounds like, show it.** Render a

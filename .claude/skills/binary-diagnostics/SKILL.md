@@ -5,6 +5,8 @@ description: Statistics of a yes/no outcome, checked and drawn -- a screening or
 
 # Binary diagnostics: the numbers we have checked, and how to draw them
 
+> Stage **slides/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `slides/`; commands are written to run from the repo root.
+
 A yes/no outcome (sick or not) and a yes/no call (flagged or cleared).
 A logistic regression gives a probability; a **cutoff** turns it into a
 call, and from then on everything here applies to that cutoff. Every number
@@ -115,7 +117,7 @@ pregnancies — **not re-read**).
   One fading figure in 499 is invisible on a phone: colour it.
 - **Rotated row names** (`flagged`, `cleared`) at x −3.58: 0.76 wide, need
   a row ≥ 2.9 tall at 56.
-- Label widths of these slides: `python -m aimanim.layout sizes` (all in
+- Label widths of these slides: `uv run --directory slides python -m aimanim.layout sizes` (all in
   `docs/tech/sizes.json`; "per 10,000 screened" is 8.09, too wide).
 
 ## 7. Reusable pieces (where)

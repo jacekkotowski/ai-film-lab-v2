@@ -5,6 +5,8 @@ description: The one craft skill for Manim slides in ai-manim -- the frame and i
 
 # Slide layout: do it right the first time
 
+> Stage **slides/**: plain paths below (`docs/`, `scenes/`, `projects/` ...) are under `slides/`; commands are written to run from the repo root.
+
 Every rule here came from a slide that went wrong. Short on purpose: the
 detail is in `docs/patterns/` (issues I01–, tasks T01–), sizes in
 `docs/tech/sizes.json`. Search before solving: `docs/patterns`, then qmd
@@ -16,15 +18,15 @@ detail is in `docs/patterns/` (issues I01–, tasks T01–), sizes in
 |---|---|
 | start a scene | copy `scenes/_template/` (kit.title, kit.text, kit.run already in) |
 | closest recipe | `grep -n "^### T" docs/patterns/tasks.md` → copy its code |
-| label widths | `uv run --extra render python -m aimanim.kit fits "a label" "big@72"` (saved to sizes.json) |
-| widths already measured | `python -m aimanim.layout sizes <part of text>` |
-| plan the column | `python -m aimanim.layout stack title 56 block:3.2 56 gap:0.3 56` → baselines, room |
-| dots for n people / columns / row step | `python -m aimanim.layout pitch 10000 8 4.5` · `columns 3.12 2.9` · `rows 56 72` |
-| still, half / full | `python -m aimanim.look still <scene>` · `… still <scene> full` |
-| the motion | `python -m aimanim.look draft <scene>` → Read `out/steps.png` (end of each step) |
-| timing before he narrates | `python -m aimanim.film <film> check` |
-| a whole film | `python -m aimanim.look film <film>` (stills, notes, margins, rehearsal) |
-| what renders cost, recurring issues | `python -m aimanim.look stats` |
+| label widths | `uv run --directory slides --extra render python -m aimanim.kit fits "a label" "big@72"` (saved to sizes.json) |
+| widths already measured | `uv run --directory slides python -m aimanim.layout sizes <part of text>` |
+| plan the column | `uv run --directory slides python -m aimanim.layout stack title 56 block:3.2 56 gap:0.3 56` → baselines, room |
+| dots for n people / columns / row step | `uv run --directory slides python -m aimanim.layout pitch 10000 8 4.5` · `columns 3.12 2.9` · `rows 56 72` |
+| still, half / full | `uv run --directory slides python -m aimanim.look still <scene>` · `… still <scene> full` |
+| the motion | `uv run --directory slides python -m aimanim.look draft <scene>` → Read `out/steps.png` (end of each step) |
+| timing before he narrates | `uv run --directory slides python -m aimanim.film <film> check` |
+| a whole film | `uv run --directory slides python -m aimanim.look film <film>` (stills, notes, margins, rehearsal) |
+| what renders cost, recurring issues | `uv run --directory slides python -m aimanim.look stats` |
 A `PROBLEM` line = fix it (exit code 1). Plain commands only (CLAUDE.md).
 
 ## 2. The frame (aimanim/frame.py — the only source of these numbers)
@@ -91,5 +93,5 @@ A new fix or recipe → `docs/patterns/` (template in its README): search
 first, then add the slide to an existing entry or open a new one as a
 `note`; climb the ladder (note → pseudocode → code → helper) the second
 time. A helper changing renders → re-render and show the stills unchanged
-(checksum) or what changed. End of a film: `python -m aimanim.patterns due`
+(checksum) or what changed. End of a film: `uv run --directory slides python -m aimanim.patterns due`
 and the `grow-skills` pass. The goal: the next slide needs no fix.

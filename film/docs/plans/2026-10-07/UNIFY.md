@@ -23,6 +23,17 @@ test, no shared package); go for phases 0 and 1. Phase 4 and decisions 5–6 not
   `film/projects/CLAUDE.md` (the editor's rulebook; `pack.TOOLKIT` names it),
   `film/.lastfilm` (now written beside the projects folder → root .gitignore).
   `SLIDES.bat` lists films with `dir films\*.txt` → use `film_names`.
+- **Decided (Jacek):** both test projects move; the fly demo moves too
+  (`projects/ai-in-obsidian/fly/`, a folder with no film): nothing stays behind.
+  Phase 4: now (after phase 2).
+- **Phase 2 DRY RUN shown, NOT run.** `python film/docs/plans/2026-10-07/move.py`:
+  51 moves (CLAUDE.md, 23 film folders, 6 slides texts + 3 published.json,
+  17 fly folders, .lastfilm), 16 stops.json rewritten, "no problems". Still to do in
+  the same commit as `--go`: root .gitignore gets film's project rules (track
+  film.yaml, slides.txt, slides.script.txt, CLAUDE.md, test_story/script.txt, the
+  fly demo's stops.json + idea.md), then the gate vs `.local/unify/after-phase1/`.
+  Watch: `projects/ai-in-obsidian` has no film, so the film guide's list of films
+  will show it.
 
 ## Today (measured)
 

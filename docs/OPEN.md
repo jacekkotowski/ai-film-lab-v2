@@ -29,8 +29,10 @@ section with the commit id -- do not delete it.
   (stdlib, 6 tests; suite 91 OK, 3 skipped), scene scenes/r-ppv-curve (in
   no film). Both faults fixed on the full still: x labels "1k"/"10k" no
   longer touch; "1 in 29" moved off the 20 % line. Rings measured on the
-  still against the grid (within 1 px). Not seen by Jacek; clip not
-  rendered; leaflet still untried.
+  still against the grid (within 1 px). Not seen by Jacek; leaflet
+  still untried. Draft clip rendered (his ask): 540x960, 24 fps, 5.00 s
+  (ffprobe), steps spaced evenly (not narrated), no [layout] notes; only
+  steps.png (the end of each step) looked at.
 - 2026-10-08 [all] Deeper integration, Jacek's 1-2-3: (1) ONE OPEN.md, this
   file (343 of 343 entry lines kept, counted); (2) the `status` skill covers
   slides (published / rehearsal PROBLEMs / clips vs narration) and the

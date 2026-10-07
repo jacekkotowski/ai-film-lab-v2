@@ -57,7 +57,7 @@ from .checks import (bokeh_notes, depth_notes, film_shape, framing_notes, librar
 from .checks import speed_to_fit
 from .moves import choose_moves
 from .record import MAX_SPEED
-from .paths import toolkit_root
+from .paths import projects_root, toolkit_root
 from .render import QUALITIES, render
 from .spec import Film
 from .spec import title_of as spec_title_of
@@ -95,11 +95,11 @@ def find_project(arg: str | None) -> Path:
     candidates = [p]
     if not p.is_absolute():
         candidates.append(toolkit_root() / p)
-        candidates.append(toolkit_root() / "projects" / p.name)
+        candidates.append(projects_root() / p.name)
 
-    if not p.is_absolute() and (toolkit_root() / "projects").is_dir():
+    if not p.is_absolute() and projects_root().is_dir():
         by_slug = timeline.project_by_slug(
-            p.name, [q for q in (toolkit_root() / "projects").iterdir() if q.is_dir()])
+            p.name, [q for q in projects_root().iterdir() if q.is_dir()])
         if by_slug is not None:
             candidates.append(by_slug)
 
@@ -759,7 +759,7 @@ def _record_project(arg):
         if arg is not None:
             raise
     from datetime import date
-    root = toolkit_root() / "projects" / date.today().isoformat()
+    root = projects_root() / date.today().isoformat()
     make_project(root, vertical=True)
     print(f"Started a project for today:  {root}")
     return root
@@ -1378,20 +1378,21 @@ def cmd_pack(args) -> None:
     from . import pack as pk
 
     root = toolkit_root()
+    films = projects_root()
     projects = list(args.projects or [])
     if args.all:
-        projects = sorted(p.name for p in (root / "projects").iterdir()
-                          if p.is_dir()) if (root / "projects").is_dir() else []
+        projects = sorted(p.name for p in films.iterdir()
+                          if p.is_dir()) if films.is_dir() else []
 
     name = pk.default_name(projects)
     # Beside the folder, never inside it -- a zip written into the tree
     # it is zipping is a zip that tries to contain itself.
     out = Path(args.out) if args.out else root.parent / name
 
-    files = pk.contents(root, projects)
+    files = pk.contents(root, projects, films)
     raw = sum(p.stat().st_size for p, _ in files)
     print(f"Packing {len(files)} files ({raw / 1e6:.1f} MB) ...")
-    size = pk.build(root, out, projects)
+    size = pk.build(root, out, projects, films)
 
     print(f"\n  {out}")
     print(f"  {size / 1e6:.1f} MB")
@@ -1618,7 +1619,7 @@ def cmd_drop(args) -> None:
 
     # Named for the day, because you are not going to think of a name
     # while standing on a beach.
-    base = toolkit_root() / "projects" / date.today().isoformat()
+    base = projects_root() / date.today().isoformat()
     root, n = base, 2
     while root.exists():
         root, n = Path(f"{base}_{n}"), n + 1
@@ -1651,7 +1652,7 @@ def cmd_new(args) -> None:
     name = guide.tidy_name(args.name or "") or guide.default_name(
         taken=[p.name for p in guide.known_projects()])
     vertical = not args.wide
-    root = make_project(toolkit_root() / "projects" / name,
+    root = make_project(projects_root() / name,
                         vertical=vertical)
     guide.remember(root)
     shape = "1080x1920 vertical (YouTube Shorts)" if vertical else "1920x1080"

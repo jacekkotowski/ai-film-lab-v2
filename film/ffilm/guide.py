@@ -157,8 +157,8 @@ def tidy_name(name: str) -> str:
 
 
 def projects_dir() -> Path:
-    from .paths import toolkit_root
-    return toolkit_root() / "projects"
+    from .paths import projects_root
+    return projects_root()
 
 
 def known_projects() -> list[Path]:

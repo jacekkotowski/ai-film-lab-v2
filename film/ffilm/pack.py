@@ -87,21 +87,25 @@ def _walk(base: Path, root: Path) -> list[Path]:
     return out
 
 
-def contents(root: Path, projects: list[str] | None = None
-             ) -> list[tuple[Path, str]]:
-    """Every file that goes in, as (real path, name inside the zip)."""
+def contents(root: Path, projects: list[str] | None = None,
+             films: Path | None = None) -> list[tuple[Path, str]]:
+    """Every file that goes in, as (real path, name inside the zip).
+    `films` is where the projects are (paths.projects_root); in the zip
+    they are always under projects/, where an unpacked toolkit looks."""
     found: list[tuple[Path, str]] = []
     for name in TOOLKIT:
         for p in _walk(root / name, root):
             found.append((p, p.relative_to(root).as_posix()))
 
+    films = films or root / "projects"
     for proj in projects or []:
-        base = root / "projects" / proj
+        base = films / proj
         if not base.is_dir():
             raise SystemExit(f"No project called {proj!r} to pack.")
         for keep in PROJECT_KEEP:
-            for p in _walk(base / keep, root):
-                found.append((p, p.relative_to(root).as_posix()))
+            for p in _walk(base / keep, films.parent):
+                arc = "projects/" + p.relative_to(films).as_posix()
+                found.append((p, arc))
     return found
 
 
@@ -194,9 +198,10 @@ you back up photographs.
 """
 
 
-def build(root: Path, out: Path, projects: list[str] | None = None) -> int:
+def build(root: Path, out: Path, projects: list[str] | None = None,
+          films: Path | None = None) -> int:
     """Write the zip. Returns its size in bytes."""
-    files = contents(root, projects)
+    files = contents(root, projects, films)
     top = out.stem
     out.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED, compresslevel=6) as z:

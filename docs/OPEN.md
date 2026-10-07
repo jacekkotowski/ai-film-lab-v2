@@ -17,6 +17,15 @@ section with the commit id -- do not delete it.
   when film/ffilm or film/tests is staged (output to /dev/null; Claude
   had said otherwise without reading it). Status not yet run as a whole
   on a film by Jacek.
+  2026-10-08 01:15: status run as a whole on Screening (Jacek's ask; read
+  only, nothing changed). All current: `film check` OK, 8 shots, 172.7 s;
+  peek 173.30 s, draft 172.80 s, final 172.80 s (ffprobe), all newer than
+  film.yaml; slides published, rehearsal 0 PROBLEM lines, the 5 clips
+  newer than the narration and within 2 frames of their slides; flight
+  fingerprint = the final's. It named: 6 captions under 1.2 s on screen
+  (shortest s04 "the false positives," 0.7 s); flight_film.mp4 175.75 s,
+  2.95 s longer than the film (cause not checked). Not known whether
+  Jacek has watched the 23:30 final.
 - 2026-10-08 [all] Unify phase 3 DONE on main: no fallbacks in any stage; one
   place per film, projects/<Title>/. Suites 1044 / 85 / 11; 25 of 26 film
   checks as before (test_story: path only). Fault found and repaired: the

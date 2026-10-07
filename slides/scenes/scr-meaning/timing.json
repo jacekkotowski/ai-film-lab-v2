@@ -1,0 +1,130 @@
+{
+  "lines": [
+    {
+      "text": "Of 517 flagged women,",
+      "start": 0.2,
+      "end": 2.5,
+      "words": [
+        0.2,
+        0.41,
+        1.5,
+        2.31
+      ]
+    },
+    {
+      "text": "18 carry an affected baby,",
+      "start": 3.0,
+      "end": 5.4,
+      "words": [
+        3.0,
+        3.42,
+        4.09,
+        4.5,
+        4.97
+      ]
+    },
+    {
+      "text": "a positive predictive value of 1 in 29.",
+      "start": 5.8,
+      "end": 8.6,
+      "words": [
+        5.8,
+        5.91,
+        6.2,
+        6.58,
+        7.11,
+        7.56,
+        7.83,
+        8.04
+      ]
+    },
+    {
+      "text": "Of 9,483 cleared,",
+      "start": 9.0,
+      "end": 11.7,
+      "words": [
+        9.0,
+        9.21,
+        11.21
+      ]
+    },
+    {
+      "text": "9,481 are healthy,",
+      "start": 12.4,
+      "end": 15.2,
+      "words": [
+        12.4,
+        14.34,
+        14.78
+      ]
+    },
+    {
+      "text": "a negative predictive value of 99.98 percent.",
+      "start": 15.8,
+      "end": 20.1,
+      "words": [
+        15.8,
+        15.9,
+        16.26,
+        16.71,
+        17.16,
+        17.45,
+        18.02
+      ]
+    },
+    {
+      "text": "Gerd Gigerenzer, a psychologist,",
+      "start": 20.2,
+      "end": 22.7,
+      "words": [
+        20.2,
+        20.71,
+        21.96,
+        22.14
+      ]
+    },
+    {
+      "text": "asked 160 gynecologists the same about breast screening,",
+      "start": 23.1,
+      "end": 27.6,
+      "words": [
+        23.1,
+        23.31,
+        24.48,
+        25.4,
+        25.95,
+        26.32,
+        26.62,
+        27.05
+      ]
+    },
+    {
+      "text": "and they most often answered 9 in 10,",
+      "start": 28.0,
+      "end": 30.7,
+      "words": [
+        28.0,
+        28.1,
+        28.32,
+        28.56,
+        29.07,
+        30.06,
+        30.27,
+        30.45
+      ]
+    },
+    {
+      "text": "not 1 in 10.",
+      "start": 31.2,
+      "end": 32.2,
+      "words": [
+        31.2,
+        31.42,
+        31.75,
+        31.96
+      ]
+    }
+  ],
+  "total": 32.88,
+  "source": "film.yaml s05"
+}

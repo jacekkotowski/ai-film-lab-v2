@@ -1,0 +1,10 @@
+In 1930, Gottfried Spiegler and Kalman Juris faced a problem with X-ray plates. Medical radiographs had too much dynamic range for photographic paper: dense rib bones appeared solid white, while lung tissue turned pitch black. Expose for the lungs, and the bones blew out.
+
+They created a physical fix. A positive copy of the X-ray was exposed through a thick glass spacer, intentionally blurring the light and creating an unsharp mask. Placed against the original negative, it acted like a mechanical dodge-and-burn tool, flattening global contrast so diagnostic details could fit onto paper.
+
+Because the mask was blurred, it could cancel broad areas but not fine details. At boundaries, this created light and dark halos. Spiegler and Juris created them as a side effect of contrast compression. Photographers later applied the technique to portraits, using the halos to create the illusion of sharper focus.
+
+In a portrait, the same principle applies. Blur the original, subtract the blurred copy to isolate fine edges, then add those edges back. Eyelashes, iris, and skin contours become more defined. No new detail is created; existing detail gains local contrast.
+
+Left: Natural contrast and detail on the camera negative.
+Middle & Right: Unsharp Mask increases local edge contrast, enhancing hair, facial lines, and fabric folds without changing image resolution.

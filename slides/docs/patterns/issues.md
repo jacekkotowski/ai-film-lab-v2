@@ -174,6 +174,16 @@ Format and ladder: `README.md`. Newest IDs at the end; the order is by kind.
 - **check**: `git ls-files --eol` → every text file `i/lf w/lf`; no warning on commit
 - **new project**: the same .gitattributes on day 0 (docs/AGENT-WORKBENCH.md §9)
 
+### I25 — a diagonal line flashes through a dense dot block as it lands
+- **status**: note
+- **seen**: scr-outcomes step 1 (9,980 dots), frame 52 of the clip only (2026-10-07)
+- **cause**: the last frame of a play is drawn at alpha just under 1 (Manim
+  steps arange(0, run_time, 1/fps)); thousands of dots a fraction of a pixel
+  from home make a moiré. Gone on the next frame.
+- **fix** (only if he notices it): end the step with an exact copy, e.g.
+  `self.add(target)` after the play, or `rate_func=linear` with run_time a
+  whole number of frames + 1. Not done: 1/24 s, mid-motion.
+
 ### I23 — "the font looks different" on one line
 - **status**: note (scr-rarity "LR+ = 0.90 / 0.05", 2026-10-06)
 - **cause**: none — it was the same DejaVu Serif; the half-size still misled

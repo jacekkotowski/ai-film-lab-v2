@@ -1,5 +1,6 @@
 ---
 name: build-preview
+model: sonnet
 description: Build an approved studio spec and render preview stills, then iterate until approved, then draft and final video. Use after idea-to-spec is approved, or when the user asks to render, preview or tweak a studio project.
 ---
 

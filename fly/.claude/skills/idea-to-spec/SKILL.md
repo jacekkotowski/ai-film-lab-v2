@@ -1,5 +1,6 @@
 ---
 name: idea-to-spec
+model: opus
 description: Turn a project's input/idea.md into a buildable spec (stops.json or spec.md) and pick the recipe. Use when starting a new studio project or when the user describes a new idea to visualise.
 ---
 

@@ -1,0 +1,128 @@
+# Edited in `film edit`. Comments are not preserved by the editor —
+# use `note:` fields, which are data and survive.
+
+fps: 24
+resolution: [1080, 1920]
+
+music_volume: 0.6
+music_fade: 2.0
+music_duck: 0.5
+look:
+  preset: old_film
+  glow: 0.25
+
+shots:
+
+  - id: s01
+    src: analysis/title.jpg
+    duration: 4.0
+    move: static
+    ease: sine_in_out
+    focus: [0.500, 0.500]
+    note: "the opening card -- the same picture and the same words as the thumbnail, so clicking the miniature lands you on the frame you clicked. Made from your library; delete this whole block if you would rather open on yourself talking."
+
+  - id: s02
+    src: media/rec_20260905-164940.mp4
+    in: "00:00.00"
+    out: "00:22.70"
+    speed: 1.2
+    move: static
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.451]
+    note: "kept whole -- there is sound on this one, so none of what you said is cut. Trim in:/out: if it drags"
+
+  - id: s03
+    src: media/rec_20260905-165034.mp4
+    in: "00:00.00"
+    out: "00:23.32"
+    speed: 1.2
+    move: drift_right
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    note: "part 1 of 8 -- one take with the long pauses cut out. Every word is kept"
+
+  - id: s04
+    src: media/rec_20260905-165034.mp4
+    in: "00:24.33"
+    out: "00:58.87"
+    speed: 1.2
+    move: static
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    dissolve: 0.3
+    note: "part 2 of 8 -- one take with the long pauses cut out. Every word is kept"
+
+  - id: s05
+    src: media/rec_20260905-165034.mp4
+    in: "01:01.18"
+    out: "01:03.71"
+    speed: 1.2
+    move: drift_left
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    dissolve: 0.3
+    note: "part 3 of 8 -- one take with the long pauses cut out. Every word is kept"
+
+  - id: s06
+    src: media/rec_20260905-165034.mp4
+    in: "01:04.95"
+    out: "01:31.05"
+    speed: 1.2
+    move: static
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    dissolve: 0.3
+    note: "part 4 of 8 -- one take with the long pauses cut out. Every word is kept"
+
+  - id: s07
+    src: media/rec_20260905-165034.mp4
+    in: "01:33.13"
+    out: "01:48.14"
+    speed: 1.2
+    move: drift_right
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    dissolve: 0.3
+    note: "part 5 of 8 -- one take with the long pauses cut out. Every word is kept"
+
+  - id: s08
+    src: media/rec_20260905-165034.mp4
+    in: "01:50.13"
+    out: "02:12.14"
+    speed: 1.2
+    move: static
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    dissolve: 0.3
+    note: "part 6 of 8 -- one take with the long pauses cut out. Every word is kept"
+
+  - id: s09
+    src: media/rec_20260905-165034.mp4
+    in: "02:14.38"
+    out: "02:22.12"
+    speed: 1.2
+    move: drift_left
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    dissolve: 0.3
+    note: "part 7 of 8 -- one take with the long pauses cut out. Every word is kept"
+
+  - id: s10
+    src: media/rec_20260905-165034.mp4
+    in: "02:24.40"
+    out: "02:37.32"
+    speed: 1.2
+    move: static
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.498, 0.446]
+    dissolve: 0.3
+    note: "part 8 of 8 -- one take with the long pauses cut out. Every word is kept"

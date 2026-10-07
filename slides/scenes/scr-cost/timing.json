@@ -1,0 +1,119 @@
+{
+  "lines": [
+    {
+      "text": "Each of the 499 false alarms is a mother told her",
+      "start": 0.2,
+      "end": 4.2,
+      "words": [
+        0.2,
+        0.46,
+        0.72,
+        0.88,
+        1.82,
+        2.43,
+        2.88,
+        3.25,
+        3.42,
+        3.65,
+        3.97
+      ]
+    },
+    {
+      "text": "baby may be ill.",
+      "start": 4.3,
+      "end": 5.4,
+      "words": [
+        4.3,
+        4.64,
+        4.83,
+        5.02
+      ]
+    },
+    {
+      "text": "She can wait until week 15 for amniocentesis,",
+      "start": 5.7,
+      "end": 9.4,
+      "words": [
+        5.7,
+        5.89,
+        6.08,
+        6.36,
+        6.77,
+        7.09,
+        7.75,
+        8.4
+      ]
+    },
+    {
+      "text": "a needle into the womb,",
+      "start": 9.9,
+      "end": 11.3,
+      "words": [
+        9.9,
+        10.11,
+        10.41,
+        10.78,
+        10.97
+      ]
+    },
+    {
+      "text": "then up to two weeks for the result.",
+      "start": 11.6,
+      "end": 13.5,
+      "words": [
+        11.6,
+        11.86,
+        12.19,
+        12.35,
+        12.53,
+        12.74,
+        12.96,
+        13.1
+      ]
+    },
+    {
+      "text": "That needle ends about 3 pregnancies in 1,000,",
+      "start": 13.9,
+      "end": 17.4,
+      "words": [
+        13.9,
+        14.08,
+        14.42,
+        15.01,
+        15.38,
+        15.81,
+        16.53,
+        16.84
+      ]
+    },
+    {
+      "text": "so if all 499 take it,",
+      "start": 17.8,
+      "end": 20.7,
+      "words": [
+        17.8,
+        18.52,
+        18.62,
+        18.9,
+        19.78,
+        20.42
+      ]
+    },
+    {
+      "text": "one or two healthy babies are lost.",
+      "start": 21.0,
+      "end": 23.2,
+      "words": [
+        21.0,
+        21.16,
+        21.43,
+        21.67,
+        21.94,
+        22.46,
+        22.79
+      ]
+    }
+  ],
+  "total": 23.92,
+  "source": "film.yaml s07"
+}

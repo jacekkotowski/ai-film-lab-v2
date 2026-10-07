@@ -1,0 +1,143 @@
+fps: 24
+resolution:
+- 1080
+- 1920
+music_volume: 0.6
+music_fade: 2.0
+music_duck: 0.5
+look:
+  preset: old_film
+  glow: 0.25
+shots:
+- id: s00
+  src: analysis/title.jpg
+  duration: 4.0
+  move: static
+  note: the opening card -- the same picture and the same words as the thumbnail, so clicking
+    the miniature lands you on the frame you clicked. Made from your library; delete this whole
+    block if you would rather open on yourself talking.
+- id: s01
+  src: media/rec_20260906-170835.mp4
+  in: '00:00.00'
+  out: '01:22.64'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.495
+  - 0.392
+  note: part 1 of 2 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: I bought a medallion myself once.
+    at: 2.02
+    dur: 3.03
+    pos: lower_third
+  - text: Cheap silver, stamped.
+    at: 5.43
+    dur: 1.31
+    pos: lower_third
+  - text: Mother and child.
+    at: 7.25
+    dur: 0.78
+    pos: lower_third
+  - text: I carried it close to my body, for years.
+    at: 8.98
+    dur: 2.33
+    pos: lower_third
+  - text: Feminism today says something else.
+    at: 12.77
+    dur: 1.83
+    pos: lower_third
+  - text: 'Justyna Melonowska writes it plainly:'
+    at: 18.2
+    dur: 0.95
+    pos: lower_third
+  - text: its fulfillment is the murder of the child...
+    at: 19.78
+    dur: 3.08
+    pos: lower_third
+  - text: the recognition of
+    at: 22.87
+    dur: 2.06
+    pos: lower_third
+  - text: that murder as
+    at: 24.93
+    dur: 1.53
+    pos: lower_third
+  - text: the "law of laws."
+    at: 26.47
+    dur: 1.08
+    pos: lower_third
+  - text: From care to hatred.
+    at: 28.38
+    dur: 1.29
+    pos: lower_third
+  - text: From mother to childless.
+    at: 30.1
+    dur: 1.96
+    pos: lower_third
+  - text: She calls it the inheritance of Eve.
+    at: 32.8
+    dur: 3.06
+    pos: lower_third
+  - text: 'Melonowska writes: "Feminism today is counter-wisdom.'
+    at: 37.87
+    dur: 2.83
+    pos: lower_third
+  - text: The more of it, the more power.
+    at: 41.12
+    dur: 1.78
+    pos: lower_third
+  - text: The more power, the less wisdom."
+    at: 43.65
+    dur: 1.91
+    pos: lower_third
+  - text: I bought a cheap medallion instead.
+    at: 47.37
+    dur: 2.31
+    pos: lower_third
+  - text: Mother and child.
+    at: 50.5
+    dur: 1.29
+    pos: lower_third
+  - text: Not power as the cosmic principle of femininity.
+    at: 52.8
+    dur: 3.13
+    pos: lower_third
+  - text: Just someone holding someone.
+    at: 56.75
+    dur: 2.13
+    pos: lower_third
+  - text: 'She writes: "Thought is Mother.'
+    at: 60.55
+    dur: 2.13
+    pos: lower_third
+  - text: Hence philosophy is maternal."
+    at: 63.32
+    dur: 2.5
+    pos: lower_third
+  - text: Cheap silver.
+    at: 66.87
+    dur: 0.8
+    pos: lower_third
+  - text: Stamped.
+    at: 68.03
+    dur: 0.28
+    pos: lower_third
+- id: s02
+  src: media/rec_20260906-170835.mp4
+  in: '01:23.64'
+  out: '01:28.47'
+  speed: 1.2
+  move: drift_right
+  amount: 0.6
+  focus:
+  - 0.495
+  - 0.392
+  dissolve: 0.3
+  note: part 2 of 2 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: That's what I carry.
+    at: 0.0
+    dur: 1.16
+    pos: lower_third

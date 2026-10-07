@@ -5,7 +5,7 @@ Local, minimal pipeline. Claude writes Python; Blender / Manim run it headless. 
 ## Stage 2 of 2
 ai-film-lab (`../ai-film-lab`) is stage 1: it makes the film. This studio reads only its
 hand-off, `out/final.mp4` + `out/final.timeline.json`. Never `film.yaml`, `analysis/`, `media/`.
-Never edit ai-film-lab from here: a need goes into its `docs/OPEN.md`. The contract and the
+Edit ai-film-lab from here only when the user asks; otherwise a need goes into its `docs/OPEN.md`. The contract and the
 rules: ai-film-lab `docs/decisions/0014`. Tests: `python -m unittest discover tests`.
 
 ## Tools (CLI only)
@@ -14,7 +14,7 @@ rules: ai-film-lab `docs/decisions/0014`. Tests: `python -m unittest discover te
 - `ffmpeg`: stitch, audio, captions
 
 ## Layout
-- `skills/`: idea-to-spec, build-preview
+- `.claude/skills/`: idea-to-spec, build-preview
 - `recipes/`: one half-page template per output type (presi-flight, plot3d, machine, photo-planes)
 - `library/`: reusable scripts, rigs, objects. Something moves here only after it's been used in 2 projects.
 - `projects/<yyyy-mm_slug>/`: `input/idea.md` → `stops.json` or `spec.md` → `preview/` → `out/`

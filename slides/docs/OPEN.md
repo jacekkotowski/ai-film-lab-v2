@@ -2,6 +2,15 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-07 screening is narrated in film-lab (his message); `clips` not
+  run yet — waiting for "narrated" / his go. films/screening.script.txt
+  was changed outside this session (intro and outro drafts marked "by
+  Claude"); not touched here. Rehearsal with them: ~144 s.
+- 2026-10-07 Workbench 1–9 done (PLAN.md). Not yet known: whether the
+  post-commit qmd refresh finishes in the background on every commit
+  (first real commit will show it in .local/knowledge.log); T08 (formula)
+  is due a helper per `patterns due`, left for Jacek to decide.
+
 - 2026-10-07 screening: slides narrated (175.8 s). Intro/outro are Claude's
   DRAFTS (script_intro/outro.txt in film-lab), not yet his words. With them
   the film will be ~4 min (words ÷ 1.4/s), not the 2:30 first asked.

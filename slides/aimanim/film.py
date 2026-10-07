@@ -50,7 +50,9 @@ from pathlib import Path
 from aimanim import beats, frame
 
 ROOT = Path(__file__).resolve().parents[1]
-FILMLAB = Path(os.environ.get("AIMANIM_FILMLAB", ROOT.parent / "ai-film-lab"))
+# ai-film-lab-v2: the film stage is the sibling folder film/ of this one
+# (slides/). Before 2026-10-07 it was the separate repo ../ai-film-lab.
+FILMLAB = Path(os.environ.get("AIMANIM_FILMLAB", ROOT.parent / "film"))
 
 
 @dataclass

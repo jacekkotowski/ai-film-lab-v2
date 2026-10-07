@@ -1,0 +1,78 @@
+1930s Austria Had Photoshop -- texts to record, 2026-09-20
+Jacek's words, cut to a Short. Every cut is listed with its reason.
+
+====================================================================
+INTRO  (48 words)  -- ALREADY IN script.txt
+====================================================================
+
+When you click 'Unsharp Mask' in Photoshop, you might think it was created by software developers to make blurry portraits look crisp. But it was invented in 1930s Vienna by a medical physicist and a technician - not to add detail, but to solve a life-or-death diagnostic problem.
+
+kept whole.
+
+====================================================================
+PICTURE 1_xray.jpg  (45 words)
+====================================================================
+
+In 1930, Gottfried Spiegler and Kalman Juris faced a massive issue with X-ray plates. Medical radiographs had way too much dynamic range for photographic printing paper. Dense rib bones blocked radiation and appeared solid white, while lung tissue let radiation straight through, turning pitch black.
+
+dropped: "If a doctor exposed the print to see detail inside the lungs, the bone blew out completely." -- the two sentences before it already say the print cannot hold both ends.
+
+====================================================================
+PICTURE 2_roentgen.png  (40 words)
+====================================================================
+
+They exposed a positive copy of the X-ray through a thick glass spacer, creating an out-of-focus positive transparency — an unsharp mask. Sandwiched back against the original negative plate, it flattened global contrast so all diagnostic details fit onto paper.
+
+dropped: "Spiegler and Juris created a purely physical fix." (named on picture 1) and "acted like a mechanical dodge-and-burn tool" (a Photoshop word inside the 1930 story).
+
+====================================================================
+PICTURE 3_portrait_process.png  (20 words)
+====================================================================
+
+When photographers applied the technique to portraiture, it became the gold standard for creating the optical illusion of razor-sharp focus.
+
+dropped: the whole mechanism sentence and the halo sentence. Picture 4 is the same explanation against a picture that shows it, and pictures 3 and 4 are the pair most at risk of saying one thing twice.
+
+====================================================================
+PICTURE 4_eye.png  (41 words)
+====================================================================
+
+First, the original eye is blurred. The difference between the original and the blurred copy contains the fine edges. When we add it back, contrast increases. No new detail has been created; existing detail has simply been given more local contrast.
+
+dropped: "Here we can see the same principle applied to a portrait." and "The eyelashes, iris and skin contours become more defined." -- the picture is doing both.
+
+====================================================================
+PICTURE 5_example.jpg  (32 words)
+====================================================================
+
+On the left, the natural contrast and detail captured on the camera negative. In the middle and on the right, the unsharp mask applied — hair texture, facial lines, and fabric folds.
+
+dropped: "making the subject appear significantly sharper without altering the underlying image resolution" -- picture 4 ends on exactly that point.
+
+====================================================================
+OUTRO  (49 words)  -- PASTE INTO script.txt BEFORE THE CLOSING TAKE
+====================================================================
+
+Spiegler and Juris called their process harmonization, created to compress extreme dynamic range in medical imaging. Decades later, when developers converted those darkroom glass-plate variables into digital code, what began as a medical tool to save lives became an innocuous standard unsharp mask algorithm for image sharpening in Photoshop.
+
+kept whole.
+
+====================================================================
+THE BUDGET
+====================================================================
+
+  intro       48
+  1_xray.jpg               45
+  2_roentgen.png           40
+  3_portrait_process.png   20
+  4_eye.png                41
+  5_example.jpg            32
+  outro       49
+  TOTAL      275 words
+
+  401 words before the cut, 275 after: 126 dropped.
+  At 1.47 words per second of finished film (ONE measurement,
+  Bauhaus 2026-09-19) that is about 187 s.
+  A Short stops at 180 s. Re-measure after this film and correct
+  the rate in the write-to-fit skill.
+

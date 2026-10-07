@@ -1,0 +1,288 @@
+fps: 24
+resolution:
+- 1080
+- 1920
+music_volume: 0.6
+music_fade: 2.0
+music_duck: 0.5
+look:
+  preset: old_film
+  glow: 0.25
+shots:
+- id: s00
+  src: analysis/title.jpg
+  duration: 4.0
+  move: static
+  note: the opening card -- the same picture and the same words as the thumbnail, so clicking
+    the miniature lands you on the frame you clicked. Made from your library; delete this whole
+    block if you would rather open on yourself talking.
+- id: s01
+  src: media/rec_20260905-173250.mp4
+  in: '00:00.00'
+  out: '00:07.41'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  note: part 1 of 9 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: I keep having the same dream in different clothes.
+    at: 1.53
+    dur: 3.68
+    pos: lower_third
+- id: s02
+  src: media/rec_20260905-173250.mp4
+  in: '00:08.54'
+  out: '00:11.66'
+  speed: 1.2
+  move: drift_right
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 2 of 9 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: In one, I'm back in college.
+    at: 0.19
+    dur: 1.93
+    pos: lower_third
+- id: s03
+  src: media/rec_20260905-173250.mp4
+  in: '00:12.62'
+  out: '00:29.73'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 3 of 9 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: I got there early,
+    at: 0.64
+    dur: 1.11
+    pos: lower_third
+  - text: pranked my way in a year ahead,
+    at: 2.36
+    dur: 1.91
+    pos: lower_third
+  - text: passed the exam before anyone expected me to.
+    at: 5.09
+    dur: 3.03
+    pos: lower_third
+  - text: I wanted to prove to a girl I loved that I was worthy.
+    at: 9.49
+    dur: 4.33
+    pos: lower_third
+- id: s04
+  src: media/rec_20260905-173250.mp4
+  in: '00:30.75'
+  out: '00:33.74'
+  speed: 1.2
+  move: drift_left
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 4 of 9 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: And it didn't matter.
+    at: 0.15
+    dur: 1.9
+    pos: lower_third
+- id: s05
+  src: media/rec_20260905-173250.mp4
+  in: '00:35.39'
+  out: '00:40.97'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 5 of 9 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: Nobody asks for that anymore.
+    at: 0.0
+    dur: 2.55
+    pos: lower_third
+  - text: I still don't belong.
+    at: 2.76
+    dur: 0.95
+    pos: lower_third
+- id: s06
+  src: media/rec_20260905-173250.mp4
+  in: '00:42.08'
+  out: '02:08.78'
+  speed: 1.2
+  move: drift_right
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 6 of 9 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: I lose my backpack.
+    at: 0.07
+    dur: 1.18
+    pos: lower_third
+  - text: Everything I own is in it.
+    at: 1.68
+    dur: 2.31
+    pos: lower_third
+  - text: It's the only home I have.
+    at: 4.93
+    dur: 1.4
+    pos: lower_third
+  - text: Inside, the last things from my childhood.
+    at: 7.65
+    dur: 3.06
+    pos: lower_third
+  - text: And while I search,
+    at: 11.63
+    dur: 1.6
+    pos: lower_third
+  - text: she watches and laughs.
+    at: 13.82
+    dur: 2.1
+    pos: lower_third
+  - text: In another dream,
+    at: 15.92
+    dur: 3.71
+    pos: lower_third
+  - text: I'm leaving the country.
+    at: 20.17
+    dur: 1.26
+    pos: lower_third
+  - text: Poland.
+    at: 22.0
+    dur: 0.26
+    pos: lower_third
+  - text: Poland is empty,
+    at: 23.38
+    dur: 1.33
+    pos: lower_third
+  - text: reforested, no work left.
+    at: 25.28
+    dur: 2.06
+    pos: lower_third
+  - text: Five thousand slaughter for a plane ticket out.
+    at: 28.37
+    dur: 2.86
+    pos: lower_third
+  - text: I worry about what I'm leaving behind.
+    at: 32.68
+    dur: 2.16
+    pos: lower_third
+  - text: My radios, my gadgets,
+    at: 35.5
+    dur: 1.63
+    pos: lower_third
+  - text: the small, useless things that were mine.
+    at: 37.92
+    dur: 2.61
+    pos: lower_third
+  - text: I end up on a construction site,
+    at: 41.73
+    dur: 2.9
+    pos: lower_third
+  - text: holding a shovel.
+    at: 45.0
+    dur: 0.81
+    pos: lower_third
+  - text: Not working, just standing.
+    at: 46.4
+    dur: 2.09
+    pos: lower_third
+  - text: Because sitting means you have failed.
+    at: 49.27
+    dur: 2.29
+    pos: lower_third
+  - text: And underneath both of those is a one, one dream that isn't a dream.
+    at: 53.83
+    dur: 4.5
+    pos: lower_third
+  - text: My daughter dying on my hands.
+    at: 62.38
+    dur: 1.93
+    pos: lower_third
+  - text: And after me being accused,
+    at: 64.32
+    dur: 3.19
+    pos: lower_third
+  - text: blamed for a crash I didn't cause.
+    at: 67.92
+    dur: 3.01
+    pos: lower_third
+- id: s07
+  src: media/rec_20260905-173250.mp4
+  in: '02:09.68'
+  out: '02:11.04'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 7 of 9 -- one take with the long pauses cut out. Every word is kept
+- id: s08
+  src: media/rec_20260905-173250.mp4
+  in: '02:13.18'
+  out: '02:38.66'
+  speed: 1.2
+  move: drift_left
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 8 of 9 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: Three versions of the same loss.
+    at: 0.13
+    dur: 2.01
+    pos: lower_third
+  - text: Something that should hold steady,
+    at: 3.16
+    dur: 1.74
+    pos: lower_third
+  - text: gone.
+    at: 5.71
+    dur: 0.56
+    pos: lower_third
+  - text: And me left standing there,
+    at: 7.26
+    dur: 2.21
+    pos: lower_third
+  - text: holding nothing or holding blame instead.
+    at: 10.29
+    dur: 3.04
+    pos: lower_third
+  - text: That's the film,
+    at: 14.57
+    dur: 2.06
+    pos: lower_third
+  - text: the film that keeps playing.
+    at: 17.43
+    dur: 1.76
+    pos: lower_third
+- id: s09
+  src: media/rec_20260905-173250.mp4
+  in: '02:39.62'
+  out: '02:41.62'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.549
+  - 0.402
+  dissolve: 0.3
+  note: part 9 of 9 -- one take with the long pauses cut out. Every word is kept

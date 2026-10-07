@@ -1,0 +1,19 @@
+My project. I built it because I have no time to sit and edit video.
+
+I drop my photos and clips in a folder. It does the rest.
+
+It listens to what I actually said and times captions to match — no scripting, no typing out lines by hand.
+
+It finds the pauses in my audio so cuts land in the right place, not mid-sentence.
+
+It mixes my voice, my narration, and background music into one track — ducked, faded, balanced so nothing fights.
+
+My voice gets its own treatment: a high-pass to cut rumble, then a warmth boost around 110Hz, so it sounds recorded, not just captured.
+
+It moves the camera on its own — push, pan, drift — so stills don't feel static.
+
+Shots cross-dissolve into each other, 0.4 seconds by default.
+
+It can grade the whole film with a look — grain, vignette, scratches, flicker, glow. There's a preset called projector: heavier grain, deeper vignette, scratches, flicker — like it's running through an old projector.
+
+It runs entirely on my machine. Nothing uploaded, no account, no internet needed once it's installed.

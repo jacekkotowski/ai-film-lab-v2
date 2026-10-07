@@ -1,0 +1,124 @@
+fps: 24
+resolution:
+- 1080
+- 1920
+music_volume: 0.6
+music_fade: 2.0
+music_duck: 0.5
+look:
+  preset: old_film
+  glow: 0.25
+shots:
+- id: s00
+  src: analysis/title.jpg
+  duration: 4.0
+  move: static
+  note: the opening card -- the same picture and the same words as the thumbnail, so clicking
+    the miniature lands you on the frame you clicked. Made from your library; delete this whole
+    block if you would rather open on yourself talking.
+- id: s01
+  src: media/rec_20260905-232339.mp4
+  in: '00:00.49'
+  out: '00:21.95'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.572
+  - 0.4
+  note: part 1 of 4 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: Seventy-two hours before D-Day, Eisenhower had two analysts telling him two different
+      things.
+    at: 1.43
+    dur: 4.5
+    pos: lower_third
+  - text: One used twenty years of historical averages.
+    at: 9.12
+    dur: 3.38
+    pos: lower_third
+  - text: June weather in Normandy was reliably calm — the pattern said go.
+    at: 13.59
+    dur: 3.75
+    pos: lower_third
+- id: s02
+  src: media/rec_20260905-232339.mp4
+  in: '00:23.12'
+  out: '00:47.34'
+  speed: 1.2
+  move: drift_right
+  amount: 0.6
+  focus:
+  - 0.572
+  - 0.4
+  dissolve: 0.3
+  note: part 2 of 4 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: The other threw out the averages.
+    at: 0.0
+    dur: 2.66
+    pos: lower_third
+  - text: He was pulling fresh readings from weather balloons and ships and stations from Spain
+      to Iceland, building a real-time picture instead of a historical one.
+    at: 3.17
+    dur: 4.5
+    pos: lower_third
+  - text: His model said a storm was forming, and the invasion had to wait.
+    at: 14.2
+    dur: 4.5
+    pos: lower_third
+- id: s03
+  src: media/rec_20260905-232339.mp4
+  in: '00:48.94'
+  out: '00:52.68'
+  speed: 1.2
+  move: static
+  amount: 0.6
+  focus:
+  - 0.572
+  - 0.4
+  dissolve: 0.3
+  note: part 3 of 4 -- one take with the long pauses cut out. Every word is kept
+- id: s04
+  src: media/rec_20260905-232339.mp4
+  in: '00:53.66'
+  out: '01:48.57'
+  speed: 1.2
+  move: drift_left
+  amount: 0.6
+  focus:
+  - 0.572
+  - 0.4
+  dissolve: 0.3
+  note: part 4 of 4 -- one take with the long pauses cut out. Every word is kept
+  captions:
+  - text: That's the actual conflict in the film "Pressure" — not weather versus war, but two
+      ways of doing analysis, and a decision-maker who has to pick one under a deadline he can't
+      move.
+    at: 0.0
+    dur: 4.5
+    pos: lower_third
+  - text: Every data team has lived some version of this.
+    at: 13.63
+    dur: 2.71
+    pos: lower_third
+  - text: The historical model is comfortable.
+    at: 17.58
+    dur: 2.09
+    pos: lower_third
+  - text: The real-time signal is inconvenient.
+    at: 20.73
+    dur: 2.83
+    pos: lower_third
+  - text: And the person who has to act on it isn't the one who built either model.
+    at: 25.42
+    dur: 4.41
+    pos: lower_third
+  - text: Eisenhower picked the harder read.
+    at: 36.91
+    dur: 1.71
+    pos: lower_third
+  - text: It was the right call.
+    at: 40.01
+    dur: 1.63
+    pos: lower_third

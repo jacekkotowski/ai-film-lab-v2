@@ -11,7 +11,7 @@ winget install Python.Python.3.12
 ```
 1. `FLY.bat` finds Blender by itself. To type `blender` commands by hand, add `C:\Program Files\Blender` to PATH (the winget install doesn't) or use the full path to `blender.exe`.
 2. Put this folder wherever you keep projects and open Claude Code in it. It reads `CLAUDE.md` automatically.
-3. Optional: copy `skills/*` into `.claude/skills/` so they show up as `/idea-to-spec` and `/build-preview`.
+3. The skills live in `.claude/skills/`, so they show up as `/idea-to-spec` and `/build-preview`.
 
 ## From a 2D film to its 3D flight (no Claude, no internet)
 [ai-film-lab](https://github.com/jacekkotowski/ai-film-lab) makes the film: your photos, clips and voice, cut, captioned and set to music. This studio flies it in 3D. Everything runs offline once the three programs above are installed.

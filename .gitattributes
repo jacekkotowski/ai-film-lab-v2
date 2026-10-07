@@ -1,0 +1,12 @@
+# Text is LF everywhere (issue I24, slides/docs/patterns/issues.md): Git for
+# Windows' core.autocrlf=true otherwise warns on every file and breaks sh hooks.
+* text=auto eol=lf
+# cmd.exe needs CRLF: an LF-only .bat can lose its labels (goto, call :x).
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.png binary
+*.jpg binary
+*.mp4 binary
+*.wav binary
+*.onnx binary
+*.tflite binary

@@ -1,0 +1,25 @@
+I want to make Shorts on the run. I have no time to produce them.
+
+So this is a first test of what Claude Code can do for a humanist who wants to automate his video production. I asked it to stay minimal: four Python libraries and two free programs.
+
+NumPy handles every frame as a grid of numbers, so moving a camera is just arithmetic.
+
+OpenCV looks at the pictures: it finds faces, follows motion in a clip, and turns a still photo into camera movement.
+
+Pillow draws text: captions and the title on the thumbnail.
+
+PyYAML reads the film itself, which is a plain text file listing shots, durations and moves.
+
+FFmpeg does the heavy lifting on sound and video: it cleans and levels my voice, tucks the music under it, and compresses the finished film.
+
+Faster-Whisper listens to my speech and turns it into captions, entirely on my own computer.
+
+I double-click one file, drop in footage or record myself, and pick vertical. Pauses are cut, the camera eases toward faces, and a Short comes out ready to upload.
+
+Most of the work happens without any AI at all. The machine does the first cut on its own.
+
+But when I have an idea for a scene, I just say it in plain words. If Claude Code is installed, it starts up, reads the film's recipe, a simple text file, and rewrites it for me.
+
+The code is free. The link is below.
+
+https://github.com/jacekkotowski/ai-film-lab

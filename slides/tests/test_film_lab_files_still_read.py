@@ -9,7 +9,7 @@ from pathlib import Path
 
 from aimanim import beats
 
-FILM_LAB = Path(__file__).resolve().parents[2] / "ai-film-lab" / "projects"
+FILM_LAB = Path(__file__).resolve().parents[2] / "film" / "projects"   # ai-film-lab-v2
 
 
 def narrated_projects():

@@ -1,0 +1,5 @@
+# Each stage keeps its own .gitignore (slides/, film/, fly/); these are the root's.
+.local/
+.venv/
+__pycache__/
+.claude/settings.local.json

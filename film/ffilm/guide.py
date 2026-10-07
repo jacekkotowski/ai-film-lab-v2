@@ -44,6 +44,7 @@ class Step:
     done: bool = False                           # nothing left to do -- stop here
     shell: list[str] = field(default_factory=list)   # not a `film` command
     ask_length: bool = False                     # offer --target before running
+    claude: bool = False                         # hands over to Claude (C)
 
     @property
     def pretty(self) -> str:
@@ -684,6 +685,53 @@ def _best_steps(project: Path) -> list[Step]:
     return steps
 
 
+def with_stages(project: Path, steps: list[Step], repo: Path) -> list[Step]:
+    """The other two stages' steps, where the disk says they are due.
+
+    ai-film-lab-v2 keeps a film's slides, film and flight in one folder
+    (docs/plans/2026-10-07/UNIFY.md, phase 4: one door). The steps are
+    their own commands, printed and run from the repo root; nothing of
+    slides/ or fly/ is imported. A toolkit on its own has neither stage,
+    and gets `steps` back as they were.
+    """
+    if not ((repo / "slides").is_dir() and (repo / "fly").is_dir()):
+        return steps
+    from .timeline import slug
+    steps = list(steps)
+    slides = ["uv", "run", "--directory", "slides", "python", "-m",
+              "aimanim.film", slug(project.name)]
+    media = project / "media"
+    if (project / "slides.txt").is_file():
+        # Only the first time: publishing again may write over words
+        # already narrated (agreement 2), so that stays his to ask for.
+        if not (project / "slides.published.json").is_file():
+            steps.insert(0, Step(
+                "Put the slides in", shell=slides + ["publish"],
+                why="Each slide's still goes into media\\, the words into "
+                    "the recording window. Then you narrate over them."))
+        else:
+            voice = max((_mtime(f) for f in media.glob("*")
+                         if f.stem.lower().startswith(kinds.VOICEOVER_PREFIX)
+                         and f.suffix.lower() in AUDIO_EXT), default=0.0)
+            if (voice and _mtime(project / "film.yaml") >= voice
+                    and _newest(project / "clips", kinds.VIDEO) < voice):
+                steps.insert(0, Step(
+                    "Time the animation to your words", shell=slides + ["clips"],
+                    why="Every step of every slide starts on its word; each "
+                        "clip as long as its slide. Then watch a draft."))
+    if steps and steps[0].done and (project / "out" / "final.mp4").is_file():
+        steps.insert(1, Step(
+            "...or fly it in 3D",
+            shell=["python", "fly/library/rigs/fly.py", str(project / "out")],
+            why="Stills of the flight first, then it asks: draft, video "
+                "or stop. Needs Blender."))
+    if not _newest(media, MEDIA_EXT) and not (project / "slides.txt").is_file():
+        steps.append(Step(
+            "...or explain a problem with animated slides", claude=True,
+            why="Say the problem in words; Claude writes the slides."))
+    return steps
+
+
 def _voice_installed() -> bool:
     from .checks import voice_installed
     return voice_installed()
@@ -1104,6 +1152,13 @@ def walk(project: Path | None = None) -> None:
             chosen = steps[int(answer) - 1]
         if chosen is s and s.folders:
             continue                     # go and look again
+        if chosen.claude:
+            if claude:
+                _ask_claude(project)
+            else:
+                print("\n  Claude is not installed on this computer.")
+            last_title = None
+            continue
         if chosen.shell:
             print()
             sys.stdout.flush()
@@ -1142,7 +1197,7 @@ def next_steps(project: Path) -> list[Step]:
     The doors go last, so ENTER and the alternatives that are genuinely
     next keep the places they had.
     """
-    steps = _best_steps(project)
+    steps = with_stages(project, _best_steps(project), projects_dir().parent)
     media = project / "media"
     names = ([f.name for f in media.iterdir() if f.is_file()]
              if media.is_dir() else [])

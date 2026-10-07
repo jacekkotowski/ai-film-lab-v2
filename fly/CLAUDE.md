@@ -7,7 +7,7 @@ Local, minimal pipeline. Claude writes Python; Blender / Manim run it headless. 
 ## Stage 2 of 2
 film/ (`../film`, was ai-film-lab) is stage 1: it makes the film. This studio reads only its
 hand-off, `out/final.mp4` + `out/final.timeline.json`. Never `film.yaml`, `analysis/`, `media/`.
-Edit ai-film-lab from here only when the user asks; otherwise a need goes into its `docs/OPEN.md`. The contract and the
+Edit ai-film-lab from here only when the user asks; otherwise a need goes into the repo's `docs/OPEN.md`, tagged [fly]. The contract and the
 rules: `film/docs/decisions/0014`. Tests: `python -m unittest discover tests`.
 
 ## Tools (CLI only)

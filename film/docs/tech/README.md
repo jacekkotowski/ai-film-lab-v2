@@ -3,7 +3,7 @@
 **Policy (2026-09-23):** before working in an area, read its file. After,
 add what was measured, the snippet that worked, what failed, and the date.
 Web documentation read → saved in the tool's file (a hook reminds).
-A fault not yet fixed → `docs/OPEN.md`, not here.
+A fault not yet fixed → the repo's `docs/OPEN.md` (tag [film]), not here.
 
 ## Areas
 | File | What |

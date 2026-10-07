@@ -35,7 +35,7 @@ details. **This file wins where they disagree.**
    Write/Edit tools. No `cd … &&`, no `VAR=` prefixes, no heredocs.
 7. **Build nothing I did not ask for** — no new tool, skill or document. If
    something comes up twice, propose it in one line.
-8. **Session start:** read `slides/docs/OPEN.md`, `film/docs/OPEN.md` (if
+8. **Session start:** read `docs/OPEN.md` (all three stages,
    there), the memory index and `git log --oneline -5`; your first answer
    says what you read. **One Claude session at a time** in this repo (two
    overwrote each other on 2026-10-07).
@@ -72,7 +72,7 @@ stage (`python -m aimanim.look …`); from here, prefix `uv run --directory <sta
 
 | what | where |
 |---|---|
-| open problems | `slides/docs/OPEN.md`, `film/docs/OPEN.md` |
+| open problems | `docs/OPEN.md` (one file, each entry tagged [slides] [film] [fly] [all]) |
 | decisions | `slides/docs/decisions/`, `film/docs/decisions/` |
 | a film's one name in all stages | its slug: `Screening - 95 Percent Accurate` → `screening-95-percent-accurate` (film-lab writes it in `final.timeline.json`) |
 | the films (all three stages, one folder each) | `projects/<Title>/` (not in git, except film.yaml, slides.txt & co.; rules in the root .gitignore) |

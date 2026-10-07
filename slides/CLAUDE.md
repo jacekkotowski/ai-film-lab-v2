@@ -129,7 +129,7 @@ number) was probably met before. First `python -m aimanim.patterns find
 
 | What                          | Where                     |
 |-------------------------------|---------------------------|
-| what is broken / not yet known | `docs/OPEN.md` — read it at the start of every session |
+| what is broken / not yet known | the repo's `docs/OPEN.md` (tag [slides]) — read it at the start of every session |
 | why things are the way they are | `docs/decisions/`        |
 | measured facts about Manim here | `docs/tech/manim.md`     |
 | layout rules and lessons       | `.claude/skills/slide-layout/SKILL.md` + `docs/patterns/` + `aimanim/kit.py` |

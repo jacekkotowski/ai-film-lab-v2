@@ -101,7 +101,7 @@ writes "proof?", show the measurement or say it was not measured.
 | what a film *is*                         | `ffilm/spec.py` docstring           |
 | how to edit one                          | `projects/CLAUDE.md`                |
 | how the code is laid out, how to change it | `ffilm/CLAUDE.md`                 |
-| **what is broken and not yet fixed**     | **`docs/OPEN.md` — read it at the start of every session** |
+| **what is broken and not yet fixed**     | **the repo's `docs/OPEN.md` (tag [film]) — read it at the start of every session** |
 | why things are the way they are          | `docs/decisions/` — read before re-proposing anything |
 | what we know, by area (sync, audio, video, recording, captions) and by tool | `docs/tech/` — read the area's file before working in it; add to it after |
 | how this whole Claude setup works        | `docs/HOW_CLAUDE_IS_SET_UP.md`      |
@@ -130,7 +130,7 @@ Grep finds a word. qmd finds the file that says it in other words
 - **Never act on a snippet.** `get` the whole file, cite `path:line`.
 - **Code and measurements beat notes.** If a note contradicts the code,
   say so; don't follow the note.
-- **At the end:** a fault → `docs/OPEN.md`; a measured fact →
+- **At the end:** a fault → the repo's `docs/OPEN.md`, tagged [film]; a measured fact →
   `docs/tech/<area>.md`; a reason → `docs/decisions/`. No other file.
 - **qmd not connected** (tools missing, "Connection closed"): say so in
   the first line and fall back to grep. Don't try to repair it unasked.

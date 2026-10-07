@@ -9,7 +9,7 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
 
 ## Steps
 
-1. **Read `docs/OPEN.md` and `docs/tech/manim.md`, and load the
+1. **Read the repo's `docs/OPEN.md` ([slides] entries) and `docs/tech/manim.md`, and load the
    `slide-layout` skill** (sizes, rules, the kit). If Manim has not been
    measured yet (PLAN step 1), say so in the first line.
 

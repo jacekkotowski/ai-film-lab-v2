@@ -28,7 +28,7 @@ from pathlib import Path
 # `docs`/`code`/`history`, all pointing at the old, now frozen folders.
 ROOT = Path(__file__).resolve().parents[2]
 HISTORY = Path.home() / ".cache" / "qmd" / "v2-history"
-MASK = ("CLAUDE.md,.claude/skills/**/*.md,"
+MASK = ("CLAUDE.md,docs/*.md,.claude/skills/**/*.md,"
         "slides/CLAUDE.md,slides/PLAN.md,slides/docs/**/*.md,slides/scenes/*/spec.md,"
         "projects/*/slides.script.txt,"
         "film/CLAUDE.md,film/ffilm/CLAUDE.md,film/*.md,film/docs/**/*.md,"

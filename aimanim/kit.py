@@ -24,6 +24,10 @@ from manim import (Arrow, Circle, Dot, Group, Line, Mobject, RoundedRectangle,
 
 from aimanim import aurora as _aurora
 from aimanim import beats, frame
+# plain geometry (stdlib, tested): scenes call them as kit.<name>
+from aimanim.layout import (ASCENT, DESCENT, area_radius, columns,  # noqa: F401
+                            fit_scale, grid_points, label_side, pitch_for,
+                            row_step, stack)
 
 # Measured at frame.MIN_FONT (56) in Manim's default font, in frame units
 # (docs/tech/layout.md). Use for planning; kit.text() measures exactly.
@@ -130,9 +134,8 @@ def man(height: float, feet, color=frame.ACCENT, width: float = 0.2) -> VGroup:
 # TARGET -> MIL READING -> FORMULA -> RESULT, top to bottom.
 CHAIN_COLORS = (frame.ACCENT, frame.SECOND, frame.INK, frame.ACCENT)
 CHAIN_STEP = 1.25     # baseline to baseline at MIN_FONT: arrows 0.35 long
-# Measured at MIN_FONT: tallest glyph 0.59 above the baseline, deepest
-# descender 0.17 below ("per second", "7.2 km/h"). Scale with the size.
-ASCENT, DESCENT = 0.59, 0.17
+# ASCENT 0.59 / DESCENT 0.17 at MIN_FONT ("per second", "7.2 km/h"):
+# from layout.py, with the rest of the plain geometry.
 
 
 def chain(items, top_baseline: float, x: float = 0.0, step: float = CHAIN_STEP,
@@ -167,15 +170,7 @@ def chain(items, top_baseline: float, x: float = 0.0, step: float = CHAIN_STEP,
 # that shows 9,481 shows 9,481 (binary-diagnostics skill).
 
 _K = 0.5523          # cubic Bezier handle for a quarter circle
-
-
-def grid_points(n: int, cols: int, pitch: float, left: float, top: float,
-                pitch_y: float | None = None) -> list[tuple[float, float]]:
-    """Centres of `n` places, row by row from the top left: the first
-    centre is (left + pitch/2, top - pitch_y/2). Width cols x pitch."""
-    py = pitch if pitch_y is None else pitch_y
-    return [(left + (i % cols + 0.5) * pitch, top - (i // cols + 0.5) * py)
-            for i in range(n)]
+# grid_points (and pitch_for, to choose the pitch): layout.py
 
 
 def _ellipses(points, rx: float, ry: float) -> np.ndarray:
@@ -222,12 +217,22 @@ def box(left: float, bottom: float, right: float, top: float,
     return VGroup(*[Line(c[i], c[(i + 1) % 4]) for i in range(4)]).set_stroke(color, width)
 
 
+def ring(points, radius: float, color=frame.SICK, width: float = 4) -> VGroup:
+    """Rings around a few items in a crowd so they can be found on a phone:
+    2 red among 9,483 were invisible without (scr-meaning; issue I12).
+    radius ≈ 3 × the crowd's pitch."""
+    return VGroup(*[Circle(radius=radius).move_to((x, y, 0)).set_stroke(color, width)
+                    for x, y in points])
+
+
 def strike(t: Mobject, color=frame.SECOND, width: float = 6) -> Line:
     """A line through a text, corner to corner of its middle band:
     "9 in 10" crossed out."""
     l, r = t.get_left()[0] - 0.1, t.get_right()[0] + 0.1
     y = t.get_center()[1]
-    return Line((l, y - 0.12, 0), (r, y + 0.12, 0)).set_stroke(color, width)
+    line = Line((l, y - 0.12, 0), (r, y + 0.12, 0)).set_stroke(color, width)
+    line.strikes = t          # the layout check expects it on this text
+    return line
 
 
 # ---- the steps, on the words ------------------------------------------------
@@ -313,8 +318,67 @@ def check(mobs, under=()) -> list[str]:
             if _overlap(_box(a), _box(c)):
                 notes.append(f"{_name(a)} touches {_name(c)}")
         for d in leaves:
-            if isinstance(d, Text) or id(d) in skip:
+            if isinstance(d, Text) or id(d) in skip or getattr(d, "strikes", None) is a:
                 continue
-            if _overlap(_box(a), _box(d), gap=0):
+            if _overlap(_box(a), _box(d), gap=0) and _hits(_box(a), d):
                 notes.append(f"{_name(a)} touches a {_name(d)}")
     return notes
+
+
+# A stroke-only line is checked along its path, not by its box: the box of
+# a diagonal (mil-angle's cone) covers labels the line never comes near,
+# and gave 4 false notes. Filled shapes (dots, tips, discs) keep their box.
+SAMPLE_STEP = 0.05     # frame units between samples along a curve
+STROKE_PAD = 0.02      # half a stroke, roughly, in frame units
+
+
+def _hits(box, d) -> bool:
+    l, b, r, t = box
+    for m in d.family_members_with_points():
+        if m.get_fill_opacity() > 0.01:
+            if _overlap(box, _box(m), gap=0):
+                return True
+            continue
+        pts = m.points[: len(m.points) // 4 * 4].reshape(-1, 4, 3)
+        for p0, p1, p2, p3 in pts:
+            n = max(9, int(np.linalg.norm(p3 - p0) / SAMPLE_STEP) + 2)
+            s = np.linspace(0, 1, n)[:, None]
+            c = ((1 - s) ** 3 * p0 + 3 * (1 - s) ** 2 * s * p1
+                 + 3 * (1 - s) * s ** 2 * p2 + s ** 3 * p3)
+            x, y = c[:, 0], c[:, 1]
+            if np.any((x >= l - STROKE_PAD) & (x <= r + STROKE_PAD)
+                      & (y >= b - STROKE_PAD) & (y <= t + STROKE_PAD)):
+                return True
+    return False
+
+
+# ---- the command line: measure and plan before drawing --------------------------
+
+def _cli(argv: list[str]) -> int:
+    """python -m aimanim.kit fits "text" "text@72" ...   (measures, and keeps
+    every width in docs/tech/sizes.json; read it without Manim:
+    python -m aimanim.layout sizes [part of a text])"""
+    from aimanim import layout
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")      # "≈", "×" on Windows
+    except AttributeError:
+        pass
+    if argv[:1] == ["fits"]:
+        found = {}
+        for a in argv[1:]:
+            s, _, size = a.rpartition("@") if "@" in a else (a, "", "")
+            size = int(size) if size else frame.MIN_FONT
+            t = Text(s, font_size=size)
+            found[(s, size)] = (t.width, t.height)
+            print(f"{t.width:6.2f}  {'TOO WIDE ' if t.width > 2 * frame.SIDE else ''}"
+                  f"{s!r} at {size}")
+        layout.remember_sizes(found)
+        return 0
+    if argv[:1] == ["stack"]:
+        return layout.main(argv)
+    print(_cli.__doc__, file=sys.stderr)
+    return 2
+
+
+if __name__ == "__main__":
+    sys.exit(_cli(sys.argv[1:]))

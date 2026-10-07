@@ -48,9 +48,36 @@ Done when: one clip whose length equals the narrated picture's span (measured). 
 ## Film 3 — screening (a yes/no test: Down syndrome screening), Jacek's script
 - [x] 5 slides, specs with the maths, full-size stills, script word for word;
       skill `binary-diagnostics`, `aimanim/diagnostic.py` + test (2026-10-06)
-- [ ] Jacek: agrees to slide 04's illustration, narrates, `film go`
+- [x] Jacek narrated slides 01–05 (2026-10-07, 175.8 s; pace 1.43 words/s, docs/tech/narration.md)
+- [ ] intro and outro (drafts in film-lab as script_intro/outro.txt): Jacek records, `film go`
+- [ ] Jacek: agrees to slide 04's illustration
 - [ ] `clips`
 - next in the subject: the cutoff (logistic curve → table), ROC/AUC
+
+## Workbench 1–9 (2026-10-07; the general version: docs/AGENT-WORKBENCH.md)
+Each item done when its check is measured and shown. All done 2026-10-07.
+- [x] 1 Local search: qmd `manim` (35 files) and `manim-history` (12 commits),
+      `aimanim/knowledge.py`, post-commit hook, "search before solving" in CLAUDE.md.
+      Measured: "rows touch descender" → I02 first (93 %); "whole frames clips
+      short" → commit 070f962 first (88 %).
+- [x] 2 `slide-tools` + `manim-patterns` merged into `slide-layout`; grep finds
+      no reference left (except the history in AGENT-WORKBENCH and this plan).
+- [x] 3 `docs/tech/sizes.json`: 56 widths measured anew, equal to the ones the
+      skills quoted (6.36/6.37, 7.28 at 64, 8.09); tables replaced by `layout sizes`.
+- [x] 4 `look film screening`: 5 slides, 0 problem lines, stills byte-equal to
+      the published ones. Pre-commit: exit 1 with a failing test, 0 without.
+      `git config core.hooksPath .githooks` set on this machine.
+- [x] 5 `.local/renders.csv` + `look stats`: 11 renders, 1.6 min; notes tagged I01–I17.
+- [x] 6 `docs/sources.md`: 15 sources, each with status (read / abstract /
+      his notes / memory) and the films using it.
+- [x] 7 `patterns due` found I12 (→ helper `kit.ring`, scr-meaning byte-equal)
+      and T08 (formula, left due: one formula style is not yet clear).
+- [x] 8 check samples stroke-only shapes: mil-angle 4 false notes → 0;
+      back-azimuth 8 → 5, the 3 dropped checked false on the picture,
+      the real ones (past SIDE, above TOP, 1200 on its arrow) kept.
+- [x] 9 `.claude/settings.json` tracked (narrow allow list), `docs/SETUP.md`,
+      memory: one duplicate removed, existing three kept. A fresh clone gets the
+      allow list once this is committed.
 
 ## Ideas for scenes (Jacek's subjects)
 - back-azimuth in mils (6400 to the circle) — the trial

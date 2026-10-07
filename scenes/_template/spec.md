@@ -13,6 +13,7 @@
 
 **Narration (his words, or a suggestion; he says it his own way)**
 
-**Sources:** (where each fact comes from; "calculated" or "derived" if not printed anywhere)
+**Sources:** (where each fact comes from; "calculated" or "derived" if not printed anywhere;
+a source cited for the first time also goes into `docs/sources.md` with its status)
 
 **Status:** written <date>.

@@ -1,146 +1,94 @@
 ---
 name: slide-layout
-description: Layout rules, measured sizes and fixes for every Manim slide in ai-manim -- load BEFORE writing or changing any scene.py (new-scene and time-to-words load it), and whenever a still looks wrong. Also how to grow this knowledge: every layout fix ends with a line added here or a helper added to aimanim/kit.py.
+description: The one craft skill for Manim slides in ai-manim -- the frame and its rules, the commands that measure, plan, render, check and rehearse (kit fits, layout stack/pitch/columns/rows/sizes, look still/draft/film/stats, film check), the quick map from a printed problem ([layout], [beats], PROBLEM) or a wrong-looking still to its general fix, and the slide recipes with almost-there code in docs/patterns. Load BEFORE writing or changing any scene.py (new-scene and time-to-words load it), whenever a still looks wrong, and to file a new fix.
 ---
 
 # Slide layout: do it right the first time
 
-Every rule here came from a slide that went wrong. Use the kit; it holds
-the fixes as code. When you fix a new kind of problem, add it (last section).
+Every rule here came from a slide that went wrong. Short on purpose: the
+detail is in `docs/patterns/` (issues I01–, tasks T01–), sizes in
+`docs/tech/sizes.json`. Search before solving: `docs/patterns`, then qmd
+(`manim`, `manim-history` collections).
 
-## 1. Start from the template
-```
-copy scenes/_template/  ->  scenes/<slug>/
-```
-It already uses `kit.title`, `kit.text` (baselines), `kit.run` (beats +
-the layout check). Never copy an older scene's construct loop.
+## 1. The loop — one command per job
+
+| job | command |
+|---|---|
+| start a scene | copy `scenes/_template/` (kit.title, kit.text, kit.run already in) |
+| closest recipe | `grep -n "^### T" docs/patterns/tasks.md` → copy its code |
+| label widths | `uv run --extra render python -m aimanim.kit fits "a label" "big@72"` (saved to sizes.json) |
+| widths already measured | `python -m aimanim.layout sizes <part of text>` |
+| plan the column | `python -m aimanim.layout stack title 56 block:3.2 56 gap:0.3 56` → baselines, room |
+| dots for n people / columns / row step | `python -m aimanim.layout pitch 10000 8 4.5` · `columns 3.12 2.9` · `rows 56 72` |
+| still, half / full | `python -m aimanim.look still <scene>` · `… still <scene> full` |
+| the motion | `python -m aimanim.look draft <scene>` → Read `out/steps.png` (end of each step) |
+| timing before he narrates | `python -m aimanim.film <film> check` |
+| a whole film | `python -m aimanim.look film <film>` (stills, notes, margins, rehearsal) |
+| what renders cost, recurring issues | `python -m aimanim.look stats` |
+A `PROBLEM` line = fix it (exit code 1). Plain commands only (CLAUDE.md).
 
 ## 2. The frame (aimanim/frame.py — the only source of these numbers)
 | | value | why |
 |---|---|---|
 | frame | 9 × 16 units, 1080 × 1920 px, 120 px per unit | ai-film-lab films |
-| safe x | −4 … 4 (`SIDE`) | 0.5 unit margin each side |
-| safe y | −4 (`BOTTOM`) … 7 (`TOP`) | bottom quarter = captions (assumed, OPEN.md); 1 unit top |
-| text | ≥ `MIN_FONT` 56 | readable on Jacek's phone (checked 2026-10-05) |
-| fine drawing | lines width 3, dots r 0.035 at 0.27/mil | legible on his phone (zero-reticle, 2026-10-06) |
-| colours | INK, DIM, ACCENT (the thing explained), SECOND (what it's compared with) | |
+| safe x | −4 … 4 (`SIDE`); pixels ≥ 60 from the sides | 0.5 unit margin each side |
+| safe y | −4 (`BOTTOM`) … 7 (`TOP`); pixels ≥ 480 from the bottom | captions sit in the bottom quarter (measured) |
+| text | ≥ `MIN_FONT` 56; ~17 characters fill 8.0 at 56, ~11 at 80 | readable on his phone (2026-10-05) |
+| rows | baselines ≥ 0.80 apart at 56 (`layout.row_step`) | descender 0.17 + capitals 0.59 |
+| fine drawing | lines width 3, dots r 0.035 at 0.27/mil | legible on his phone (zero-reticle) |
+| colours | INK, DIM, ACCENT (explained), SECOND (compared), SICK / HEALTHY (populations) | |
 
-## 3. Measured sizes at MIN_FONT (Manim default font) — plan with these
-| thing | width | height |
-|---|---|---|
-| one digit | 0.48 | 0.59 |
-| "4800", "1200" | 1.83–1.90 | |
-| "0.73 cm", "1.45 cm" | 3.05 | |
-| "Triumph" | 3.35 | 0.75 (descender) |
-| TITLE_FONT 80: "Group centre" | 7.38 | 1.06 |
-| TITLE_FONT 80: "Range by width" | 8.74 → too wide | |
-| any text at 56: tallest glyph / deepest descender | | 0.59 above / 0.17 below the baseline |
-| "1.78 × 1000 ÷ 4", "0.50 × 1000 ÷ 2" | 6.36–6.37 (7.28 at 64) | |
-| "2 m/s = 7.2 km/h", "10 × 200 ÷ 1000" | 6.60–6.67 | |
-| "10 MIL per second" | 7.33 | |
-| "drop ≈ ½ g t²" at 72, "drift = wind × lag" | 6.77, 7.07 | |
-| "measuring instrument" | 8.74 → too wide | |
-| "TRAJECTORY" | 5.37 | |
-| "screening" (gauge label), "affected" | 3.81, 3.12 | |
-| "sensitivity 90%", "18 / 517 = 1 in 29" | 5.90, 6.96 | |
-| "healthy pregnancies", "per 10,000 screened" | 7.94, 8.09 → too wide | |
-Rule of thumb: ~17 digits/characters fill the safe width at 56; ~11 at 80.
-Measure anything new with `kit.fits("text")` BEFORE placing it.
+## 3. Rules (one line each; the entry has the why)
+- Text by its BASELINE: `kit.text(s, x, baseline)`, never `move_to` (I03).
+- Title: `kit.title(s)` — top on TOP, shrinks to fit.
+- Directions from angles: `kit.toward(turns)` (I06).
+- Measure every label before placing it; too wide → I01's order.
+- Plan the column with `layout.stack` before drawing (I04).
+- Labels away from other labels; names in empty corners, arrow from 0.62 above the baseline (I09).
+- Two arrows on one line: offset the second 0.3 (I08).
+- A table under a label: a blank row between (zero-reticle).
+- One drawing on two slides: geometry in a stdlib module, each scene scales it (I14).
+- Static things (title, grid, axes) in `background` (labels may lie on them).
+- Reticle: `kit.reticle(kit.mil_to(scale, aim), window)`; chains: `kit.chain(items, top, step=…)` by name (T07, T09).
+- Target behind lines: `set_z_index(-1)`, fill opacity 0.35–0.6.
+- Populations: `kit.dots` / `kit.people`, one VMobject per cell, pitch from `layout.pitch_for` (T02, I15).
+- Highlight a column/row: `kit.box` (I10); cross out: `kit.strike` (I11).
+- A few marks in a crowd: ring or recolour, never only fade (I12); one dot size per comparison, areas by `layout.area_radius` (I13).
+- Rotated row names: row ≥ 2.9 tall at 56, x ≥ −3.58.
+- ≤ 3 objects move in one step (VGroup the rest). No effects he did not ask for.
+- Metric only on screen; numbers computed in scene.py from the spec, rounded as he says them; a changed number → `films/<film>.script.txt` in the same turn.
 
-Consequences already paid for:
-- **labels beside a circle**: a 4-digit label is 1.9 wide, so a circle with
-  labels outside at 3 and 9 o'clock needs radius ≤ 2.0 (back-azimuth).
-- **two columns**: centres at x = ±2.2 hold texts ≤ 3.3 wide (zero-clicks).
-- **a whole reticle across the width**: ±14 mil at 0.27 units/mil; at 0.28
-  the "2" above the 14-mil stadia pokes 0.10 past SIDE (zero-reticle).
-  Its centre, to range on, goes on its own slide at 1.6/mil (zero-range):
-  both on one slide left the labels crowded.
-- **reticle parts and their scales**: `docs/aurora/README.md` (the table
-  of units/mil, aim point, window, stroke, dot radius per part).
-- **a chain (`kit.chain`) of 4 rows**: step 1.25 at 56 = 3.75 units; at
-  1.1 the arrows are 0.2 long and read as dots (mil-speed). Plan the free
-  height for it first, then the drawing above it.
-- **heights read on the ladder** (mil-man): 0.7 units/mil, so rows at
-  2, 3, 4 mil are 0.7 apart; at 0.6 their labels touched.
-- **bar scales**: pick units/cm so the longest bar fits the free height;
-  10 cm at 0.6 = 6 units (zero-mil), 5 cm at 1.0 (zero-clicks).
+## 4. Quick map: what you see → the entry in docs/patterns/issues.md
+| you see | entry |
+|---|---|
+| `past SIDE`, a word cut, a label wider than its column | I01 |
+| `"a" touches "b"` for stacked rows | I02 |
+| uneven label heights | I03 |
+| caption zone reached / a big empty band | I04 |
+| quiet check but ink near an edge (`look` margins PROBLEM) | I05 |
+| `touches a Line/Rectangle` for a box or strike you meant | I10, I11 |
+| a highlighted item nobody can find | I12 |
+| a picture that exaggerates | I13 |
+| `step n starts … after` / `runs past the words` | I16 |
+| `the word 'x' was not heard` | I17 |
+| clip shorter than its slide | I18 |
+| 854×480 output · `UnicodeEncodeError` · "Allow once" | I20 · I21 · I22 |
 
-## 4. Placement rules (each is in kit)
-- **Rows of text: by BASELINE** — `kit.text(s, x, baseline)`. Centring by
-  middle or top puts "turret"/"reticle", "Triumph"/"SLx" at different heights.
-- **Title: `kit.title(s)`** — top on TOP, shrinks to fit. A title centred at
-  TOP − 0.3 pokes 0.23 above TOP.
-- **Directions from angles: `kit.toward(turns)`** — rounds sin/cos; sin(π) =
-  1.2e-16 makes `next_to` shift a label sideways ("3200" drifted right).
-- **Two arrows on one line** (there and back): offset the second sideways
-  (0.3 units), else it hides the first.
-- **A label for each arrow** goes on the side away from other labels: two
-  labels stacked read as a list, not as two arrows (zero-group).
-- **A name with an arrow**: start the arrow 0.62 above the name's
-  baseline (the text top is ~0.45); at 0.5 the check says the name touches
-  its own arrow (zero-reticle). Put names in the empty corners of the
-  drawing, not over it.
-- **A table under a label** (zero-reticle): leave a blank row between, or
-  it reads as part of the label above.
-- **One drawing on two slides**: its geometry goes in a stdlib module
-  (`aimanim/aurora.py`, in its own units) and each scene scales it, so the
-  slides cannot drift apart.
-- **Static things** (title, grid, axes) go in `background`: on screen before
-  the first word, and labels may lie on them without a `[layout]` note.
-- **The Aurora reticle, whole or a part: `kit.reticle(kit.mil_to(scale,
-  aim), window)`**, never drawn by hand. A window without the aim point
-  leaves the chevron out (docs/aurora/stadia.png).
-- **TARGET → MIL READING → FORMULA → RESULT: `kit.chain`**, one row per
-  word, colours ACCENT / SECOND / INK / ACCENT. Its arrows are placed from
-  the baselines (0.17 + 0.06 under, 0.59 + 0.08 over), never from the text
-  boxes: a row with a descender ("per") left the box-placed arrow a dot.
-- **`kit.chain(items, top, step=...)`**: give `step=` by name; positionally
-  it is `x`, and the chain moved right (mil-drop).
-- **A target behind the reticle** (plate, car): `set_z_index(-1)` and a fill
-  of opacity 0.35–0.6, so the reticle lines stay on top.
-- **Many people (hundreds to 10,000): `kit.dots` / `kit.people`**, one
-  VMobject each, placed by `kit.grid_points`; never one Dot per person.
-  They Transform as one object (the 10,000 → 2×2 split, scr-outcomes).
-  Figures below h 0.26 with a body 1.5 heads wide read as ovals (scr-cost).
-  Statistics slides: the `binary-diagnostics` skill §6.
-- **Light a column or row: `kit.box`** (four Lines). A Rectangle is one
-  box to the check, so every text inside it gets a "touches" note.
-- **Two text lines 0.7 apart touch** when the upper has a descender
-  ("screening" over "test"): 0.8 apart (scr-accuracy).
-- **Row names rotated** need the row as tall as the word is wide (2.9 for
-  "flagged" at 56), and x ≥ −3.58 to stay inside SIDE (scr-outcomes).
-- At most 3 objects move in one step: group parts with `VGroup`.
-- No effects or polish Jacek didn't ask for.
+Making a slide: T01 the loop · T02 a share · T03/T04 a 2×2 table and its
+rates · T05 A vs B · T06 a sweep · T07/T08 calculation, formula · T09 to
+scale · T10 a timeline · T11 answer vs truth · T12 counts → people · T13 cue words.
 
-## 5. The check — runs inside every render
-`kit.run` checks the last frame (= the still) and prints:
-```
-[layout] "1200 + 3200 = 4400" is past SIDE (-4.04..4.04)
-[layout] "6400 mil" is 0.13 above TOP
-[layout] "1600" touches a Arrow
-```
-- Fix every note, or say in the answer why it is a false alarm. The check
-  uses boxes: a DIAGONAL arrow's box is large, so "touches a Arrow" next to
-  a diagonal can be false — look at the still.
-- Then still look at the half-size PNG (Read it): the check cannot see
-  meaning (wrong label on an arrow, a confusing picture).
-- For the bottom margin of an existing PNG, measure pixels: lowest ink must
-  be ≥ 480 px from the bottom at full size, and side margins ≥ 60 px. The
-  box check missed "300 m" at 55 px from the edge (mil-angle): measure.
+## 5. The check inside every render
+`kit.run` checks the last frame (the still) and prints `[layout]` notes:
+outside the safe area, text touching text, text touching a drawing
+(boxes; a stroke-only line is sampled along its path). Fix every note or
+say why it is a false alarm; then look at the picture — the check cannot
+see meaning.
 
-## 6. Units and words
-- Metric only on screen (Jacek, 2026-10-05). Imperial sources are converted
-  in spec.md, with the conversion shown; MOA and mil are angles, fine.
-- Numbers on screen are computed in scene.py from the spec's data (never
-  typed twice), and rounded the way the narration says them.
-- When a slide changes what he says (a number, a unit, a sentence split),
-  update `films/<film>.script.txt` in the same turn.
-
-## 7. Growing this skill (do this every time)
-When a still needs a layout fix that is not covered above:
-1. fix it in the scene;
-2. if it can happen again: make it a helper or a check in `aimanim/kit.py`,
-   or a measured size / rule in this file (with the slide it came from);
-3. if the fix changes how existing slides render, re-render them and show
-   they are unchanged (pixel diff) or show what changed.
-The goal: the next slide needs no layout fix at all.
+## 6. Growing (every time)
+A new fix or recipe → `docs/patterns/` (template in its README): search
+first, then add the slide to an existing entry or open a new one as a
+`note`; climb the ladder (note → pseudocode → code → helper) the second
+time. A helper changing renders → re-render and show the stills unchanged
+(checksum) or what changed. End of a film: `python -m aimanim.patterns due`
+and the `grow-skills` pass. The goal: the next slide needs no fix.

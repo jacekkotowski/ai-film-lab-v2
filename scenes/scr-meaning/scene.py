@@ -11,7 +11,7 @@ in a row is the share you see.
 import sys
 from pathlib import Path
 
-from manim import Circle, FadeIn, Scene, VGroup
+from manim import FadeIn, Scene, VGroup
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
@@ -63,8 +63,7 @@ class Slide(Scene):
 
     def step_cleared(self):
         grey, red, where = pile(T.negative, T.fn, 2, NEG_TOP, NEG_COLS, NEG_PITCH, NEG_R)
-        rings = VGroup(*[Circle(radius=RING_R).move_to((x, y, 0)).set_stroke(frame.SICK, 4)
-                         for x, y in where])
+        rings = kit.ring(where, RING_R)
         return [FadeIn(kit.text(f"NPV: {T.negative:,} cleared", 0, ROWS["neg_head"])),
                 FadeIn(VGroup(grey, red, rings)),
                 FadeIn(kit.text(NPV_TEXT, 0, ROWS["neg_res"], frame.SECOND))]

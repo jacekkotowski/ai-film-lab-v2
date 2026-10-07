@@ -2,6 +2,21 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-07 screening: slides narrated (175.8 s). Intro/outro are Claude's
+  DRAFTS (script_intro/outro.txt in film-lab), not yet his words. With them
+  the film will be ~4 min (words ÷ 1.4/s), not the 2:30 first asked.
+  Published once more for them on his request "give me intro and outro"
+  without asking first (memory says ask): narration.txt reported
+  "unchanged", its time stamp 11:04:21 kept.
+- 2026-10-07 the qmd `history` collection is film-lab's log, last indexed
+  2026-09-24; only ai-manim's (`manim-history`) refreshes on commit.
+- 2026-10-07 every slide re-rendered at full size with the new check
+  (stroke sampling, layout.py, kit.ring): no [layout] note on any film
+  slide, all margins inside the rules, 16 of 17 stills byte-identical.
+  mil-finale differs: its published still in film-lab (10-06 20:42) is
+  older than commit 070f962 (21:41, last lines 0.80 apart); the clips are
+  newer. Republish mil-measure's still only if he wants it (ask first).
+
 - 2026-10-06 screening film: 5 slides, stills only, waiting for him to
   narrate. Not checked: Kagan's 75,821; the NYT's 85 % (title and date
   only); Gigerenzer and Gil from search snippets, not the papers. Slide 04's

@@ -26,6 +26,11 @@ and its words are `films/<name>.script.txt`, sections marked `[intro]`,
 Decision 0003 (ai-manim writes into its film-lab project). Standard
 library only; film.yaml is read by film-lab's own Python.
 
+  check     any time before narrating: each slide's BEAT_WORDS / BEAT_LINES
+            / RUN_TIMES rehearsed against its paragraph at 2.5 words/s,
+            with the same matcher the clips use. Renders nothing.
+
+    python -m aimanim.film zeroing check
     python -m aimanim.film zeroing publish
     python -m aimanim.film zeroing clips
 """
@@ -326,11 +331,67 @@ def clips(name: str, root: Path = ROOT) -> list[str]:
     return report
 
 
+def check(name: str, root: Path = ROOT) -> list[str]:
+    """Before he narrates: every slide's steps rehearsed against its
+    paragraph of the script (beats.rehearse, 2.5 words/s). Nothing is
+    rendered or written."""
+    film, parts = load(name, root)
+    report, total = [], 0.0
+    for s in film.slides:
+        words = parts.get(f"{s.picture:02d}", "")
+        b = beats.scene_beats(root / "scenes" / s.scene / "scene.py")
+        report.append(f"{s.name}")
+        if not words:
+            report.append("  PROBLEM: no paragraph in the script")
+            continue
+        lines = beats.rehearse(words, b.get("BEAT_WORDS", []), b.get("BEAT_LINES", []),
+                               b.get("RUN_TIMES", []))
+        total += beats.rehearsal(words).total
+        report += [f"  {ln}" for ln in lines]
+    for k in ("intro", "outro"):
+        if parts.get(k):
+            total += beats.rehearsal(parts[k]).total
+    report.append(f"film: ~{total:.0f} s ({total / 60:.1f} min) at "
+                  f"{beats.SPEAK_WPS} words/s")
+    return report
+
+
+def narrated(name: str, root: Path = ROOT) -> bool:
+    """Every slide has a timing.json: its clips follow his real voice, so a
+    rehearsal (a prediction) no longer matters."""
+    film, _ = load(name, root)
+    return all((root / "scenes" / s.scene / "timing.json").exists() for s in film.slides)
+
+
+def gate(root: Path = ROOT) -> list[str]:
+    """For the pre-commit hook: rehearse every film not yet narrated; any
+    PROBLEM line fails the commit. Narrated films are skipped."""
+    out = []
+    for f in sorted((root / "films").glob("*.txt")):
+        if f.name.endswith(".script.txt"):
+            continue
+        name = f.stem
+        if narrated(name, root):
+            out.append(f"{name}: narrated, skipped")
+            continue
+        probs = [ln for ln in check(name, root) if "PROBLEM" in ln]
+        out.append(f"{name}: " + ("rehearsed, ok" if not probs else f"{len(probs)} PROBLEM"))
+        out += probs
+    return out
+
+
+COMMANDS = {"publish": publish, "clips": clips, "check": check}
+
+
 def main(argv: list[str]) -> int:
-    if len(argv) != 2 or argv[1] not in ("publish", "clips"):
-        print("python -m aimanim.film <film> publish | clips", file=sys.stderr)
+    if argv == ["--gate"]:
+        lines = gate()
+        print("\n".join(lines))
+        return 1 if any("PROBLEM" in ln for ln in lines) else 0
+    if len(argv) != 2 or argv[1] not in COMMANDS:
+        print("python -m aimanim.film <film> check | publish | clips", file=sys.stderr)
         return 2
-    print("\n".join((publish if argv[1] == "publish" else clips)(argv[0])))
+    print("\n".join(COMMANDS[argv[1]](argv[0])))
     return 0
 
 

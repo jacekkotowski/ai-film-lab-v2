@@ -21,7 +21,7 @@ Gigerenzer's 160 gynecologists most often answered 9 in 10, not 1 in 10.
 2. line 1, "cleared" — "NPV: 9,483 cleared", the 9,483 dots + 2 rings, "99.98% healthy"
 3. line 2, "Gerd" — "9 in 10" struck (doctors) | "1 in 10" (truth)
 
-Layout note "9 in 10 touches a Line": the strike-through, meant.
+No layout notes (the strike-through is known to the check since 2026-10-07).
 "9,481 / 9,483 = 99.98%" is 8.9 units at 56, wider than the slide: shown
 as "99.98% healthy" under the header with 9,483.
 

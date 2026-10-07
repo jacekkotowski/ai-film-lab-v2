@@ -108,16 +108,15 @@ pregnancies — **not re-read**).
   (`aimanim/screening.py`, shared by slides 1 and 2) and Transform each
   cell's dots to its place: columns first (truth), then rows (test).
 - **Light a column or row with `kit.box`** (four Lines, so texts inside
-  give no layout notes); cross out with `kit.strike` (its own layout note
-  "touches a Line" is meant).
+  give no layout notes); cross out with `kit.strike` (the check knows it
+  crosses its own text). Recipes: `docs/patterns/tasks.md`.
 - **People**: `kit.people(points, h)` — 499 at h 0.26, pitch 0.222 × 0.286
   read as figures at 1080×1920; at h 0.22 with a thin body they did not.
   One fading figure in 499 is invisible on a phone: colour it.
 - **Rotated row names** (`flagged`, `cleared`) at x −3.58: 0.76 wide, need
   a row ≥ 2.9 tall at 56.
-- Sizes at 56: "sensitivity 90%" 5.90, "9,481 / 9,483" 5.10, "18 / 517 =
-  1 in 29" 6.96, "positives in 100,000" 7.86, "healthy pregnancies" 7.94,
-  "per 10,000 screened" 8.09 → too wide.
+- Label widths of these slides: `python -m aimanim.layout sizes` (all in
+  `docs/tech/sizes.json`; "per 10,000 screened" is 8.09, too wide).
 
 ## 7. Reusable pieces (where)
 

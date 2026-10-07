@@ -4,3 +4,4 @@ media/
 scenes/*/out/
 films/*/
 .claude/settings.local.json
+.local/

@@ -35,19 +35,28 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    the circle unless he says otherwise; say which convention you used.
 
 4. **Write `scenes/<slug>/spec.md`** (copy `scenes/_template/spec.md`): problem, one idea, data, 3–6 steps,
-   and a suggested narration of about 2.5 words per second (150 a minute). The
+   and a suggested narration. Length: he speaks ~1.4 words per second
+   (measured, docs/tech/narration.md), so a film of T seconds holds about
+   1.4 × T words (2:30 ≈ 210 words), not 2.5 × T. The
    narration is a suggestion; he says it his own way.
 
 5. **Write `scenes/<slug>/scene.py`** from `scenes/_template/scene.py`:
    class `Slide`, content constants at the top, one `step_*` method per
    step returning its animations, `BEAT_LINES` / `RUN_TIMES`, placement with
    `kit.text` / `kit.title`, `kit.run` at the end. Measure text with
-   `kit.fits` before choosing positions (`slide-layout` §3).
+   `kit fits` before choosing positions (`slide-layout` §1).
+
+5a. **Plan before drawing** (`slide-layout` §1, recipe T01): `kit fits` every label in
+   one call, `kit stack` the column; copy the baselines into the constants.
 
 6. **Render the still at half size** and look at it (Read the PNG):
    ```
-   uv run --extra render manim -s -r 540,960 --media_dir scenes/<slug>/out scenes/<slug>/scene.py Slide
+   python -m aimanim.look still <slug>
    ```
+   (prints only the [layout] notes, the size and the pixel margins). After
+   the steps are written, `python -m aimanim.film <film> check` rehearses
+   every BEAT_WORD against the script; `look draft <slug>` shows the end
+   of every step in `out/steps.png`.
    Fix every `[layout]` note it prints (or say why it is a false alarm),
    then look: vertical, nothing in the bottom quarter, nothing overlapping,
    the picture says the one idea. Re-render until clean. A new kind of

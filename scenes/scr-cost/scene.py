@@ -35,7 +35,7 @@ WEEK_Y0, PER_WEEK = 1.35, 0.41                       # week 12 at 1.35, 17 at -0
 ROWS = {"sum": -1.95, "what": -2.8, "per": -3.65}
 
 # ---- timing --------------------------------------------------------------
-BEAT_WORDS = ["Each", "wait", "result", "needle"]
+BEAT_WORDS = ["Each", "wait", "two", "needle"]   # "result" ran into "needle" (film check)
 BEAT_LINES = [0, 1, 1, 2]
 RUN_TIMES = [1.5, 1.0, 1.0, 1.5]
 

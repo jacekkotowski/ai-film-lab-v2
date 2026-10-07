@@ -209,6 +209,84 @@ def starts_for(timing: Timing, beat_lines: list[int]) -> list[float]:
 
 
 # --------------------------------------------------------------------------
+# Rehearsal: the script read aloud at a steady pace, BEFORE he narrates
+# --------------------------------------------------------------------------
+
+# 2.5 words a second, the pace new-scene writes for. MEASURED on the
+# screening take (2026-10-07): he speaks 1.2-1.8, 1.43 on average
+# (docs/tech/narration.md), so a gap the rehearsal accepts is longer in
+# his voice: this is the cautious side. Films last words / 1.4 seconds.
+SPEAK_WPS = 2.5
+
+
+def sentences(paragraph: str) -> list[str]:
+    """A paragraph's sentences: split after . ! ? followed by a space, so
+    "99.8 percent" and "0.90 / 0.05" stay whole."""
+    return [s for s in re.split(r"(?<=[.!?])\s+", paragraph.strip()) if s]
+
+
+def rehearsal(paragraph: str, wps: float = SPEAK_WPS) -> Timing:
+    """The paragraph as if read at `wps` words a second, every word timed:
+    the same shape film-lab's captions give, so the real matcher runs on it."""
+    lines, t = [], 0.0
+    for s in sentences(paragraph):
+        n = len(s.split())
+        words = [round(t + k / wps, 3) for k in range(n)]
+        lines.append(Line(s, round(t, 3), round(t + n / wps, 3), words))
+        t += n / wps
+    return Timing(lines, round(t, 3), f"rehearsal at {wps} words/s")
+
+
+def scene_beats(scene_py: Path) -> dict:
+    """BEAT_WORDS, BEAT_LINES, RUN_TIMES of a scene.py, read without
+    running it (no Manim): only literal assignments count."""
+    import ast
+    found = {}
+    for node in ast.parse(Path(scene_py).read_text(encoding="utf-8")).body:
+        target = node.target if isinstance(node, ast.AnnAssign) else (
+            node.targets[0] if isinstance(node, ast.Assign) and len(node.targets) == 1 else None)
+        if isinstance(target, ast.Name) and target.id in ("BEAT_WORDS", "BEAT_LINES", "RUN_TIMES"):
+            try:
+                found[target.id] = ast.literal_eval(node.value)
+            except ValueError:
+                pass
+    return found
+
+
+def rehearse(paragraph: str, beat_words: list[str], beat_lines: list[int],
+             run_times: list[float], wps: float = SPEAK_WPS) -> list[str]:
+    """Each step's word, the sentence it is in, when it would start at
+    `wps`, and every problem the real clips would have: a word not in the
+    script, a word in another sentence than BEAT_LINES says, a step that
+    starts late or an animation that runs past the words."""
+    timing = rehearsal(paragraph, wps)
+    out = [f"{len(paragraph.split())} words, {len(timing.lines)} sentences, "
+           f"~{timing.total:.1f} s at {wps} words/s"]
+    if len(set(map(len, (beat_lines, run_times)))) != 1 or (
+            beat_words and len(beat_words) != len(run_times)):
+        return out + [f"PROBLEM: {len(beat_words)} words, {len(beat_lines)} lines, "
+                      f"{len(run_times)} run times: one each per step"]
+    if beat_words:
+        starts, missing = starts_by_words(timing, beat_words)
+    else:
+        starts, missing = starts_for(timing, beat_lines), []
+    for i, st in enumerate(starts):
+        line = next((k for k, ln in enumerate(timing.lines)
+                     if ln.start <= st < ln.end or (k == len(timing.lines) - 1)), 0)
+        cue = beat_words[i] if beat_words else f"sentence {beat_lines[i]}"
+        flag = ""
+        if beat_words and beat_words[i] in missing:
+            flag = "  PROBLEM: not in the script"
+        elif beat_lines[i] != line:
+            flag = f"  PROBLEM: BEAT_LINES says {beat_lines[i]}"
+        out.append(f"step {i + 1}: {cue!r} in sentence {line}, at {st:.1f} s, "
+                   f"runs {run_times[i]:.1f} s{flag}")
+    p = plan(starts, run_times, timing.total)
+    out += [f"PROBLEM: {n}" for n in p.notes]
+    return out
+
+
+# --------------------------------------------------------------------------
 # Reading an ai-film-lab project (read only -- decision 0001)
 # --------------------------------------------------------------------------
 

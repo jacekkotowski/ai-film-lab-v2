@@ -10,6 +10,10 @@ description: After Jacek has narrated a film's slides in ai-film-lab (and run `f
 1. **Which film?** `films/<film>.txt` names the film-lab project. Load
    `slide-layout` before changing any scene.
 
+1a. **Before he narrates** (any time): `python -m aimanim.film <film> check`
+   rehearses every step's word at 2.5 words/s with the same matcher;
+   fix its PROBLEM lines first (recipe T13, issues I16–I17), so `clips` has none.
+
 2. **One command does it all:**
    ```
    python -m aimanim.film <film> clips

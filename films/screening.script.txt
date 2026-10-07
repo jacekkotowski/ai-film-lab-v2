@@ -1,9 +1,15 @@
 SCREENING -- script (2026-10-06), Jacek's corrected draft, word for word (250 words)
-No camera intro or outro: his "Intro" and "Outro" have animations, so
-all five are slides you narrate over (narration.txt, one paragraph each).
+Slides 01-05 are narrated (2026-10-07, voiceover_20261007-110422). Intro
+and outro are camera takes (0_rec_20261007-111320, close_rec_20261007-111642),
+drafted by Claude, his edits copied back from film-lab ("humble", 2026-10-07).
 `python -m aimanim.film screening publish` puts them there. A line starting
 with a section mark in brackets starts a section. One sentence per step
 (BEAT_LINES); the word each step starts on is BEAT_WORDS in each scene.py.
+
+
+[intro]
+
+I am a humble data scientist. Every model I build that answers yes or no, sick or healthy, fraud or not, is judged by one table of four numbers. Doctors judge screening tests with the same table. Here is what it tells a pregnant woman whose test comes back positive.
 
 
 [01] Intro   (slide scr-accuracy)
@@ -29,6 +35,11 @@ Blood tests catch 99.7 percent of Down syndrome and were sold as highly accurate
 [05] The price of a false alarm   (slide scr-cost)
 
 Each of the 499 false alarms is a mother told her baby may be ill. She can wait until week 15 for amniocentesis, a needle into the womb, then up to two weeks for the result. That needle ends about 3 pregnancies in 1,000, so if all 499 take it, one or two healthy babies are lost.
+
+
+[outro]
+
+So when a test comes back positive, ask two questions. How common is the condition in people like me? And how many false alarms does the test raise for every case it finds? Here it was 499 false alarms for 18 cases. The same table judges every yes-or-no model, a logistic regression included: accuracy alone hides the rare case.
 
 
 -----------------------------------------------------------------------

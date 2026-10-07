@@ -1,0 +1,134 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "PowerShell",
+      "Edit",
+      "Write",
+      "Bash(uv run --extra dev pytest)",
+      "Bash(uv run --extra dev pytest -q)",
+      "Bash(uv run film check *)",
+      "Bash(uv run film peek *)",
+      "Bash(uv run film draft *)",
+      "Bash(uv --version)",
+      "Bash(./.venv/Scripts/python.exe *)",
+      "Bash(.venv/Scripts/python.exe *)",
+
+      "Bash(ffprobe *)",
+      "Bash(ffmpeg *)",
+
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(ls *)",
+      "Bash(wc *)",
+      "Bash(sed -n *)",
+      "Bash(grep *)",
+      "Bash(rg *)",
+      "Bash(find *)",
+      "Bash(for *)",
+
+      "Bash(git status)",
+      "Bash(git status *)",
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git show *)",
+
+      "PowerShell(uv run --extra dev pytest*)",
+      "PowerShell(uv run film check*)",
+      "PowerShell(uv run film peek*)",
+      "PowerShell(uv run film draft*)",
+      "PowerShell(uv --version)",
+      "PowerShell(.\\.venv\\Scripts\\python.exe *)",
+      "PowerShell(& $py *)",
+      "PowerShell(ffprobe *)",
+      "PowerShell(ffmpeg *)",
+      "PowerShell(Get-ChildItem*)",
+      "PowerShell(Get-Content*)",
+      "PowerShell(Get-Item*)",
+      "PowerShell(Test-Path*)",
+      "PowerShell(Select-String*)",
+      "PowerShell(Measure-Object*)",
+      "PowerShell(Resolve-Path*)",
+      "PowerShell(git status*)",
+      "PowerShell(git log*)",
+      "PowerShell(git diff*)",
+      "PowerShell(git show*)",
+
+      "Read(//c/Users/jacek/code/ai-film-lab/**)",
+      "Glob(//c/Users/jacek/code/ai-film-lab/**)",
+      "Grep(//c/Users/jacek/code/ai-film-lab/**)"
+    ]
+  },
+
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/commit_gate.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/long_session.py\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard_media.py\"",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "WebFetch|WebSearch|mcp__.*firecrawl.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"You just read documentation from the web. Before finishing this task, save what this project needs from it (the call, the version, the trap) to docs/tech/<library>.md and list it in docs/tech/README.md, so no later session fetches it again.\"}}'",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/run_tests.py\"",
+            "timeout": 120,
+            "statusMessage": "tests"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/check_film.py\"",
+            "timeout": 120,
+            "statusMessage": "film check"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,1087 @@
+"""
+voice.py  --  turn a spoken track into captions with real timestamps.
+
+    uv run film caption -p my_movie
+
+Runs entirely on your machine. Nothing is uploaded, no account, no
+internet needed after the model downloads once. Uses faster-whisper
+(CTranslate2), which is several times quicker than the reference
+Whisper on a CPU-only laptop and needs no GPU.
+
+What this solves: writing `at:`/`dur:` for captions by hand means
+guessing when you said a line and re-rendering to check. This listens
+to what you actually said and writes the timing for you. You keep only
+the judgment call a machine cannot make -- which lines are worth
+putting on screen, and which shot each one belongs to.
+
+The model downloads once (about 460 MB for the default 'small' size) and
+is cached by faster-whisper itself -- nothing this toolkit manages.
+"""
+
+from __future__ import annotations
+
+import copy
+import difflib
+import json
+import logging
+import os
+import re
+import subprocess
+from dataclasses import dataclass, field
+from pathlib import Path
+
+from . import ingest, kinds
+
+AUDIO_EXT = kinds.AUDIO
+VIDEO_EXT = kinds.VIDEO
+
+
+@dataclass
+class Line:
+    text: str
+    start: float
+    end: float
+    words: list[float] = field(default_factory=list)   # when each word starts
+    # Which sentence of the script this came from, or -1 when there was
+    # no script and the line was made by listening. It is what lets a
+    # paragraph be found again in the finished timing -- see
+    # paragraph_windows. Never written to film.yaml.
+    unit: int = -1
+
+    def __post_init__(self):
+        # The speech model hands back numpy scalars, not Python floats.
+        # They compare and arithmetic like floats, so nothing complains --
+        # until one reaches yaml.dump, which writes it as
+        # !!python/object/apply:numpy._core.multiarray.scalar and produces
+        # a film.yaml that safe_load then refuses to read. Coerce at the
+        # door, once, rather than hunting them downstream.
+        self.text = str(self.text)
+        self.start = float(self.start)
+        self.end = float(self.end)
+        self.words = [float(w) for w in self.words]
+
+    @property
+    def dur(self) -> float:
+        return self.end - self.start
+
+
+def has_audio_track(path: Path) -> bool:
+    """Some clips are silent (a screen recording, a muted export). Check
+    before trying to extract, so the error is clear instead of cryptic."""
+    from .ffmpeg import ffmpeg_bin, ffprobe_bin
+    exe = ffprobe_bin()
+    r = subprocess.run(
+        [exe, "-v", "error", "-select_streams", "a", "-show_entries",
+         "stream=index", "-of", "csv=p=0", str(path)],
+        capture_output=True, text=True)
+    return bool(r.stdout.strip())
+
+
+def extract_audio(video: Path, out: Path) -> Path:
+    """Pull the audio track out of a video file, once, to a plain wav.
+    Re-used on later runs unless the source video is newer."""
+    from .ffmpeg import ffmpeg_bin, ffprobe_bin
+    if out.exists() and out.stat().st_mtime > video.stat().st_mtime:
+        return out
+    out.parent.mkdir(parents=True, exist_ok=True)
+    r = subprocess.run(
+        [ffmpeg_bin(), "-y", "-hide_banner", "-loglevel", "error",
+         "-i", str(video), "-vn", "-ac", "1", "-ar", "16000", str(out)],
+        capture_output=True, text=True)
+    if r.returncode != 0 or not out.exists():
+        raise SystemExit(f"Could not extract audio from {video.name}: "
+                         f"{r.stderr.strip()[-300:]}")
+    return out
+
+
+@dataclass
+class VoiceSource:
+    """One thing to transcribe, and -- for video -- which shot(s) in
+    film.yaml it corresponds to, so lines land on the right shot even
+    when several clips each have their own talking."""
+    audio_path: Path        # extracted wav or original audio file
+    label: str               # for messages: the file this came from
+    shot_srcs: list[str]     # film.yaml `src:` values this audio covers
+
+
+def slides_using(film, path: Path) -> list[str]:
+    """The `voice:` values in this film that name this file.
+
+    A narration cut into slides is NOT a global source, even though it
+    is one file playing over the whole film. A global source is matched
+    against the FILM's clock -- "which shot is on screen at 0:42?" --
+    and a slide film's narration is not on that clock: its pieces are
+    scattered across the shots that quote them, in whatever order those
+    shots ended up in. Handed back as the source's `shot_srcs`, it is
+    matched on the narration's own clock instead, exactly the way a
+    talking clip's audio already is.
+    """
+    if film is None:
+        return []
+    want = Path(path).resolve()
+    out: list[str] = []
+    for s in film.shots:
+        if s.voice and s.voice not in out:
+            # A shortened copy (tighten.py) is the same recording. Compared
+            # by path alone, a narration whose slides all play its copy was
+            # quoted by none, and never listened to (Zeroing a Rifle Sight,
+            # 2026-10-06: five slides, no captions).
+            try:
+                played_here = film.resolve(s.voice)
+                same = want in (played_here.resolve(),
+                                kinds.recording_of(played_here).resolve())
+            except OSError:
+                continue
+            if same:
+                out.append(s.voice)
+    return out
+
+
+def played(film, path: Path, quoted: list[str]) -> Path:
+    """The file to transcribe for a recording its slides quote: the one
+    they play. Their `in`/`out` are on a shortened copy's clock when they
+    play the copy, and captions timed off the original would land late by
+    every pause cut out before them. More than one file (an old film.yaml
+    brought back by `undo` beside a new one): the original, as before."""
+    files = {film.resolve(v) for v in quoted} if film is not None else set()
+    return files.pop() if len(files) == 1 else path
+
+
+def voice_sources(project: Path, film=None) -> list[VoiceSource]:
+    """What can be transcribed, in priority order:
+
+    1. A file named `voiceover*` in media/ -- `voiceover.mp3` or a dated
+       `voiceover_20260917-104512.wav` (`film record --voice`) alike --
+       always wins outright, on the assumption that if you bothered to
+       record and name one, that IS the narration, even if your clips
+       also have sound.
+    2. Any other standalone audio file in media/ (a phone voice memo,
+       an mp3) -- same idea, just not specially named.
+    3. Otherwise, every video clip that has its own audio track gets its
+       audio extracted and transcribed separately -- this is "captions
+       for me talking in the clips" with no extra recording needed.
+
+    Rule 2 is right for a voice memo and quietly wrong for a piece of
+    music dropped into media/ instead of music/ -- two folders side by
+    side, and an easy mistake. It still wins, because a file somebody put
+    in media/ is material; but it now says out loud which file it took
+    and what it therefore did NOT listen to, so the answer to "why are my
+    captions the lyrics" is on screen instead of being guessed at.
+
+    Nothing in media/_discarded/ or media/_unreadable/ is ever a source.
+    A take you fluffed and asked to redo used to be transcribed anyway,
+    and its words captioned onto the take you kept.
+    """
+    media = project / "media"
+    here = [p for p in sorted(media.rglob("*"))
+            if p.is_file() and not kinds.is_aside(p, media)]
+
+    # A prefix, not "voiceover." exactly -- `film record --voice` names a
+    # dated take `voiceover_20260917-104512.wav` (record.take_name), and
+    # that still has to win outright, the same as a plain `voiceover.mp3`.
+    # The same choice `init` makes, by the same function: the newest
+    # narration, `voiceover*` first, audio only. See kinds.pick_narration
+    # for the day the oldest take was used instead.
+    pick = kinds.pick_narration(here)
+    clips = [p for p in here if p.suffix.lower() in VIDEO_EXT]
+    if pick is not None and pick.name.lower().startswith("voiceover"):
+        quoted = slides_using(film, pick)
+        narration = [VoiceSource(played(film, pick, quoted), pick.name, quoted)]
+        # A picture said again (`record --voice --picture N`) is its own
+        # file under its own shot; listened to only if a shot uses it.
+        for p in here:
+            if kinds.is_picture_retake(p) and slides_using(film, p):
+                q = slides_using(film, p)
+                narration.append(VoiceSource(played(film, p, q), p.name, q))
+        if not quoted:
+            # Slides that carry `voice:` and none of them quote this
+            # narration: every picture was said again, and the narration
+            # is no longer in the film. Listened to anyway it was taken
+            # for one track under the whole film and put 34 lines of
+            # old words on top of each retake's own captions (Excel Time
+            # Logic, 2026-10-02).
+            # The clips are still listened to, below: the intro and the
+            # closing are camera takes with their own words, and the old
+            # narration had been captioning them by film time.
+            if not (film is not None and any(s.voice for s in film.shots)):
+                return narration
+            narration = narration[1:]
+        # The narration is cut across the pictures, and every clip keeps
+        # its own sound -- so the clips are listened to as well. Only the
+        # ones the film uses: listening takes minutes, and a clip no shot
+        # uses has nothing to be captioned onto.
+        in_film = {s.src for s in film.shots if s.kind == "video"}
+        return narration + _clip_sources(
+            project, [p for p in clips
+                      if p.relative_to(project).as_posix() in in_film])
+
+    standalone = [p for p in here if p.suffix.lower() in AUDIO_EXT]
+    if pick is not None:
+        if len(standalone) > 1:
+            print(f"  {len(standalone)} audio files in media\\ -- listening to "
+                  f"{pick.name} (the newest).")
+        if clips:
+            print(f"  Listening to {pick.name}, NOT to the sound in "
+                  f"your {len(clips)} clip(s).")
+            print("  A standalone audio file in media\\ is taken as the "
+                  "narration. If that")
+            print("  file is music, move it to the music\\ folder next door "
+                  "and run this again.")
+        quoted = slides_using(film, pick)
+        return [VoiceSource(played(film, pick, quoted), pick.name, quoted)]
+
+    return _clip_sources(project, clips)
+
+
+def _clip_sources(project: Path, clips: list[Path]) -> list[VoiceSource]:
+    """Each clip with a sound track, as its own source, matched to the
+    shots that use it."""
+    from . import ingest as ingest_mod
+
+    cache = project / "analysis" / "audio"
+    sources = []
+    for p in clips:
+        if not has_audio_track(p):
+            continue
+        rel = p.relative_to(project).as_posix()
+        wav = cache / f"{ingest_mod.key_of(project, rel)}.wav"
+        sources.append(VoiceSource(extract_audio(p, wav), p.name, [rel]))
+    return sources
+
+
+# The silence between two words that means the speaker finished a
+# thought. Ordinary gaps between words in running speech are under a
+# tenth of a second; a breath is a third of one or more.
+PAUSE = 0.35
+
+# Below this, a caption on its own reads as a glitch rather than as a
+# line. Used both to refuse a break that would leave a fragment, and to
+# fold a stray tail onto the line before it.
+MIN_WORDS = 3
+
+
+def _line(chunk: list) -> Line | None:
+    text = "".join(x.word for x in chunk).strip()
+    return Line(text, chunk[0].start, chunk[-1].end) if text else None
+
+
+def _breath(chunk: list) -> int:
+    """Where to cut a run of words that has to be cut somewhere.
+
+    The widest silence in it -- because that is where the speaker
+    paused, and a pause is where a sentence ends whether or not the
+    transcript says so. Never so near either end that one side comes out
+    a fragment. 0 means there is nowhere good.
+    """
+    best, where = 0.0, 0
+    for i in range(MIN_WORDS, len(chunk) - MIN_WORDS + 1):
+        gap = chunk[i].start - chunk[i - 1].end
+        if gap > best:
+            best, where = gap, i
+    return where
+
+
+def _chunk_words(words: list, max_words: int = 16) -> list[Line]:
+    """Group words into on-screen lines, broken where the sense breaks.
+
+    Whisper's own segments are often a whole breath or more -- too long
+    to read comfortably as one caption. Three things end a line, in
+    order of how much they mean:
+
+    Real punctuation (. ! ?), which is the model telling us a sentence
+    finished. Then a PAUSE, which is the SPEAKER telling us the same
+    thing -- and which matters more than it sounds, because whisper
+    punctuates some recordings barely at all, and on those the only
+    other rule left was word count. Then a comma, once there is enough
+    on screen to be worth breaking.
+
+    The comma and word-count thresholds are deliberately generous --
+    raised from the values this shipped with, which cut sentences at
+    their first internal clause even when nothing about the audio
+    called for it. A caption that runs a little long is still readable;
+    one snapped off at a comma is a different sentence than the one
+    spoken.
+
+    Only when none of those has happened for `max_words` is a line cut
+    for length, and even then it is cut at the widest silence inside it
+    rather than at whatever word the counter happened to reach. Half a
+    sentence on screen does not just read badly; it can read as
+    something the speaker did not say.
+    """
+    lines: list[Line] = []
+    chunk: list = []
+
+    def flush() -> None:
+        nonlocal chunk
+        made = _line(chunk)
+        if made:
+            lines.append(made)
+        chunk = []
+
+    for w in words:
+        # A breath before this word ends the line that came before it.
+        if (len(chunk) >= MIN_WORDS
+                and w.start - chunk[-1].end >= PAUSE):
+            flush()
+        chunk.append(w)
+
+        word_text = w.word.strip()
+        # An ellipsis is a hesitation, not a full stop. "You... feel and
+        # know what is good" is one sentence, and breaking it after
+        # "You..." leaves a caption that is a whole word of nothing.
+        trailing_off = word_text.endswith(("...", "…"))
+        if word_text.endswith((".", "!", "?")) and not trailing_off:
+            flush()
+        elif word_text.endswith(",") and len(chunk) >= 9:
+            flush()
+        elif len(chunk) >= max_words:
+            cut = _breath(chunk)
+            if cut:
+                made = _line(chunk[:cut])
+                if made:
+                    lines.append(made)
+                chunk = chunk[cut:]
+            else:
+                flush()
+
+    if chunk:
+        # Don't leave a stray one- or two-word caption dangling -- it
+        # reads as a glitch, not a stress. Fold it onto the line before
+        # it instead, if there is one.
+        made = _line(chunk)
+        if made and len(chunk) < MIN_WORDS and lines:
+            prev = lines[-1]
+            lines[-1] = Line(f"{prev.text} {made.text}", prev.start, made.end)
+        elif made:
+            lines.append(made)
+    return lines
+
+
+# --------------------------------------------------------------------------
+# Breaking the captions where YOU broke them
+#
+# `_chunk_words` below decides where a caption ends by listening: real
+# punctuation, then a breath, then a word count. It is a good guess, and
+# it is still what happens when you improvised. But when there is a
+# script.txt -- and there is, whenever you used the recording window --
+# the guessing is unnecessary. You already decided where the sentences
+# end, by typing them. This puts the words back into the shape you wrote,
+# and uses the transcript only for the one thing it is actually
+# authoritative about: WHEN each word was said.
+#
+# Nothing new is installed for this. difflib is in the standard library
+# and a four hundred word script is nothing to it.
+# --------------------------------------------------------------------------
+
+# A gap this big between two runs of the same sentence means the first
+# one was a false start -- you fluffed the line and read it again.
+FALSE_START_GAP = 3
+
+# A whole SECOND reading is a different thing from a false start, and it
+# was being treated as one. You read a sentence, stop, and read it again:
+# the edit cuts at that pause (ingest cuts pauses of about a second) and
+# keeps both readings as shots. Keeping only the last reading's caption
+# left the first one on screen with nothing under it -- 8 talking shots,
+# 47.5s of a 216s film, on "I am not your fear" (2026-09-16).
+#
+# So speech that no caption covers, standing apart from its neighbours by
+# at least this pause, is matched against the script again on its own.
+SECOND_READING_GAP = 1.0
+# ...and a written sentence counts as read there only if most of it was.
+# Under this it is a stumble, and a stumble does not get the whole
+# sentence printed over it.
+SECOND_READING_SHARE = 0.6
+
+
+def _key(text: str) -> list[str]:
+    """Words reduced to something two spellings of them can share.
+
+    Casefolded and stripped of punctuation, because the transcript
+    writes "Nagrywam," and the script writes "Nagrywam" -- and because
+    whisper's commas are its own opinion, not yours.
+    """
+    return re.findall(r"\w+", text.casefold(), flags=re.UNICODE)
+
+
+# A sentence ends with punctuation -- and then, often, with the quote
+# mark that closes what was being said. Splitting on the punctuation
+# alone missed every quoted sentence, because the character before the
+# space is the quote, not the stop:
+#
+#     the "law of laws." From care to hatred.
+#
+# stayed one unit, blew the character ceiling, and got cut mid-phrase
+# into `the recognition of that` / `murder as the "law of laws." ...`.
+SENTENCE_END = re.compile("[.!?…]+[\"'”’»)\\]]*\\s+")
+
+
+# A paragraph may open by naming the picture it belongs to: `[3]` or
+# `[3_declaration_of_love.png]`. It is an instruction, not something to
+# read out, so it is taken off here -- otherwise it would be captioned
+# onto the screen and matched against what was actually said.
+PICTURE_TAG = re.compile(r"^\[([^\]]*)\]\s*")
+
+
+def script_units(text: str) -> list[str]:
+    """The script, cut where its author cut it.
+
+    A line break you typed is a decision -- `booth.reflow` keeps those
+    and flattens the ones a window put in, so by the time a script
+    reaches here every remaining break is yours. Inside a line, the end
+    of a sentence is the other place a caption may end.
+    """
+    units: list[str] = []
+    for line in text.splitlines():
+        line = PICTURE_TAG.sub("", line.strip()).strip()
+        if not line:
+            continue
+        start = 0
+        for m in SENTENCE_END.finditer(line):
+            part = line[start:m.end()].strip()
+            if part:
+                units.append(part)
+            start = m.end()
+        tail = line[start:].strip()
+        if tail:
+            units.append(tail)
+    return units
+
+
+@dataclass
+class Paragraph:
+    """One paragraph of script.txt: the picture it names, if it named
+    one, and the sentences in it."""
+    picture: str | None
+    units: list[str]
+
+
+def script_paragraphs(text: str) -> list[Paragraph]:
+    """The script, split where its author left a blank line.
+
+    A line break inside a paragraph is already a decision -- it is where
+    a caption may end. A BLANK line is the bigger one: it is where the
+    subject changes, and so it is where the picture changes. One
+    paragraph, one slide.
+
+    The units come out of `script_units`, block by block, so the flat
+    list of them is exactly `script_units` of the whole script. That
+    matters: the matcher is given one list and the cutting reads the
+    other, and a sentence that belonged to a different paragraph in each
+    would put a picture under somebody else's words.
+    """
+    out: list[Paragraph] = []
+    for block in re.split(r"\n\s*\n", text or ""):
+        if not block.strip():
+            continue
+        first = block.lstrip().splitlines()[0] if block.strip() else ""
+        m = PICTURE_TAG.match(first.strip())
+        units = script_units(block)
+        if units:
+            out.append(Paragraph(m.group(1).strip() if m else None, units))
+    return out
+
+
+def paragraph_windows(lines: list[Line], paragraphs: list[Paragraph],
+                      breath: float = 0.3) -> list[tuple[float, float] | None]:
+    """When each paragraph was said: first word to last, plus a breath.
+
+    `lines` are what `align_to_script` gave back -- every written
+    sentence with the times of the words that said it -- and each one
+    carries the index of the sentence it came from. Grouping those by
+    paragraph is the whole trick; the timing was already done.
+
+    None for a paragraph nobody read out. A window is never allowed to
+    reach into the next one: padding both ends by a breath can make two
+    neighbours overlap, and two slides quoting the same moment would
+    say it twice, a beat apart.
+    """
+    at: dict[int, int] = {}
+    n = 0
+    for p, para in enumerate(paragraphs):
+        for _ in para.units:
+            at[n] = p
+            n += 1
+
+    spans: list[tuple[float, float] | None] = []
+    for p in range(len(paragraphs)):
+        here = [ln for ln in lines if at.get(ln.unit) == p]
+        if not here:
+            spans.append(None)
+            continue
+        spans.append((max(0.0, min(ln.start for ln in here) - breath),
+                      max(ln.end for ln in here) + breath))
+
+    said = [i for i, s in enumerate(spans) if s is not None]
+    for i, j in zip(said, said[1:]):
+        a, b = spans[i], spans[j]
+        if b[0] < a[1]:
+            mid = (a[1] + b[0]) / 2.0
+            spans[i], spans[j] = (a[0], mid), (mid, b[1])
+    return [None if s is None else (round(s[0], 2), round(s[1], 2))
+            for s in spans]
+
+
+# A caption has to be short enough to READ, and matching a script does
+# not change that. Two separate ceilings, and both were breached the
+# moment whole sentences went on screen unbroken:
+#
+#   seconds -- caption_fit clamps any caption to MAX_CAPTION_SECONDS
+#   (4.5). A sentence taking 9.4s to say therefore showed for 4.5s and
+#   left 4.9s of talking with nothing on screen at all.
+#
+#   words -- render.fit_caption WRAPS first and then SHRINKS the font
+#   until the text fits in CAPTION_MAX_LINES. A long sentence is
+#   therefore a small one, which is the other half of the same
+#   complaint.
+#
+# Kept under caption_fit's own figure rather than equal to it, so the
+# clamp there never has anything left to do.
+CAPTION_SECONDS = 4.0
+
+# Measured in CHARACTERS, not words, because that is what decides
+# whether the type has to shrink. render.wrap_to_width wraps to the
+# frame and render.fit_caption then shrinks the font until the result
+# fits in CAPTION_MAX_LINES (3) -- so what matters is how much INK a
+# caption is, and short words are not much.
+#
+# Counting words got this wrong in both directions: "I wanted to prove
+# to the girl I loved that I was worthy" is thirteen words, fifty-six
+# characters and three and a half seconds -- comfortably one caption --
+# and a word ceiling cut it into "I wanted to prove" and a remainder.
+CAPTION_CHARS = 62
+
+# A backstop, not the rule. Nothing sensible reaches it.
+CAPTION_WORDS = 18
+
+# A breath cut may not leave less than this on either side. MIN_WORDS
+# (3) was enough to permit "I wanted to", which is three words and no
+# meaning.
+BREATH_MIN_WORDS = 4
+
+# A silence has to be at least this long to count as a place somebody
+# chose to stop. Under it, one gap is no more meaningful than another.
+REAL_BREATH = 0.12
+
+# Where a sentence may be cut when it will not fit whole: at the marks
+# its author already put in it.
+CLAUSE_END = re.compile(r"(?<=[,;:—–-])\s+")
+
+
+def _atoms(unit: str) -> list[str]:
+    """One sentence, cut at its own internal punctuation. No punctuation
+    means one atom, and it gets cut on time and word count instead."""
+    return [a for a in CLAUSE_END.split(unit) if a.strip()]
+
+
+def _pack(atoms: list[str], span, tokens_before: int) -> list[tuple[str, int, int]]:
+    """Group clauses into caption-sized pieces.
+
+    Returns (text, first token, last token+1) for each piece, counted in
+    tokens of the sentence they came from -- which is how each piece
+    finds its own times later.
+    """
+    out: list[tuple[str, int, int]] = []
+    cur, lo, pos = [], tokens_before, tokens_before
+    for atom in atoms:
+        n = len(_key(atom))
+        joined = " ".join(cur + [atom])
+        wide = (len(joined) > CAPTION_CHARS
+                or len(joined.split()) > CAPTION_WORDS)
+        slow = span(lo, pos + n) > CAPTION_SECONDS
+        if cur and (wide or slow):
+            out.append((" ".join(cur), lo, pos))
+            cur, lo = [], pos
+        cur.append(atom)
+        pos += n
+    if cur:
+        out.append((" ".join(cur), lo, pos))
+    return out
+
+
+def _by_breath(text: str, lo: int, hi: int, at, span) -> list[tuple[str, int, int]]:
+    """A clause still too long on its own, cut where the speaker breathed.
+
+    Same rule as `_breath` uses on an unscripted take: the widest silence
+    beats whatever word a counter happened to reach.
+
+    Width is the only reason to cut. Not time.
+
+    Time was tried twice and was wrong twice. Text past the character
+    ceiling has its type shrunk by render.fit_caption until it fits, and
+    a caption nobody can read is no caption -- so width must force a
+    break. A phrase that merely takes a while does not: caption_fit
+    clamps the display to 4.5s, so it shows for four and a half and
+    leaves a second or so bare. That is the whole cost.
+
+    Against it, from one real film:
+
+        the recognition of / that murder as / the "law of laws."
+
+    when the clock could cut anywhere, and then
+
+        the recognition of that / murder as the "law of laws."
+
+    when the clock could only cut at a real pause -- because the speaker
+    paused half a second after "that", for emphasis, in the middle of
+    the phrase. A pause in speech is not a boundary in a sentence, and
+    without a parser there is no way to tell which is which. So the
+    clock does not get to break a phrase at all. A second of bare screen
+    is cheaper than a caption that says "the recognition of that".
+    """
+    words = text.split()
+    # One word cannot be cut in half, however long it is. Without this,
+    # a word longer than the ceiling recursed until it indexed past the
+    # end of its own offsets and raised IndexError.
+    if len(words) < 2:
+        return [(text, lo, hi)]
+    if len(text) <= CAPTION_CHARS and len(words) <= CAPTION_WORDS:
+        return [(text, lo, hi)]
+
+    # A written word is not always one token: `_key` splits
+    # "decision-maker" into two and "can't" into two, so the count of
+    # things on the page and the count of things matched against the
+    # transcript drift apart. Comparing them directly made this function
+    # give up silently -- which is how a seventy-three character, seven
+    # second caption reached the screen with both ceilings in place.
+    steps = [len(_key(w)) for w in words]
+    offset = [lo + sum(steps[:i]) for i in range(len(words) + 1)]
+    if offset[-1] != hi:
+        return [(text, lo, hi)]           # genuinely cannot line them up
+
+    # Only the places that leave a full first caption are worth
+    # considering at all -- a break is a choice between good places, not
+    # a licence to put four words on screen and nine on the next one.
+    fits = [i for i in range(BREATH_MIN_WORDS,
+                             len(words) - BREATH_MIN_WORDS + 1)
+            if len(" ".join(words[:i])) <= CAPTION_CHARS]
+    if not fits:
+        # It does not fit on screen, so it has to break somewhere.
+        # Clamped to a real split point: BREATH_MIN_WORDS on its own
+        # could name a word that does not exist in a short clause.
+        fits = [min(max(1, len(words) // 2), len(words) - 1)]
+
+    best, cut = 0.0, 0
+    for i in fits:
+        a, b = at(offset[i] - 1), at(offset[i])
+        gap = (b[0] - a[1]) if a and b else 0.0
+        if gap > best:
+            best, cut = gap, i
+    # A real breath wins. Below that the "widest" silence is noise --
+    # measured on a take where the winning gap was 0.00s, which cut
+    # "He was pulling fresh | readings from weather balloons" for no
+    # reason at all. With nothing to go on, fill the line instead.
+    if best < REAL_BREATH or not cut:
+        cut = fits[-1]
+    return (_by_breath(" ".join(words[:cut]), lo, offset[cut], at, span)
+            + _by_breath(" ".join(words[cut:]), offset[cut], hi, at, span))
+
+
+def align_to_script(words: list, units: list[str]) -> list[Line]:
+    """Give each written sentence the times of the words that said it.
+
+    `words` is whisper's word list; `units` is `script_units`. Returns one
+    Line per sentence that was actually spoken, timed from the transcript
+    and worded from the script.
+
+    A sentence stumbled and said again straight away keeps the LAST
+    reading, which is what a person means by that. A sentence read again
+    after a real pause gets a caption on each reading -- see
+    SECOND_READING_GAP for why the two are different.
+    """
+    out = _align_once(words, units)
+    out += _second_readings(words, units, out)
+    # Times must not run backwards, whatever the matcher decided.
+    out.sort(key=lambda ln: ln.start)
+    return out
+
+
+def _second_readings(words: list, units: list[str],
+                     lines: list[Line]) -> list[Line]:
+    """Captions for speech the first alignment left uncovered, where the
+    caption found there stands apart as a reading of its own.
+
+    The pause is checked around each CAPTION, not around the uncovered
+    stretch. On the real take every missed reading ran straight into the
+    first word of the next attempt -- "...disrespected you. I'm" -- so the
+    stretch never stood apart, and the reading inside it did.
+
+    A third reading is found too: the matcher on a stretch keeps its last
+    reading, and every earlier one is left uncovered for the next level.
+    """
+    def covered_by(found: list[Line]):
+        return [any(ln.start - 1e-6 <= float(w.start) <= ln.end + 1e-6
+                    for ln in found) for w in words]
+
+    flags = covered_by(lines)
+    extra: list[Line] = []
+    i = 0
+    while i < len(words):
+        if flags[i]:
+            i += 1
+            continue
+        j = i
+        while j + 1 < len(words) and not flags[j + 1]:
+            j += 1
+        if j - i + 1 >= MIN_WORDS:
+            stretch = words[i:j + 1]
+            found = _align_once(stretch, units, SECOND_READING_SHARE)
+            found += _second_readings(stretch, units, found) if found else []
+            before = next((float(words[k].end) for k in range(i - 1, -1, -1)
+                           if flags[k]), None)
+            after = next((float(words[k].start)
+                          for k in range(j + 1, len(words)) if flags[k]), None)
+            # One caption at a time: a stretch can hold a clean reading of
+            # one sentence and, at its very end, a sentence said again
+            # straight away -- which is a stumble, and stays uncaptioned.
+            extra += [ln for ln in found
+                      if (before is None or ln.start - before >= SECOND_READING_GAP)
+                      and (after is None or after - ln.end >= SECOND_READING_GAP)]
+        i = j + 1
+    return extra
+
+
+def _align_once(words: list, units: list[str],
+                min_share: float = 0.0) -> list[Line]:
+    """One pass of the matcher: each written sentence, at most once.
+    `min_share` is how much of a sentence has to have been said for it to
+    count -- nothing on the first pass, most of it on a second reading."""
+    spoken, spoken_at = [], []
+    for i, w in enumerate(words):
+        for tok in _key(getattr(w, "word", "")):
+            spoken.append(tok)
+            spoken_at.append(i)
+
+    written, written_unit, written_pos = [], [], []
+    for u, unit in enumerate(units):
+        for j, tok in enumerate(_key(unit)):
+            written.append(tok)
+            written_unit.append(u)
+            written_pos.append(j)
+
+    if not spoken or not written:
+        return []
+
+    # Which spoken word each written word turned out to be.
+    pairs: dict[int, list[tuple[int, int]]] = {}
+    sm = difflib.SequenceMatcher(None, written, spoken, autojunk=False)
+    for a, b, size in sm.get_matching_blocks():
+        for k in range(size):
+            pairs.setdefault(written_unit[a + k], []).append(
+                (written_pos[a + k], b + k))
+
+    out: list[Line] = []
+    for u, unit in enumerate(units):
+        got = sorted(pairs.get(u, []), key=lambda p: p[1])
+        if not got:
+            continue                      # written but never said
+        # Keep only the last run. Two runs far apart is the same
+        # sentence read twice, and the good one is the one you kept
+        # going after.
+        #
+        # A gap counts only for the heard words it holds BEYOND the written
+        # words it skipped. A fluff adds heard words with nothing written
+        # to go with them. A mishearing has as many of both: on What Is
+        # Love (2026-09-28) "Kathrin Karsay, Johannes" came back as
+        # "Catherine Carcey, Johns", and "3,003" as "three thousand and
+        # three". Counted raw, those gaps were false starts, and "In one
+        # study," and "A 2018 meta-analysis by Kathrin Karsay," were
+        # dropped from the screen with nothing said about it.
+        run = [got[-1]]
+        for pair in reversed(got[:-1]):
+            extra = (run[0][1] - pair[1]) - (run[0][0] - pair[0])
+            if extra > FALSE_START_GAP:
+                break
+            run.insert(0, pair)
+        if min_share and len(run) < min_share * len(_key(unit)):
+            continue                      # a stumble, not a reading
+        run += _misheard(run)
+        when = {pos: words[spoken_at[j]] for pos, j in run}
+
+        def at(pos, _when=when):
+            w = _when.get(pos)
+            return (float(w.start), float(w.end)) if w else None
+
+        def span(lo, hi, _when=when):
+            """How long the words from lo to hi took to say."""
+            here = [_when[p] for p in range(lo, hi) if p in _when]
+            return (float(here[-1].end) - float(here[0].start)) if here else 0.0
+
+        # Cut at your own commas and dashes first; anything still too
+        # long gets cut where you breathed.
+        pieces: list[tuple[str, int, int]] = []
+        for text, lo, hi in _pack(_atoms(unit), span, 0):
+            pieces += _by_breath(text, lo, hi, at, span)
+
+        for text, lo, hi in pieces:
+            here = [when[p] for p in range(lo, hi) if p in when]
+            if not here:
+                continue                  # this clause was never said
+            out.append(Line(text, float(here[0].start), float(here[-1].end),
+                            unit=u))
+    return out
+
+
+def _misheard(run: list[tuple[int, int]]) -> list[tuple[int, int]]:
+    """Written words the matcher could not find, given the heard words
+    said in their place: (written position, spoken position) pairs.
+
+    Between two matched words, the written words left over and the heard
+    words left over are the same stretch of speech, spelled two ways. So
+    the script's word takes the time of the heard word in its place:
+    one for one when the counts agree ("Kathrin Karsay" / "Catherine
+    Carcey"), spread evenly over them when they do not ("3,003" / "three
+    thousand and three"). Every time used is one the model heard. None
+    is made up, and a stretch with nothing heard in it gets nothing.
+    """
+    out = []
+    for (w1, s1), (w2, s2) in zip(run, run[1:]):
+        m, n = w2 - w1 - 1, s2 - s1 - 1
+        if m <= 0 or n <= 0:
+            continue
+        for k in range(m):
+            j = round(k * (n - 1) / (m - 1)) if m > 1 else 0
+            out.append((w1 + 1 + k, s1 + 1 + j))
+    return out
+
+
+def lines_for(words: list, script: str | None) -> list[Line]:
+    """The captions for one stretch of speech.
+
+    Uses the script when there is one and it was actually followed; falls
+    back to listening when there is not, or when what was said has
+    drifted too far from what was written for the alignment to mean
+    anything.
+    """
+    units = script_units(script or "")
+    if not units:
+        return _chunk_words(words)
+    aligned = align_to_script(words, units)
+    heard = len([t for w in words for t in _key(getattr(w, "word", ""))])
+    said = sum(len(_key(ln.text)) for ln in aligned)
+    # Under half of what was said accounted for by the script means this
+    # take went its own way. Trust the ears, not the page.
+    if not aligned or heard and said / heard < 0.5:
+        return _chunk_words(words)
+    return aligned
+
+
+def _model_cached(model_size: str) -> bool:
+    """Has this model already been downloaded? Only used to decide whether
+    to warn about a long wait -- being wrong costs nothing."""
+    home = os.environ.get("HF_HOME")
+    root = Path(home) / "hub" if home else Path.home() / ".cache" / "huggingface" / "hub"
+    repo = root / f"models--Systran--faster-whisper-{model_size}"
+    # The folder appears the moment a download starts, so its existence
+    # proves nothing. The weights file is the thing.
+    return any(repo.glob("snapshots/*/model.bin"))
+
+
+def transcribe(audio: Path, model_size: str = "small",
+               language: str | None = None,
+               script: str | None = None) -> list[Line]:
+    """Speech -> a list of short lines, each with a start and end time.
+
+    Whisper segments speech into breath-sized chunks; `_chunk_words`
+    then splits those further at real punctuation so no caption on
+    screen outstays a natural pause.
+    """
+    # The guard in cli.cmd_caption imports THIS module, which succeeds --
+    # faster_whisper is only reached here, lazily. So the friendly message
+    # has to live at the point of use, or a clip with talking in it ends
+    # the run with a raw ModuleNotFoundError.
+    # huggingface_hub is chatty on Windows, and everything it says here is
+    # noise you cannot act on: that it could not make symlinks (true, and
+    # harmless -- it just uses a little more disk), and that the download
+    # is unauthenticated (true, and irrelevant for a public model). Both
+    # arrive mid-run looking like errors. Quiet them before the import
+    # that triggers them.
+    os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS_WARNING", "1")
+    logging.getLogger("huggingface_hub").setLevel(logging.ERROR)
+
+    # Fetch the model over plain HTTP rather than Xet, huggingface's newer
+    # chunked transfer. Xet is faster when it works and dies with a
+    # "CAS Client Error" when it does not -- which it does on plenty of
+    # ordinary connections, and the traceback it leaves is meaningless to
+    # anyone. This is a one-time download of a few hundred MB; boring and
+    # reliable beats fast. Set HF_HUB_DISABLE_XET=0 yourself to opt back in.
+    os.environ.setdefault("HF_HUB_DISABLE_XET", "1")
+
+    try:
+        from faster_whisper import WhisperModel
+    except ImportError:
+        raise SystemExit(
+            "Putting your talking on screen needs one extra package that "
+            "isn't installed by default (about 100 MB, which is why it is "
+            "optional). Install it once:\n\n"
+            "    uv sync --extra voice\n\n"
+            "then run the same command again. Everything else works without "
+            "it -- add --no-captions to skip this and carry on now."
+        )
+
+    if _model_cached(model_size):
+        print(f"  loading the {model_size} speech model ...")
+    else:
+        print(f"  fetching the {model_size} speech model. This happens once,")
+        print(f"  it is a few hundred MB, and it can take several minutes on")
+        print(f"  a slow connection. Nothing is wrong -- let it finish.")
+    try:
+        model = WhisperModel(model_size, device="cpu", compute_type="int8")
+    except Exception as e:
+        # Almost always the download, and almost always the network. The
+        # cache resumes, so running it again really is the right advice.
+        raise SystemExit(
+            f"Could not load the {model_size} speech model.\n\n"
+            f"  {type(e).__name__}: {str(e)[:300]}\n\n"
+            f"If that mentions a download, a connection or a CAS error, it "
+            f"is the fetch that failed, not your film. What already came "
+            f"down is kept, so just run the same command again -- it picks "
+            f"up where it stopped. A smaller model downloads sooner:\n\n"
+            f"    uv run film caption --model base\n\n"
+            f"Everything else works without captions in the meantime."
+        )
+
+    # English unless told otherwise (2026-09-29): left to guess, the
+    # model heard an English intro that opens on two Polish names as
+    # Polish (p = 0.49) and captioned all of it in made-up Polish.
+    print(f"  listening to {audio.name} ...")
+    segments, info = model.transcribe(str(audio), vad_filter=True,
+                                      word_timestamps=True,
+                                      language=language or "en")
+
+    # Whisper hands back breath-sized segments. Chunking by ear works on
+    # one of those at a time, but MATCHING A SCRIPT cannot: a sentence
+    # you wrote often takes two breaths to say, and aligning each segment
+    # on its own found that sentence in both of them and captioned it
+    # twice. Measured on a real take: 4 of 23 sentences came out doubled.
+    # So the script path sees the whole take at once, and the listening
+    # path is left exactly as it was.
+    following_a_script = bool(script_units(script or ""))
+    # Every word starts where the pause before it ends (snap_to_pauses),
+    # before any line is made, so a caption's start moves with its first
+    # word.
+    segments = list(segments)
+    snapped = iter(snap_to_pauses(
+        [w for seg in segments for w in (seg.words or [])], pauses_in(audio)))
+    lines: list[Line] = []
+    every_word: list = []
+    for seg in segments:
+        words = [next(snapped) for _ in (seg.words or [])]
+        if not words:
+            t = seg.text.strip()
+            if t:
+                lines.append(Line(t, seg.start, seg.end))
+            continue
+        every_word.extend(words)
+        if not following_a_script:
+            lines.extend(_chunk_words(words))
+
+    if following_a_script and every_word:
+        lines.extend(lines_for(every_word, script))
+    lines.sort(key=lambda ln: ln.start)
+    attach_word_starts(lines, every_word)
+
+    print(f"  {len(lines)} lines, language detected: {info.language}")
+    return lines
+
+
+SNAP_PAUSE = 0.2    # a silence this long is a pause, not the gap before a
+                    # "t" or "p" inside a word (at 0.1 s, "multiplies"
+                    # moved 0.28 s into itself on SUMIFS)
+SNAP_BEFORE = 0.25  # how far before a pause a word's start may sit and
+                    # still be the sound of the word before it
+
+
+def snap_to_pauses(words: list, pauses, before: float = SNAP_BEFORE) -> list:
+    """The words, each starting where the pause before it ends.
+
+    Whisper often starts a word in the silence before it, or on the last
+    sound of the word before. On SUMIFS SUMPRODUCT vs DAX (2026-10-05)
+    "Choose" started 0.44 s before it was said and "The same in DAX"
+    0.64 s; the caption and its lit word ran ahead of the voice.
+
+    A word moves only when its start is inside a pause, or up to
+    `before` ahead of one, AND its end is after the pause: a word that
+    ends first was said first. It never moves onto the next word. The
+    words given are not changed; copies are returned.
+    """
+    out = []
+    for i, w in enumerate(words):
+        start, end = float(w.start), float(w.end)
+        nxt = float(words[i + 1].start) if i + 1 < len(words) else float("inf")
+        for s, e in pauses:
+            if s - before <= start < e and end > e and e < nxt:
+                w = copy.copy(w)
+                w.start = e
+                break
+        out.append(w)
+    return out
+
+
+def pauses_in(audio: Path) -> list[tuple[float, float]]:
+    """The pauses of SNAP_PAUSE or more in `audio`, by ingest's own
+    detector. None found, or the sound unreadable: no pauses, and no
+    word moves."""
+    if not Path(audio).is_file():
+        return []
+    pcm = ingest._pcm(audio)
+    if pcm is None:
+        return []
+    return ingest.quiet_stretches(ingest.window_levels(pcm), SNAP_PAUSE)[0]
+
+
+def attach_word_starts(lines: list[Line], words: list) -> None:
+    """Give each line the start time of every word said inside it.
+
+    The model has always reported when each word starts, and the lines
+    were built from those words -- then the times were thrown away, and
+    a caption could only appear and disappear whole. Kept, they let the
+    renderer light the word being said.
+
+    A word belongs to the last line that has started by then, and only
+    if that line has not already ended: words said between two captions
+    belong to neither.
+    """
+    lines = sorted(lines, key=lambda ln: ln.start)
+    for ln in lines:
+        ln.words = []
+    for w in words:
+        start = float(w.start)
+        owner = None
+        for ln in lines:
+            if ln.start - 1e-3 <= start:
+                owner = ln
+            else:
+                break
+        if owner is not None and start <= owner.end + 0.05:
+            owner.words.append(start)
+
+
+def save_transcript(project: Path,
+                    sources: list[tuple[str, list[Line]]]) -> Path:
+    """A plain, readable side file -- edit the wording here before
+    pulling lines into film.yaml. Never auto-applied without review.
+    `sources` is [(label, lines), ...] -- one entry per audio source."""
+    out = project / "analysis" / "transcript.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    data = {
+        "sources": [
+            {"source": label,
+             "lines": [{"text": ln.text, "start": round(ln.start, 2),
+                       "end": round(ln.end, 2)} for ln in lines]}
+            for label, lines in sources
+        ]
+    }
+    out.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    return out
+
+
+def transcript_readable(project: Path,
+                        sources: list[tuple[str, list[Line]]]) -> Path:
+    """A .txt companion -- easiest place to just read what was captured."""
+    out = project / "analysis" / "transcript.txt"
+    blocks = []
+    for label, lines in sources:
+        rows = [f"[{ln.start:6.2f} - {ln.end:6.2f}]  {ln.text}" for ln in lines]
+        blocks.append(f"-- {label} --\n" + "\n".join(rows))
+    out.write_text("\n\n".join(blocks), encoding="utf-8")
+    return out

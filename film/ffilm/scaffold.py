@@ -1,0 +1,1317 @@
+"""
+scaffold.py  --  write a first film.yaml from what ingest found.
+
+Deliberately not clever. It gives you a complete, valid, watchable film
+in one command, so your first render never depends on anyone else. Then
+you change the numbers -- which is the whole point of the system.
+"""
+
+from __future__ import annotations
+
+import json
+from dataclasses import replace
+from pathlib import Path
+
+from . import kinds, pix, segment
+from .moves import choose_moves
+from .record import REC_SPEED, is_recording, read_cues
+from .retakes import keep_retakes
+# The narration cut into slides and the film.yaml text surgery live in
+# slides.py, and saying one picture again in retakes.py (2026-10-05).
+from .slides import (NO_CAPTIONS_YET, SLIDES_CUED, SLIDES_GUESSED,
+                     _in_film_order, narration_of, place_takes, quoted, tc)
+from .spec import VOICE_TAIL, Caption, Shot, Window, pretty_name
+
+
+# A person talking to a lens is not a photograph. There is nowhere to
+# drift TO -- their face is the interesting part for the whole shot -- so
+# the camera frames it and then behaves. A push_in on a talking head
+# walks into their nose; a tilt_up on one cropped to 9:16 takes the top
+# of their head off. Static and the two drifts, alternating so that no
+# two neighbours share a family, and nothing that changes the framing
+# enough to lose an ear.
+TALKING_MOVES = ["static", "drift_right", "static", "drift_left"]
+TALKING_AMOUNT = 0.6         # even the drifts, gentler than on a still
+
+
+def _video_focus(entry: dict) -> tuple[float, float]:
+    """Where the speaker is, as found by ingest. Falls back to the middle
+    only when the clip gave nothing to go on."""
+    f = entry.get("focus")
+    return (float(f[0]), float(f[1])) if f else (0.5, 0.5)
+
+
+def _speed_for(path: str) -> float:
+    """A take you shot with `film record` comes in slightly brisk.
+
+    It is a number in film.yaml, not something done to the file: the
+    original in media/ stays exactly the speed you spoke at, and if 1.2
+    is wrong for a particular take you change one digit. Anything you
+    dropped in from a camera or a phone is left alone -- this is a
+    correction for talking to a lens, not a house style.
+    """
+    stem = Path(path).stem
+    # A voiceover is you talking too. It was left at 1.0 because the
+    # narration is read, not performed to a lens -- but that put a film's
+    # own voice at two paces, 1.2 for the talking head and 1.0 over the
+    # photographs, and the step between them is audible. Asked for
+    # repeatedly by Jacek and settled 2026-09-20; see
+    # docs/decisions/0010. Change the digit in film.yaml per film.
+    if stem.lower().startswith(kinds.VOICEOVER_PREFIX):
+        return REC_SPEED
+    return REC_SPEED if is_recording(stem) else 1.0
+
+AUDIO_EXT = kinds.AUDIO
+
+STILL_SECONDS = 4.5
+FACE_SECONDS = 5.5          # a face holds attention longer. Give it room.
+VIDEO_SECONDS = 4.0          # a sample from a SILENT clip. B-roll length.
+MAX_SEGMENTS_PER_VIDEO = 6
+TALK_WHOLE_MAX = 240.0       # a take longer than this is SPLIT (never shortened)
+SOUND_FLOOR = 0.03           # audible for less than this fraction = B-roll
+                             # Deliberately tiny. This is "did anyone record
+                             # sound", not "is this mostly talking". Someone
+                             # speaking to camera with real pauses can be
+                             # audible only a tenth of the time -- a 76s take
+                             # with twelve transcribed lines measured 0.118,
+                             # and a 0.12 floor threw the whole thing away.
+PAUSE_DROP = 1.5             # dead air longer than this is cut out
+BREATH = 0.3                 # left either side of a cut, so words survive
+MIN_PIECE = 0.8              # a fragment shorter than this is not a shot
+MAX_TRIM = 0.35              # never cut away more than this much of a take
+DISSOLVE = 0.3               # softens ONLY the joins where a pause was cut
+OPENER_CLOSER_SECONDS = 3.0  # a title-card image, held, is usually brief
+
+# The opening card -- the film's name over the same picture as the
+# thumbnail. Long enough to read a title and settle, short enough that
+# nobody reaches for the scrub bar: four seconds is about two beats
+# after you have finished reading. It is written into film.yaml as an
+# ordinary shot, so it is a number you can change and a block you can
+# delete, like everything else in there.
+TITLE_CARD_SECONDS = 4.0
+# On a vertical film -- a Short -- the first sentence is the hook, and a
+# still title held for four seconds is where people scroll away. Half of
+# it. Chosen by reasoning, not measured on an audience.
+SHORT_TITLE_CARD_SECONDS = 2.0
+QUOTE_SECONDS = 5.0          # a quote needs to be READ, not glanced at
+
+# Filename hints, checked so you can drop files in fast without opening
+# film.yaml at all. None of these are required -- unhinted files just
+# fall back to plain alphabetical order.
+#
+#   00_thing.jpg, 01_thing.jpg    explicit numbered order (checked first)
+#   1thing.jpg                    the separator is optional -- see below
+#   open_thing.jpg                use as the opening shot
+#   close_thing.jpg               use as the closing shot
+#   open_close_thing.jpg          use the SAME image to open AND close
+#   quote_thing.jpg                held longer, centered text if titled
+#   rec_20260828-1014.mp4          made by `film record` -- comes in at
+#                                  REC_SPEED, because talking to a lens
+#                                  is slower than talking to a person
+#
+# A file can only be recognized by one of these -- the most specific
+# match wins (open_close over open, a number over a word-hint).
+# A leading run of up to three digits is the order you asked for, and
+# whatever separates it from the name -- an underscore, a dot, a dash, a
+# space, or nothing at all -- is not part of the request. This used to
+# demand a separator, and Jacek's three pictures, `1declaration…`,
+# `2declaration of love` and `3_declaration…`, came out 3, 1, 2: only the
+# third was read as numbered, so it went first and the other two followed
+# alphabetically behind it. The file the machine writes promises that
+# `00_ 01_` orders files; it was keeping that promise for one spelling of
+# it.
+#
+# `(?!\d)` is what keeps a date or a camera counter out of this:
+# `20260917.jpg` and `IMG_0042.jpg` are not somebody asking for position
+# 202 or 42.
+# The rule itself is kinds.NUM_PREFIX, read by kinds.hint and
+# kinds.is_recording alike: two copies of it is how a take could be
+# numbered for one and un-numbered for the other at the same time.
+
+
+# Anything the frame cannot show is travelled. It was 0.80 -- a picture
+# had to be a quarter wider than the frame before it got a sweep -- and
+# that was wrong for the ordinary case: a 1024x1536 diagram in a
+# 1080x1920 frame loses 15.6% of its width, which on a labelled diagram
+# is the entire right-hand column of labels. Jacek, 2026-09-20: "in the
+# case of visuals you cut the captions on the right of the images".
+SWEEP_BELOW = 1.0
+
+# Kept off the very edge, where scans are dirty -- but never more than a
+# tenth of what there is to see, or the margin eats the whole reveal on
+# exactly the pictures that are only slightly too wide.
+SWEEP_MARGIN = 0.02
+
+# Below this there is nothing to show and a sweep is just a wobble.
+MIN_SWEEP = 0.03
+
+
+def sweep_across(src_w: int, src_h: int, frame_w: int,
+                 frame_h: int) -> tuple[float, float] | None:
+    """Where a lateral move should start and end, across a wide picture.
+
+    Returns two `cx` values -- the centre of the crop window, 0..1 across
+    the SOURCE -- or None when the picture is near enough the frame's
+    shape that there is nothing to travel.
+
+    At scale 1.0 the crop window has the FRAME's aspect and is as large
+    as fits inside the picture. On a picture wider than the frame it is
+    height-limited, so it shows `frame_aspect / src_aspect` of the width
+    and no more. On 1930s Austria Had Photoshop that was 0.24 for a
+    600x260 triptych in a 1080x1920 film: three quarters of the picture
+    never on screen, while `drift_right` moved the window by 0.045.
+
+    The direction is the one that ENDS on the focus point, so the move
+    still arrives at the face or the contrast that ingest found. That is
+    the existing rule -- move towards what matters -- applied to a
+    picture that also has to be shown.
+    """
+    if src_w <= 0 or src_h <= 0 or frame_h <= 0:
+        return None
+    window = (frame_w / frame_h) / (src_w / src_h)
+    if window >= SWEEP_BELOW:
+        return None
+    available = 1.0 - window
+    margin = min(SWEEP_MARGIN, available * 0.1)
+    half = window / 2
+    lo = half + margin
+    hi = 1.0 - half - margin
+    if hi - lo < MIN_SWEEP:
+        return None
+    # Always left to right. It was the side the focus point sat on, which
+    # is the right instinct on a photograph and the wrong one on a
+    # diagram: what gets cropped is the label column on the right, and
+    # you want to ARRIVE there, in reading order. Jacek asked for
+    # left-to-right twice.
+    return (lo, hi)
+
+
+# How far from exactly two frames wide a picture may be and still count.
+TWO_COLUMNS_TOLERANCE = 0.03
+
+
+def is_two_columns(src_w: int, src_h: int, frame_w: int, frame_h: int) -> bool:
+    """A picture twice as wide as the frame: two frames side by side.
+
+    Excel Tutorial - Use tables, 2026-10-01: 2160x1920 slides, each
+    half the shape of a 1080x1920 frame. Nothing is read from the pixels
+    and no model is asked -- the file's own size says it. It would also
+    take a photograph that happens to be 9:8; there is no way to tell
+    one from a slide by shape alone, and `move:` on the shot undoes it.
+    """
+    if src_w <= 0 or src_h <= 0 or frame_w <= 0 or frame_h <= 0:
+        return False
+    two = 2.0 * frame_w / frame_h
+    return abs((src_w / src_h) / two - 1.0) <= TWO_COLUMNS_TOLERANCE
+
+
+# Beside the middle line, how wide a strip is looked at (share of the
+# width, each side), and how much of the line itself is skipped.
+GUTTER = 0.03
+SEAM = 0.006
+# A table across both halves covers half the height or more; two panels
+# with an arrow between them, 4.8% -- measured on the seven slides of
+# Excel Tutorial - Use tables. Between the two, nothing measured: this is
+# a guess until a real spanning slide has been seen.
+SPANS_WHEN = 0.20
+
+
+def spans_the_middle(img) -> bool:
+    """Does one piece of content run across the middle of the picture?
+
+    Two columns have an empty gutter between them (a divider line and,
+    on these slides, an arrow, are tolerated: they are a few percent of
+    the rows). A table spanning both halves has content on both sides of
+    the middle in a large share of the rows. Pure; pixels in, yes/no out.
+    """
+    import numpy as np
+    h, w = img.shape[:2]
+    if h == 0 or w < 40:
+        return False
+    c = w // 2
+    seam = max(2, int(w * SEAM))
+    reach = max(seam + 2, int(w * GUTTER))
+    edge = max(1, w // 100)
+    bg = np.median(img[:, :edge].reshape(-1, img.shape[2]), axis=0)
+    ink = np.abs(img.astype(np.int16) - bg).max(axis=2) > 30
+    both = (ink[:, c - reach:c - seam].any(axis=1)
+            & ink[:, c + seam:c + reach].any(axis=1))
+    return float(both.mean()) > SPANS_WHEN
+
+
+# Moved down to kinds.hint so the timeline can name shots by the same rule.
+_hint = kinds.hint
+
+
+def _title_from_stem(stem: str) -> str:
+    """thought_experiment -> 'Thought Experiment'. Used for quote/title
+    cards, where the filename is often already the words you want. The
+    same rule names the film itself -- see spec.pretty_name."""
+    return pretty_name(stem)
+
+
+def is_talking(entry: dict) -> bool:
+    """Did someone record sound on this clip?
+
+    Not "is this speech" -- we cannot know that without transcribing, and
+    we are not going to. Sound at all is the right test, because the two
+    mistakes are not equal. Keep a clip whole that turned out to be wind,
+    and you have a film that runs long; you see it in the peek and you
+    trim a number. Sample four seconds out of a clip she was talking over,
+    and the sentence that mattered is gone -- and nothing on screen tells
+    her it was ever there.
+    """
+    snd = entry.get("sound") or {}
+    return bool(snd.get("has")) and float(snd.get("ratio", 0.0)) >= SOUND_FLOOR
+
+
+def talking_segments(dur: float, snd: dict) -> list[tuple[float, float]]:
+    """Keep every word. Drop the dead air between them.
+
+    Three things happen here, in order:
+
+      1. The lead-in and the tail go -- the seconds of fumbling before you
+         start and after you finish.
+      2. Any pause longer than PAUSE_DROP goes, leaving BREATH either side
+         so it lands on a natural beat instead of clipping a word. Short
+         pauses stay: speech without them sounds panicked.
+      3. Anything still longer than TALK_WHOLE_MAX is split at a remaining
+         pause, so one long take can carry more than one camera move.
+
+    What comes back is a list of consecutive in/out pairs. Every one of
+    them is a separate shot, which is what gives you the reframe on each
+    cut -- and why it reads as an edit rather than a glitch.
+    """
+    a = max(0.0, float(snd.get("in", 0.0)) - BREATH)
+    b = min(dur, float(snd.get("out", dur)) + BREATH)
+    if b - a < 1.0:                          # nothing sensible to trim to
+        a, b = 0.0, dur
+
+    inner = [(s, e) for s, e in snd.get("quiet", []) if a < s and e < b]
+
+    kept: list[tuple[float, float]] = []
+    cursor = a
+    for s, e in inner:
+        if e - s < PAUSE_DROP:               # a breath, not dead air. Keep it.
+            continue
+        end = s + BREATH
+        if end - cursor >= MIN_PIECE:
+            kept.append((cursor, end))
+        cursor = max(cursor, e - BREATH)
+    if b - cursor >= MIN_PIECE:
+        kept.append((cursor, b))
+    if not kept:
+        kept = [(a, b)]
+
+    # If that wanted to throw away half the take, the detection is wrong,
+    # not the take. A softly spoken passage reads as silence to any level
+    # threshold, and losing it is far worse than leaving a slow patch in.
+    # When in doubt, keep everything.
+    if sum(y - x for x, y in kept) < (b - a) * (1.0 - MAX_TRIM):
+        kept = [(a, b)]
+
+    # Split anything still too long, at the pauses we chose to keep.
+    out: list[tuple[float, float]] = []
+    for x, y in kept:
+        while y - x > TALK_WHOLE_MAX:
+            here = [s for s, e in inner if x + TALK_WHOLE_MAX * 0.6 < s < y]
+            if not here:
+                break
+            cut = min(here, key=lambda s: abs(s - (x + TALK_WHOLE_MAX)))
+            out.append((x, cut))
+            x = cut
+        out.append((x, y))
+
+    return [(round(x, 2), round(y, 2)) for x, y in out if y - x >= MIN_PIECE]
+
+
+def video_segments(entry: dict, lag: float = 0.0) -> list[tuple[float, float]]:
+    """Turn a clip into usable in/out pairs.
+
+    A clip with sound on it is kept (see `is_talking`). A silent clip is
+    B-roll, and gets sampled: if it has hard cuts we respect them, and if
+    it doesn't -- normal for handheld footage, and for anything long and
+    continuous -- we sample along it instead. Roughly one shot per minute
+    of source, so a ten minute clip yields several candidates, not one.
+
+    `lag` is how late the take's sound started against its picture
+    (audio.sound_lag). The words and pauses were measured on the sound's
+    clock, but in/out are the picture's, and the render plays sound at
+    picture time minus lag. Without this every intro and closing lost
+    its last `lag` seconds -- "domination" cut mid-vowel, 2026-09-24.
+    """
+    dur = float(entry.get("duration") or 0.0)
+    if dur < 1.5:
+        return []
+    if is_talking(entry):
+        segs = talking_segments(dur, entry["sound"])
+        if not lag:
+            return segs
+        moved = [(round(a + lag, 2), round(min(dur, b + lag), 2))
+                 for a, b in segs]
+        return [(a, b) for a, b in moved if b - a >= MIN_PIECE] or moved
+    cuts = [c for c in entry.get("cuts", []) if 0.0 < c < dur]
+    bounds = [0.0] + cuts + [dur]
+
+    budget = max(1, min(MAX_SEGMENTS_PER_VIDEO, round(dur / 60.0) + 1))
+
+    candidates: list[tuple[float, float]] = []
+    for a, b in zip(bounds, bounds[1:]):
+        seg = b - a
+        if seg < 2.0:                          # too short to be a shot
+            continue
+        # More shots from longer segments, proportionally.
+        k = max(1, min(budget, int(seg // 45) + 1))
+        for j in range(k):
+            centre = a + seg * (j + 0.5) / k
+            start = max(a + 0.3, centre - VIDEO_SECONDS / 2)
+            end = min(start + VIDEO_SECONDS, b - 0.2)
+            if end - start >= 1.5:
+                candidates.append((round(start, 2), round(end, 2)))
+
+    # Keep the longest, but present them in timeline order.
+    candidates.sort(key=lambda s: s[1] - s[0], reverse=True)
+    return sorted(candidates[:budget])
+
+
+def merge_back(shots: list, meta: list, still_at: list[int],
+               stills: list, stills_meta: list) -> tuple[list, list]:
+    """Put the pictures back among the clips. Pure.
+
+    `still_at` is where the pictures were; the new pictures fill those
+    places in their new order -- which may differ, when the recording
+    window showed them in another order. Any extra picture (one shown
+    twice) goes right after the last picture's place, not at the end of
+    the film after every clip.
+    """
+    slots = set(still_at)
+    last = still_at[-1] if still_at else -1
+    out_s, out_m = [], []
+    k = 0
+    for i, (s, m) in enumerate(zip(shots, meta)):
+        if i not in slots:
+            out_s.append(s)
+            out_m.append(m)
+            continue
+        if i == last:
+            out_s.extend(stills[k:])
+            out_m.extend(stills_meta[k:])
+            k = len(stills)
+        elif k < len(stills):
+            out_s.append(stills[k])
+            out_m.append(stills_meta[k])
+            k += 1
+    return out_s, out_m
+
+
+def build(project: Path, seed: int = 0, target: float | None = None) -> str:
+    mpath = project / "analysis" / "manifest.json"
+    if not mpath.exists():
+        raise SystemExit("Run `uv run film ingest` first.")
+    manifest = json.loads(mpath.read_text(encoding="utf-8"))
+
+    audio = narration_of(project)
+
+    # Read the filename hint for every still up front -- this decides
+    # ORDER (explicit numbers first, else alphabetical) and ROLE
+    # (opener / closer / quote / plain), before any shots get built.
+    tagged = []
+    for e in manifest["media"]:
+        stem = Path(e["path"]).stem
+        role, num, clean = _hint(stem)
+        tagged.append({"entry": e, "role": role, "num": num, "clean": clean})
+
+    # Openers first, closers last, everything else keeps its order --
+    # this is what lets you drop files in any which way and still get
+    # "title card, talking, quote, title card again" for free. A numbered
+    # file's position is exactly what you typed, full stop -- the number
+    # is a stronger signal than the role, so numbered opens/closes are
+    # NOT re-sorted, only unnumbered ones are. One function, shared with
+    # the recording window: see pictures_in_order.
+    ordered, numbered, middle = _in_film_order(tagged, repeat_open_close=True)
+    ordered = place_takes(ordered, audio.name if audio else None)
+
+    # `quote_` has no natural position relative to other unnumbered
+    # content -- unlike open/close, "before or after the talking?" isn't
+    # something a filename alone can answer. Flag it rather than guess.
+    ambiguous_quotes = (len(numbered) == 0 and
+                       any(t["role"] == "quote" for t in middle) and
+                       len(middle) > 1)
+
+    # One file at a time, through the one function that knows what a file
+    # becomes. See shots_for.
+    shots: list[Shot] = []
+    meta: list[dict] = []
+    for t in ordered:
+        made, made_meta = shots_for(t["entry"], len(shots) + 1,
+                                    lag=_lag_of(project, t["entry"]))
+        shots.extend(made)
+        meta.extend(made_meta)
+
+    if not shots:
+        raise SystemExit("No usable media found. Is anything in media/ ?")
+
+    # A narration over photographs, with no script to cut it by: give
+    # each picture its own piece of it, cut at the longest pauses. That
+    # is the only way anything in film.yaml can say which picture goes
+    # with which words -- see cut_into_slides.
+    #
+    # Photographs only. A film that also has footage keeps the flat
+    # `audio:` track: a clip carries its own sound, and cutting one
+    # narration across pictures and clips alike is a bigger decision
+    # than `init` should be making on its own.
+    #
+    # Clips are left exactly where they are, with their own sound: the
+    # narration is cut across the PICTURES only. This used to require
+    # every shot to be a photograph, so one talking clip put the whole
+    # narration back under the film as a flat track -- and the clip's
+    # own speech then played over it. Measured 2026-09-18: both voices
+    # at once from 53.2 s to 59.0 s.
+    slide_notes: list[str] = []
+    still_at = [i for i, s in enumerate(shots) if s.kind == "still"]
+    if audio and still_at:
+        stills = [shots[i] for i in still_at]
+        stills_meta = [meta[i] for i in still_at]
+        slide_notes = cut_into_slides(stills, stills_meta, project, audio)
+        if slide_notes:
+            shots[:], meta[:] = merge_back(shots, meta, still_at,
+                                           stills, stills_meta)
+            for i, s in enumerate(shots, 1):
+                s.id = f"s{i:02d}"
+    slides = bool(slide_notes)
+
+    target_notes: list[str] = []
+    if audio and not slides:
+        target_notes += stretch_to_narration(
+            shots, meta, narration_seconds(audio) + NARRATION_FADE_ROOM)
+    if target:
+        target_notes += fit_to_target(shots, meta, float(target))
+        keep = [(s, m) for s, m in zip(shots, meta) if s.duration > 0]
+        shots = [s for s, _ in keep]
+        meta = [m for _, m in keep]
+        for i, s in enumerate(shots, 1):        # renumber after any drops
+            s.id = f"s{i:02d}"
+
+    # Assign varied moves -- never two of the same family back to back.
+    # Opener/closer/quote shots already have a fixed move and are skipped.
+    choose_moves(shots, seed=seed)
+
+    L = []
+    L.append("# Written by `film init`. Everything here is a starting point.")
+    L.append("# Change the numbers. That is what this file is for.")
+    L.append("#")
+    L.append("# Filename hints `init` understood, if you used any:")
+    L.append("#   00_ 01_ ...     explicit order")
+    L.append("#   open_ close_    which shot opens / closes the film")
+    L.append("#   open_close_     the SAME image opens AND closes it")
+    L.append("#   quote_          held longer, filename becomes a centered title")
+    L.append("#")
+    L.append("#   uv run film peek    seconds    -- is the ORDER right?")
+    L.append("#   uv run film draft   <1 min     -- does the MOTION feel right?")
+    L.append("#   uv run film final   minutes    -- ship it")
+    L.append("")
+    L.append("fps: 24")
+    vertical = (project / ".vertical").exists()
+    if vertical:
+        L.append("resolution: [1080, 1920]   # vertical, for YouTube Shorts")
+    else:
+        L.append("resolution: [1920, 1080]")
+
+    # A picture too wide for the frame is travelled rather than cropped.
+    # Written as an explicit from/to on the shot, so it is visible in the
+    # file and can be argued with like every other number here. Only
+    # where a named move would leave most of the picture unseen -- see
+    # sweep_across.
+    frame = (1080, 1920) if vertical else (1920, 1080)
+    for s, m in zip(shots, meta):
+        if s.kind != "still" or s.frm is not None or s.to is not None:
+            continue
+        e = m.get("entry") or {}
+        w, h = e.get("width") or 0, e.get("height") or 0
+        # Two columns are shown in turn (moves.columns). If one table runs
+        # across both, it falls through to the sweep below: a slow
+        # left-to-right pan over the whole shot, which is what it needs.
+        # `move` was already rotated by choose_moves, so it is not "auto"
+        # here -- this is a fresh film, nothing in it is hand-set.
+        if is_two_columns(w, h, frame[0], frame[1]):
+            img = pix.imread(project / s.src)
+            if img is not None and not spans_the_middle(img):
+                s.move = "columns"
+                continue
+        got = sweep_across(w, h, frame[0], frame[1])
+        if got is None:
+            continue
+        s.frm = Window(cx=got[0], cy=0.5, scale=1.0)
+        s.to = Window(cx=got[1], cy=0.5, scale=1.0)
+        s.ease = "linear"        # a sweep that slows at both ends is a drift
+
+    # Built here, before `audio_offset` is decided, rather than where it
+    # is written into `shots:` below -- the narration needs to know
+    # whether there IS a card, and how long it holds, before it can know
+    # where to start.
+    card_block = title_card_block(project, vertical)
+    card_seconds = ((SHORT_TITLE_CARD_SECONDS if vertical else TITLE_CARD_SECONDS)
+                    if card_block else 0.0)
+
+    if audio and slides:
+        # No `audio:` here on purpose. It would play the whole narration
+        # flat under the film IN ADDITION to the pieces on the slides --
+        # every word said twice, a beat apart.
+        L.append("# Each picture carries its own piece of")
+        L.append(f"# {audio.relative_to(project).as_posix()} -- see `voice:` below.")
+    elif audio:
+        L.append(f'audio: {audio.relative_to(project).as_posix()}')
+        if card_seconds:
+            L.append(f"audio_offset: {card_seconds:.1f}   "
+                     f"# the narration waits for the opening card")
+        else:
+            L.append("audio_offset: 0.0")
+    else:
+        L.append("# audio: media/voiceover.mp3   # optional separate narration")
+    if audio:
+        older = sum(1 for p in (project / "media").rglob("*")
+                    if p.is_file() and p.suffix.lower() in AUDIO_EXT
+                    and not kinds.is_aside(p, project / "media")) - 1
+        if older > 0:
+            L.append(f"# The newest of {older + 1} recordings in media/. The "
+                     f"older one(s) are not used;")
+            L.append("# move them to media/_discarded/ to tidy up.")
+    L.append("# title: the words on the thumbnail. Left out, the film is")
+    L.append("#        called what its folder is called.")
+    L.append("# music: found on its own -- this project's music/ folder if it")
+    L.append("#        has one, otherwise your library/music/ folder.")
+    L.append("music_volume: 0.6      # the level when nobody is talking")
+    L.append("music_fade: 2.0        # seconds of fade in and out")
+    L.append("music_duck: 0.5        # how far the music drops while you talk")
+    L.append("                       # 0 = never drops. 1 = gets right out of the way")
+    L.append("")
+    L.append("look:")
+    L.append("  preset: old_film      # clean | warm | old_film | projector")
+    L.append("  glow: 0.25            # lifts shadows -- better lighting")
+    L.append("")
+    L.append("# Uncomment if a wide clip is losing too much to a tall frame.")
+    L.append("# `blur` keeps the picture whole on a blurred copy of itself")
+    L.append("# instead of cropping it. fill_aspect is the shape of the sharp")
+    L.append("# part: 1.0 square, 0.8 taller and bigger, 1.33 shorter and safer.")
+    L.append("# fill: blur")
+    L.append("# fill_aspect: 1.0")
+    L.append("")
+    L.extend(bokeh_lines(segment.missing_model() is None))
+    L.append("")
+    L.extend(depth_lines())
+    L.append("")
+    L.append("shots:")
+    L.extend(card_block)
+
+    for s, m in zip(shots, meta):
+        L.extend(shot_block(s, m))
+
+    L.append("")
+    total = sum(s.duration for s in shots)
+    L.append(f"# {len(shots)} shots, about {total:.0f} seconds.")
+    for note in target_notes + slide_notes:
+        L.append(note)
+    if ambiguous_quotes:
+        L.append("#")
+        L.append("# NOTE: a quote_ card was placed by guesswork among other")
+        L.append("# unnumbered files -- its position (before/after other shots)")
+        L.append("# was NOT something the filename could tell me. Check the")
+        L.append("# order above; if it's wrong, either reorder the shots: blocks")
+        L.append("# below, or rename files 00_, 01_, 02_... and run init again.")
+    # Not on a slide film. The words ARE the film there, and `caption`
+    # is the next step the footer above already names.
+    if not slides and not any(m.get("role") == "quote" for m in meta):
+        L.extend(NO_CAPTIONS_YET)
+    L.append("")
+    return "\n".join(L)
+
+
+def bokeh_lines(model_present: bool) -> list[str]:
+    """Bokeh is on in every new film, and says so in film.yaml.
+
+    Written into the file rather than made the code's default, so it can
+    be seen and set to 0, and so films made before it keep looking the
+    way they were watched. Without the model it is written commented out:
+    a fresh machine's first render must not stop over a look.
+    """
+    L = ["# The room behind you softly blurred, you sharp -- on your own",
+         "# recordings (rec_*) only. 0 = off, 2 = twice as soft. About +45%",
+         "# render time. Barely shows in a vertical close-up: the crop is",
+         "# nearly all face. Another clip can ask for it with its own `bokeh:`."]
+    if model_present:
+        L.append("bokeh: 1")
+    else:
+        L.append(f"# bokeh: 1   <- needs models/{segment.MODEL_FILE}, "
+                 f"see models/README.md")
+    return L
+
+
+def depth_lines() -> list[str]:
+    """Parallax on photographs, on in every new film at 0.5. Jacek watched
+    0.5 to 0.8 in motion on What Is Love (2026-09-28): 0.8 smeared, 0.5
+    was kept. Written on even without the optional extra: render.py then
+    renders the photographs flat and says so once, so nothing stops. A
+    .png, .gif or .svg is a chart and stays flat on its own (spec.CHARTS)."""
+    return ["# Photographs with depth: as the camera moves, what is near",
+            "# slides past what is far (parallax). 0 = flat. Photos only;",
+            "# a .png .gif .svg is a chart and stays flat by itself.",
+            "# 0.8 smears. Needs `uv sync --extra depth` once, flat without",
+            "# it; see docs/decisions/0013.",
+            "depth: 0.5"]
+
+
+def title_card_block(project: Path, vertical: bool) -> list[str]:
+    """The opening shot: the film's name over the thumbnail picture.
+
+    Written only when there is a picture to write it on -- which, once
+    the library has one wide and one tall backdrop in it, is always, for
+    every film, with nobody doing anything.
+
+    `static` and nothing else. Every other move scales into the frame,
+    and the frame is a title: push in on it by even a few percent and
+    the words start losing their edges. It also earns its keep as a
+    stillness before the first person speaks.
+    """
+    from . import cover
+
+    w, h = (1080, 1920) if vertical else (1920, 1080)
+    if cover.build_card(project, w, h) is None:
+        return []
+    return [
+        "",
+        "  - id: s00",
+        f"    src: {cover.card_src(project)}",
+        f"    duration: "
+        f"{SHORT_TITLE_CARD_SECONDS if vertical else TITLE_CARD_SECONDS:.1f}",
+        "    move: static",
+        '    note: "the opening card -- the same picture and the same words',
+        '      as the thumbnail, so clicking the miniature lands you on the',
+        '      frame you clicked. Made from your library; delete this whole',
+        '      block if you would rather open on yourself talking."',
+    ]
+
+
+def shot_block(s: Shot, m: dict) -> list[str]:
+    """One shot, as the lines that go in film.yaml.
+
+    Its own function because two callers need it: writing a film from
+    scratch, and appending the footage you shot after lunch to a film you
+    have already tuned.
+    """
+    L: list[str] = []
+    e, role = m["entry"], m.get("role")
+    L.append("")
+    L.append(f"  - id: {s.id}")
+    L.append(f"    src: {s.src}")
+    if s.kind == "video":
+        L.append(f"    in: {tc(m['in'])}")
+        L.append(f"    out: {tc(m['out'])}")
+        if abs(s.speed - 1.0) > 1e-3:
+            L.append(f"    speed: {s.speed}              # 1.0 is the speed "
+                     f"you actually spoke at")
+    elif s.voice:
+        # A slide: the picture from `src`, the words from `voice`, and
+        # in/out their times inside it. No `duration:` -- it defaults to
+        # the words plus a breath, which is what a slide is for. Write
+        # one to hold the picture longer; the words do not stretch.
+        L.append(f"    voice: {s.voice}")
+        L.append(f"    in: {tc(s.tin)}")
+        L.append(f"    out: {tc(s.tout)}")
+        # The narration is you talking, so it gets the same correction
+        # your talking takes get. Written out rather than defaulted,
+        # because this is the number to change when a film's narration
+        # was read at a different pace -- and because a key you cannot
+        # see is a key nobody knows to change.
+        vspeed = _speed_for(s.voice or "")
+        if abs(vspeed - 1.0) > 1e-3:
+            L.append(f"    speed: {vspeed}              # 1.0 is the speed "
+                     f"you actually read at")
+    else:
+        L.append(f"    duration: {s.duration:.1f}")
+    L.append(f"    move: {s.move}")
+    # A hand-set pair of windows beats the named move (moves.windows_for
+    # returns them untouched), so `move:` above is only what this would
+    # have been. Written by `sweep_across` for a picture too wide to show
+    # in one frame -- change the two cx values, or delete both lines to
+    # go back to the named move.
+    if s.frm is not None and s.to is not None:
+        w, h = e.get("width") or 0, e.get("height") or 0
+        L.append(f"    from: {{cx: {s.frm.cx:.3f}, cy: {s.frm.cy:.3f}, "
+                 f"scale: {s.frm.scale:.2f}}}")
+        L.append(f"    to:   {{cx: {s.to.cx:.3f}, cy: {s.to.cy:.3f}, "
+                 f"scale: {s.to.scale:.2f}}}")
+        L.append(f"    ease: {s.ease}")
+        swept = (f" This picture is {w}x{h}; the frame shows about "
+                 f"{1 - abs(s.to.cx - s.frm.cx):.2f} of its width at a "
+                 f"time, so it is swept across instead of cropped.")
+    else:
+        swept = ""
+    if abs(s.amount - 1.0) > 1e-3:
+        L.append(f"    amount: {s.amount}            # how much of the move "
+                 f"to use. 0 = none")
+    L.append(f"    focus: [{s.focus[0]:.3f}, {s.focus[1]:.3f}]")
+    if s.dissolve:
+        L.append(f"    dissolve: {s.dissolve}      # blends in from the "
+                 f"shot before. 0 = a hard cut")
+    # One note, built then written. It used to be written from each
+    # branch, which meant a shot that needed two things said about it
+    # could only have the first -- and a swept picture needs its own
+    # sentence on top of whatever else it is.
+    note = ""
+    if role in ("open", "open_close"):
+        note = "opener -- held still, deliberately brief"
+    elif role == "close":
+        note = "closer"
+    elif role == "quote":
+        note = "quote card -- title from filename"
+    elif m.get("slide"):
+        note = (f"picture {m['part']} of {m['parts']} -- holds while "
+                f"these words are said")
+    elif m.get("talking"):
+        if m["parts"] > 1:
+            note = (f"part {m['part']} of {m['parts']} -- one take with "
+                    f"the long pauses cut out. Every word is kept")
+        else:
+            note = ("kept whole -- there is sound on this one, so none "
+                    "of what you said is cut. Trim in:/out: if it drags")
+    elif e.get("focus_from") == "face":
+        note = "face detected -- given longer screen time"
+    elif e.get("from"):
+        note = "converted from " + Path(e["from"]).name
+    if note or swept:
+        both = f"{note}." + swept if note and swept else note + swept
+        L.append(f"    note: {quoted(both.strip())}")
+    if s.captions:
+        L.append("    captions:")
+        for c in s.captions:
+            L.append(f"      - text: {quoted(c.text)}")
+            L.append(f"        at: {c.at}")
+            L.append(f"        dur: {c.dur}")
+            L.append(f"        pos: {c.pos}")
+    return L
+
+
+MIN_SHOT = 2.0               # no still is worth less screen time than this
+
+# Room left after the narration ends, so the music has somewhere to fade
+# out into rather than being cut off on the last word. Same number as
+# Film.music_fade's own default (spec.py) -- if that default moves, this
+# should move with it.
+NARRATION_FADE_ROOM = 2.0
+
+
+def stretch_to_narration(shots: list[Shot], meta: list[dict],
+                         target: float) -> list[str]:
+    """Grow the photographs so the film covers a narration longer than
+    they are. The inverse of fit_to_target's shrink -- and deliberately
+    not the same function.
+
+    fit_to_target's target is a CEILING for a Short: a film already
+    under it is left alone, however far under
+    (test_a_target_that_is_already_met_changes_nothing in
+    test_editing_rules.py runs it at 300s against 18s of stills and
+    expects nothing to move). This target is a FLOOR the narration
+    needs met. They are not the same kind of number -- "no more than"
+    and "at least" -- and making one function serve both would have
+    made that test wrong.
+
+    Only ever touches photographs. A video clip is stretched by slowing
+    it down, which is record.REC_SPEED's decision to make on a take,
+    not a duration target's to make silently on whatever clip is in
+    the film.
+    """
+    notes: list[str] = []
+    total = sum(s.duration for s in shots)
+    if total >= target:
+        return notes
+    photos = [i for i, m in enumerate(meta)
+             if m["entry"].get("kind") == "still"]
+    photo_total = sum(shots[i].duration for i in photos)
+    if photo_total <= 0:
+        return notes
+    room = target - (total - photo_total)
+    factor = room / photo_total
+    for i in photos:
+        shots[i].duration *= factor
+    notes.append(f"# Photographs held longer -- {room:.0f}s of pictures in "
+                 f"all -- to cover the narration to its end.")
+    return notes
+
+
+def cut_at_pauses(start: float, end: float, quiet: list,
+                  pieces: int) -> list[tuple[float, float]]:
+    """Cut a narration into `pieces` consecutive windows, at its longest
+    pauses. Pure -- hand it a pause list and it is arithmetic.
+
+    The same idea as `talking_segments`, and the same constants: a cut
+    takes BREATH off each side of the pause, so the words either side of
+    it survive and the join lands on a natural beat. What falls in the
+    gap between two windows is silence, and is not heard -- which is
+    exactly what happens to a talking take today.
+
+    The cuts are the LONGEST pauses, not the first ones: where somebody
+    stopped for three seconds is where they finished a thought, and
+    where they stopped for eight tenths is where they took a breath
+    mid-sentence. A cut that would leave a picture on screen for less
+    than MIN_SHOT is not made at all, and the next-longest pause is
+    tried instead -- one enormous pause right after the first word is
+    the end of a false start, not the end of a paragraph.
+
+    Fewer pauses than asked-for cuts means fewer pieces. The caller is
+    handed what it got and says so; inventing empty slides to reach a
+    number would put a photograph on screen with nothing said over it.
+    """
+    a = max(0.0, start - BREATH)
+    b = end + BREATH
+    inner = sorted(((s, e) for s, e in quiet if a < s and e < b),
+                   key=lambda p: p[1] - p[0], reverse=True)
+
+    cuts: list[tuple[float, float]] = []
+    for s, e in inner:
+        if len(cuts) >= pieces - 1:
+            break
+        trial = sorted(cuts + [(s, e)])
+        starts = [a] + [y - BREATH for _x, y in trial]
+        ends = [x + BREATH for x, _y in trial] + [b]
+        if all(hi - lo >= MIN_SHOT for lo, hi in zip(starts, ends)):
+            cuts = trial
+
+    out: list[tuple[float, float]] = []
+    cursor = a
+    for s, e in cuts:
+        out.append((round(cursor, 2), round(s + BREATH, 2)))
+        cursor = e - BREATH
+    out.append((round(cursor, 2), round(b, 2)))
+    return out
+
+
+def narration_seconds(path: Path) -> float:
+    """How long the narration file is. Its own function so a test can
+    stand in for it without decoding anything."""
+    from .audio import _dur
+    return _dur(path)
+
+
+def narration_pauses(path: Path) -> tuple[float, float, list]:
+    """(first word, last word, the pauses between) for a narration file.
+
+    The same measurement `ingest` already makes on every clip -- window
+    RMS, the room and the voice found in this take's own distribution,
+    the line put between them. See ingest.quiet_stretches for why it is
+    not `silencedetect`. Run here on a standalone audio file, which
+    ingest itself never looks at: its manifest is pictures and clips.
+
+    Its own function, and the only impure part of the slide path, so
+    that everything above it can be tested on a pause list.
+    """
+    from . import ingest as ingest_mod
+    dur = narration_seconds(path)
+    snd = ingest_mod.detect_sound(path, dur)
+    if not snd.get("has"):
+        return 0.0, dur, []
+    return (float(snd.get("in", 0.0)), float(snd.get("out", dur)),
+            [(float(s), float(e)) for s, e in snd.get("quiet", [])])
+
+
+def cut_into_slides(shots: list[Shot], meta: list[dict], project: Path,
+                    audio: Path) -> list[str]:
+    """Give each photograph its own piece of the narration.
+
+    Turns plain stills into SLIDES -- `voice:`, `in:`, `out:` -- in the
+    order they are already in, and hands back the footer lines saying
+    what it did. An empty list back means it did not do it, and the
+    caller keeps the flat `audio:` track.
+    """
+    start, end, quiet = narration_pauses(audio)
+    if end - start < MIN_SHOT:
+        return []
+    rel = audio.relative_to(project).as_posix()
+
+    # Pressed Next while recording: that is where the pictures change,
+    # and nothing else gets a say. See slides_from_cues.
+    cued = read_cues(audio)
+    if cued and cued["cues"]:
+        silent = slides_from_cues(shots, meta, rel, cued, start, end, quiet)
+        n = sum(1 for s in shots if s.voice)
+        return _slide_footer(n, narration_seconds(audio), silent,
+                             SLIDES_CUED)
+
+    pieces = cut_at_pauses(start, end, quiet, len(shots))
+    if not pieces:
+        return []
+    for i, (s, (a, b)) in enumerate(zip(shots, pieces)):
+        s.voice = rel
+        s.tin, s.tout = a, b
+        s.duration = (b - a) + VOICE_TAIL
+        meta[i]["slide"] = True
+        meta[i]["part"] = i + 1
+        meta[i]["parts"] = len(pieces)
+    # More pictures than pieces: the ones past the end have no words and
+    # would sit there in silence. Left as plain photographs, at the end.
+    for s in shots[len(pieces):]:
+        s.voice = None
+    return _slide_footer(len(pieces), narration_seconds(audio),
+                         len(shots) - len(pieces), SLIDES_GUESSED)
+
+
+def _slide_footer(n: int, total: float, silent: int, how) -> list[str]:
+    L = ["#",
+         f"# {n} slide(s), one per picture, each holding its own piece of",
+         f"# the {total:.0f}s narration. Each `in:`/`out:` is that picture's "
+         f"words, on",
+         "# the narration's own clock. Move a shot and its words move with it;",
+         "# swap `src:` to put a different picture under the same words; hold",
+         "# one longer with `duration:` and the words stay where they were said."]
+    if silent > 0:
+        L.append(f"# {silent} picture(s) had nothing said over them and are "
+                 f"held silent.")
+    return L + ["#"] + list(how)
+
+
+# How far a press of Next may be moved to land in a pause. People press a
+# little after the sentence ends, or reach for the key just before it
+# does; either way the cut belongs in the silence, not through a word.
+# Reasoned, not measured -- the acceptance run on test_story measures it.
+CUE_SNAP = 1.5
+
+
+def cut_at_cues(cues: list[float], start: float, end: float,
+                quiet: list) -> list[tuple[float, float] | None]:
+    """The narration cut where Next was pressed. Pure.
+
+    One piece per picture shown: len(cues) + 1. Each cue moves to the
+    nearest pause within CUE_SNAP and is cut there the way every other
+    cut in this file is -- a BREATH either side, the silence between
+    dropped. With no pause that close, it is cut where it was pressed.
+
+    None for a picture nothing was said over: Next pressed before the
+    first word, or twice on one pause. It was on screen, but giving it
+    a slice of silence would put a picture in the film that says nothing
+    and is there for less than a second.
+    """
+    a0 = max(0.0, start - BREATH)
+    b0 = end + BREATH
+    ends: list[float] = []
+    starts: list[float] = []
+    for c in cues:
+        best = None
+        for s, e in quiet:
+            d = 0.0 if s <= c <= e else min(abs(c - s), abs(c - e))
+            if d <= CUE_SNAP and (best is None or d < best[0]):
+                best = (d, s, e)
+        if best is None:
+            ends.append(c)
+            starts.append(c)
+        else:
+            _d, s, e = best
+            if e - s > 2 * BREATH:
+                ends.append(s + BREATH)
+                starts.append(e - BREATH)
+            else:
+                mid = (s + e) / 2.0
+                ends.append(mid)
+                starts.append(mid)
+
+    out: list[tuple[float, float] | None] = []
+    lo = a0
+    for i in range(len(cues) + 1):
+        a = max(a0, starts[i - 1]) if i > 0 else a0
+        a = max(a, lo)
+        b = min(b0, ends[i]) if i < len(cues) else b0
+        if b - a < MIN_PIECE:
+            out.append(None)
+        else:
+            out.append((round(a, 2), round(b, 2)))
+            lo = b
+    return out
+
+
+def slides_from_cues(shots: list[Shot], meta: list[dict], rel: str,
+                     cued: dict, start: float, end: float,
+                     quiet: list) -> int:
+    """Make the slides the recording window described. Returns how many
+    pictures are in the film with nothing said over them.
+
+    Follows what was ON SCREEN, which is `cued["pictures"]`, not the
+    filename order: a paragraph that named `[3]` showed picture 3 first,
+    and the words said over it belong under it. A picture shown twice is
+    in the film twice. A picture never shown stays in the film, after
+    the words, as a plain photograph -- it is still in media/, and
+    dropping it without a word is the one thing this toolkit never does.
+
+    If the pictures the file names are not the pictures there are -- one
+    renamed or deleted since -- the cues are applied in film order.
+    """
+    pieces = cut_at_cues(cued["cues"], start, end, quiet)
+    first: dict[str, tuple[Shot, dict]] = {}
+    for s, m in zip(shots, meta):
+        first.setdefault(s.src, (s, m))
+    shown = list(cued.get("pictures") or [])
+    if len(shown) != len(pieces) or any(src not in first for src in shown):
+        order = [s.src for s in shots]
+        shown = [order[min(i, len(order) - 1)] for i in range(len(pieces))]
+
+    new_s: list[Shot] = []
+    new_m: list[dict] = []
+    used: set[str] = set()
+    for i, (src, piece) in enumerate(zip(shown, pieces)):
+        s0, m0 = first[src]
+        if src in used:
+            s, m = replace(s0, captions=list(s0.captions)), dict(m0)
+        else:
+            s, m = s0, m0
+            used.add(src)
+        if piece is None:
+            s.voice = None
+            m.pop("slide", None)
+        else:
+            a, b = piece
+            s.voice = rel
+            s.tin, s.tout = a, b
+            s.duration = (b - a) + VOICE_TAIL
+            m["slide"] = True
+            m["part"] = i + 1
+            m["parts"] = len(pieces)
+        new_s.append(s)
+        new_m.append(m)
+    silent = sum(1 for s in new_s if not s.voice)
+    for s, m in zip(shots, meta):
+        if s.src not in used:
+            s.voice = None
+            new_s.append(s)
+            new_m.append(m)
+            silent += 1
+    shots[:] = new_s
+    meta[:] = new_m
+    for i, s in enumerate(shots, 1):
+        s.id = f"s{i:02d}"
+    return silent
+
+
+def cut_by_hand(film) -> bool:
+    """Were this film's slides cut where somebody pressed Next?
+
+    Then `film caption --apply` places the captions and leaves the cuts
+    alone. A script's paragraphs have to be FOUND in the audio; a press
+    of Next is somebody saying outright where the picture changes.
+    """
+    for s in film.shots:
+        if s.voice:
+            # Beside the recording, not beside its shortened copy: read
+            # off the copy, a film cut by pressing Next was re-cut by
+            # paragraph (Zeroing a Rifle Sight, 2026-10-06).
+            cued = read_cues(kinds.recording_of(film.resolve(s.voice)))
+            if cued and cued["cues"]:
+                return True
+    return False
+
+
+def fit_to_target(shots: list[Shot], meta: list[dict],
+                  target: float) -> list[str]:
+    """Bring the film down to `target` seconds. Never by cutting speech.
+
+    Twenty-five photographs at four and a half seconds each is a two
+    minute film, and a two minute film is not a Short -- nobody reaches
+    the end of it. So: shorten the photographs, then drop the weakest
+    ones, and if that still is not enough, say so rather than reaching
+    for the one thing that must not be touched.
+
+    What you said is never shortened to hit a number. If your talking
+    alone is longer than the target, the target loses.
+    """
+    notes: list[str] = []
+    # A slide's length is its words, the same as a talking clip's: cut it
+    # to hit a number and the next shot's picture lands over them.
+    talking = {i for i, m in enumerate(meta)
+               if m.get("talking") or m.get("slide")}
+    spoken = sum(shots[i].duration for i in talking)
+    flex = [i for i in range(len(shots)) if i not in talking]
+
+    if sum(s.duration for s in shots) <= target:
+        return notes
+
+    if spoken >= target:
+        for i in flex:
+            shots[i].duration = MIN_SHOT
+        notes.append(f"# You talk for {spoken:.0f}s, which is already past the "
+                     f"{target:.0f}s target -- so the pictures were cut to the "
+                     f"bone and nothing you said was touched.")
+        return notes
+
+    # 1. Shorten the pictures proportionally, down to a floor.
+    room = target - spoken
+    flex_total = sum(shots[i].duration for i in flex)
+    if flex_total > 0:
+        factor = room / flex_total
+        for i in flex:
+            shots[i].duration = max(MIN_SHOT, shots[i].duration * factor)
+
+    # 2. Still over? Drop the least missable pictures, one at a time.
+    # A face, an opener, a closer and a quote card all earn their place;
+    # a plain photograph in the middle of a run does not.
+    def droppable(i: int) -> bool:
+        m = meta[i]
+        return (m.get("role") not in ("open", "close", "open_close", "quote")
+                and m["entry"].get("focus_from") != "face")
+
+    dropped = 0
+    while sum(s.duration for s in shots) > target:
+        candidates = [i for i in flex if droppable(i)]
+        if not candidates:
+            break
+        i = candidates[len(candidates) // 2]     # from the middle of the run
+        flex.remove(i)
+        shots[i].duration = 0.0                  # marked; removed below
+        dropped += 1
+
+    if dropped:
+        notes.append(f"# {dropped} photograph(s) left out to reach the "
+                     f"{target:.0f}s target. They are still in media/ -- "
+                     f"raise the target, or add them back by hand.")
+    over = sum(s.duration for s in shots if s.duration > 0)
+    if over > target + 0.5:
+        notes.append(f"# Could not get under {target:.0f}s without cutting "
+                     f"into speech or below {MIN_SHOT}s a picture. "
+                     f"This is {over:.0f}s.")
+    return notes
+
+
+def _lag_of(project: Path, entry: dict) -> float:
+    """How late this take's sound starts (audio.sound_lag). 0 for a still,
+    or for a file that is not one of your camera takes. Asked of the disk,
+    so kept out of the pure functions above."""
+    if entry.get("kind") != "video" or "path" not in entry:
+        return 0.0
+    from .audio import sound_lag
+    return sound_lag(project / entry["path"])
+
+
+def shots_for(entry: dict, first_id: int, run: int | None = None,
+              lag: float = 0.0) -> tuple[list[Shot], list[dict]]:
+    """The shot(s) one media file becomes.
+
+    The ONLY place that decides this. `build` used to hold a second copy
+    of the whole thing, and the two had already drifted apart: the copy
+    in `build` stepped through TALKING_MOVES on the running length of the
+    WHOLE film, this one on the length of its own little list. So `film
+    init` and `film go` (which appends through here) gave the same clip
+    different camera moves, and every future change of taste had to be
+    made twice or be half made.
+
+    `run` is how many shots the film already has, which is what the
+    talking-head move rotation steps on. It defaults to `first_id - 1`,
+    which is the same thing whenever ids are simply counted from one.
+    """
+    shots, meta = [], []
+    stem = Path(entry["path"]).stem
+    role, _num, clean = _hint(stem)
+    run = (first_id - 1) if run is None else run
+
+    if entry["kind"] == "still":
+        if role in ("open", "close", "open_close"):
+            dur, mv = OPENER_CLOSER_SECONDS, "static"
+        elif role == "quote":
+            dur, mv = QUOTE_SECONDS, "static"
+        else:
+            dur = FACE_SECONDS if entry.get("focus_from") == "face" else STILL_SECONDS
+            mv = "auto"
+        s = Shot(src=entry["path"], kind="still", duration=dur, move=mv,
+                 focus=tuple(entry.get("focus", (0.5, 0.5))),
+                 id=f"s{first_id:02d}")
+        if role == "quote":
+            s.captions.append(Caption(text=_title_from_stem(clean), at=0.3,
+                                      dur=max(1.0, dur - 0.6), pos="center"))
+        shots.append(s)
+        meta.append({"entry": entry, "role": role})
+    else:
+        segments = video_segments(entry, lag)
+        talking = is_talking(entry)
+        spd = _speed_for(entry["path"])
+        spot = _video_focus(entry)
+        for k, (a, b) in enumerate(segments, 1):
+            here = run + len(shots)
+            shots.append(Shot(src=entry["path"], kind="video",
+                              duration=(b - a) / spd,
+                              tin=a, tout=b, speed=spd,
+                              move=(TALKING_MOVES[here % len(TALKING_MOVES)]
+                                    if talking else "auto"),
+                              amount=TALKING_AMOUNT if talking else 1.0,
+                              focus=spot,
+                              id=f"s{first_id + len(shots):02d}",
+                              dissolve=DISSOLVE if (talking and k > 1) else 0.0))
+            meta.append({"entry": entry, "in": a, "out": b, "role": role,
+                         "talking": talking, "part": k, "parts": len(segments)})
+    return shots, meta
+
+
+def append_new(project: Path, seed: int = 0) -> list[str]:
+    """Add shots for media that arrived AFTER film.yaml was written.
+
+    The point of this is that both halves are true at once: your edit is
+    yours and nothing rewrites it, and footage you drop in later actually
+    reaches the film. Before this existed the first won silently -- new
+    clips were analysed, proxied, and then never mentioned again.
+
+    Appended as text, at the end, so every comment and every number you
+    tuned survives untouched.
+    """
+    from .spec import Film
+
+    yml = project / "film.yaml"
+    manifest = json.loads(
+        (project / "analysis" / "manifest.json").read_text(encoding="utf-8"))
+
+    film = Film.load(yml)
+    have = {s.src for s in film.shots}
+    fresh = [e for e in manifest["media"] if e["path"] not in have]
+    if not fresh:
+        return []
+
+    next_id = len(film.shots) + 1
+    shots: list[Shot] = []
+    meta: list[dict] = []
+    for e in fresh:
+        s, m = shots_for(e, next_id + len(shots),
+                         run=len(film.shots) + len(shots),
+                         lag=_lag_of(project, e))
+        shots.extend(s)
+        meta.extend(m)
+    if not shots:
+        return []
+
+    # Keep the no-two-alike rule running across the join, by handing
+    # choose_moves the last shot that is already in the film.
+    choose_moves([film.shots[-1]] + shots if film.shots else shots, seed=seed)
+
+    before = yml.read_text(encoding="utf-8")
+    lines = [before.rstrip("\n"), "",
+             f"# --- added {len(shots)} shot(s) from footage that arrived later ---"]
+    for s, m in zip(shots, meta):
+        lines.extend(shot_block(s, m))
+    lines.append("")
+    yml.write_text("\n".join(lines), encoding="utf-8")
+
+    try:
+        Film.load(yml)                     # it has to still parse
+    except SystemExit:
+        yml.write_text(before, encoding="utf-8")
+        raise SystemExit(
+            "Could not add the new footage to film.yaml without breaking it, "
+            "so nothing was changed. This happens if `shots:` is not the last "
+            "thing in the file. Move any other settings above it, or run "
+            "`uv run film go --rewrite` to start the edit over.")
+    return [s.src for s in shots]
+
+
+def write(project: Path, force: bool = False, seed: int = 0,
+          target: float | None = None) -> Path:
+    out = project / "film.yaml"
+    if out.exists() and not force:
+        raise SystemExit(
+            f"{out} already exists. Use --force to overwrite it "
+            f"(commit first if you care about it)."
+        )
+    out.write_text(keep_retakes(project, build(project, seed=seed,
+                                               target=target)),
+                   encoding="utf-8")
+    return out

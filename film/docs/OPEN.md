@@ -1,0 +1,242 @@
+# OPEN — faults found and not yet fixed
+
+Every session reads this first. A fault stays here until it is fixed AND
+Jacek has seen the fix work in a real render. Newest first. When fixed:
+move it to the bottom section with the commit id — do not delete it.
+
+- 2026-10-05 NEW: `film check` names passages said twice in OTHER words
+  (checks.paraphrased_captions: 3 captions vs 3, >=60% and >=5 shared
+  content words; intro<->closing named as a possible recap). Calibrated on
+  20 films, ONE known true case (SUMIFS intro/closing, 78%). Not yet seen
+  catching anything on a new film by Jacek.
+- 2026-10-05 caption word timing from whisper misses some numbers.
+  SUMIFS s06 "72,000 and 157.55.": the highlight reaches 157.55 at
+  tight 157.00 s; the speech there is 156.45-158.05 (pause) 158.45-...,
+  so 157.55 starts ~158.45 (inferred from the pause + word length, 50 ms
+  levels, not heard): 1.16 s early on screen. Whisper on the tight copy
+  put it at 159.88 (1.43 s late). Of the 15 words the two whisper runs
+  disagree on, the caption (old run) is: at the word onset 3, 0.2-0.44 s
+  (source) early 5, inside continuous speech so not decidable 5, the
+  157.55 miss 1, plausible 1 (167). The tight run was worse on numbers
+  (167 and "times" placed on the previous word's end). Not fixed.
+  Re-transcribing a short slice does NOT help numbers (it does names,
+  docs/tech/captions.md): slice 153.5-162.5 heard "72 ,157" with 157 at
+  157.14; slice 50.5-56.5 put 157 at 51.78, inside the pause before it
+  (onset 52.41). Judged cosmetic by Claude: the caption itself appears
+  on time, only the highlight runs ahead on one word in ~300.
+  BUILT anyway at Jacek's ask ("A word starts where the pause before it
+  ends", voice.snap_to_pauses; new captions only, SUMIFS not redone).
+  Real transcribe of the SUMIFS tight narration: caption starts inside
+  a pause 27 -> 0, word starts 30 -> 0 of 300; 30 of 51 captions start
+  later, by 0.01-0.65 s; one sentence now splits after "Insert Slicer,"
+  instead of after "Design," (its "and" moved past the pause). 157.55
+  not fixed by it. Not yet seen on a new film by Jacek.
+- 2026-10-05 FIXED (b458026, "A pause of exactly the limit is
+  shortened"; new films only, SUMIFS final left as Jacek accepted it):
+  `film tighten` left a pause of exactly 0.60 s uncut: 12 windows x
+  0.05 s = 0.5999999999999943 < OVER in `cuts_for` (SUMIFS: orig
+  198.10-198.70). After the fix, on SUMIFS media: 30 cuts, 16.15 s
+  (was 29, 15.95 s). Not yet seen on a new film by Jacek.
+  Measured at the same time: the tight copy equals the original minus
+  the cuts sample for sample (9,904,800 samples; 13,745 differ, all
+  inside the 5 ms fades). So the 15 of 304 words whisper hears 0.21-2.88 s
+  off (mostly numbers: 291, 157, 167) are whisper's timing, not the
+  mapping. Jacek, 2026-10-05: `film fit` speed-ups are done, 1.25 is the
+  ceiling; not an open item.
+- 2026-10-02 SKIPPED by Jacek (final rendered 177.8 s with them silent;
+  not to be raised again). Excel Time Logic pictures 6 and 7 (s07, s08) have no
+  narration: the whole-narration take (162.45 s) is silent where they were
+  cued (158.8-161.4 s mean -53 dB, 161.4-end -62.6 dB), and retakes exist
+  only for pictures 1-5. They hold 4.5 s each with no voice, no captions.
+  Not fixed: needs Jacek to say them (`record --voice --picture 6`, `7`;
+  those two were out of range until ea776d4, now offered: menu 1-7).
+  The final.mp4 rendered 20:3x predates the caption rebuild below.
+- 2026-10-02 FIXED (0842bcf, e794d44; Jacek has not yet seen the new
+  final): doubled captions (46 overlapping pairs -> 0) and intro captions
+  that were picture 1's words. Cause: with every picture said again, no
+  shot quoted the old narration, so voice_sources used it as a global
+  track and never listened to the clips. Measured on Excel Time Logic.
+  Note: `film caption --apply` still ADDS to existing captions; clear a
+  shot's captions first.
+- 2026-10-02 intro take could not be stopped (Excel Time Logic,
+  `media/rec_20261002-191354.mp4`, started 19:13:54): file stops growing
+  19:13:58 at 3.4 MB (~3.7 s), no moov atom = ffmpeg was killed, not
+  stopped. Windows event log: AUDIODG.EXE APPCRASH 0xc0000005 at 19:13:55
+  and kernel LiveKernelEvent 141 at 19:13:58. Inferred (not reproduced):
+  ffmpeg's dshow mic input hung when the audio engine died, so it never
+  read the `q` that SPACE/Stop/Esc send. Cause of the AUDIODG crash not
+  measured. The window has no timeout for a take that stops writing
+  (`booth.Take.wait` only kills 30 s after `q`). FIXED 2026-10-05
+  ("A take that stops writing is stopped"): `booth.watchdog` -- file not
+  grown for 5 s -> `q`; still running 5 s later -> killed; the review
+  screen says which. Normal takes measured: growth every <=1.43 s, exit
+  0.14-0.66 s after `q`. Proved on a stand-in process that ignores `q`
+  (stopped 5.02 s, killed 10.05 s). Not yet seen on a real hang (mic
+  unplugged mid-take) by Jacek.
+  2026-10-02 later: narration over pictures is now recorded ONE SLIDE PER
+  TAKE (window: SPACE ends the slide, Enter next, R this slide again,
+  shown after every slide; takes wait in media/_slides, joined into one
+  voiceover + cues when the last is kept). A hang still cannot be stopped
+  from the window. Window not yet walked by Jacek; join proved on three
+  synthetic wavs (3.0+4.5+2.0 s -> 9.5 s, cues 3.0, 7.5).
+- 2026-10-01 `columns` (a 2-column slide held, panned mid-shot, held;
+  found by shape: width = 2x the frame's) is built and drafted on Excel
+  Tutorial - Use tables: 7 of 7 slides got it, draft 34.5 s. Not yet
+  seen by Jacek. Open: (1) `spans_the_middle` (a table across both
+  halves -> slow sweep over the whole shot instead) has threshold
+  SPANS_WHEN 0.20 chosen between the 4.8% measured on these slides
+  (divider + arrow) and a synthetic table; no real spanning slide has
+  been measured. (2) `film go`/`append_new` adds shots through
+  `shots_for`, which does not look for columns: a slide dropped in
+  later gets the ordinary move. (3) a 9:8 photograph would be taken
+  for a slide; `move:` on the shot undoes it. (4) two faint thin
+  columns at x=44,50 in a draft frame at 10.5 s, cause not found.
+- 2026-09-30 last syllable of a camera take is never recorded when SPACE
+  comes soon after the last word. GAM Curves intro `0_rec_20260930-200204`:
+  video 16.68 s, audio 16.01 s; sound still −26..−28 dB at its last sample
+  (no "-p" of "relationship"); lips close for the "p" at ~16.23 s and stay
+  closed to 16.68. Start offset by lips vs sound onset ≈ 0.2 s (not the
+  0.67 s `sound_lag` assumes), so ~0.45 s of sound is lost at the END
+  (lips read by eye at 6–10 fps, ±0.1 s). `film.yaml` out 16.68 is the
+  last frame already: no edit brings it back. fit-to-length did not cause
+  it. Inferred also: this take's voice plays ~0.45 s before the lips.
+  Older takes ended in ≥0.5 s silence, so the loss was hidden. Cause,
+  measured with -copyts: the mic's default ~0.5 s buffer; `q` drops the
+  chunk still filling. FIXED (this commit, "A take keeps its last
+  syllable"): `-audio_buffer_size 50` → sound ends within 0.012 s of the
+  picture; v − a now 0.24–0.27 s = the real start delay (0.28 s). Real
+  take 0_rec_20260930-213940 (Jacek, 21:39): speech ends 15.51 s, then
+  2.0 s at −55..−62 dB to the end; v − a 0.306. Draft c0923fb (177.7 s):
+  voice ends 14.50 s, intro cut 14.75 s, music only between. Not yet
+  heard by Jacek.
+- 2026-09-30 "Change the words" in the recording window KEEPS the take
+  just made (booth.py `edit_words` does not call `discard`); every kept
+  camera take becomes a shot (GAM Curves first draft 1e9d354: three intro
+  takes). Jacek: changing the words or reading again = replace the take.
+  FIXED (same commit): the take is dropped to media/_discarded when the
+  next take starts. Unit-tested only; the window not yet walked by Jacek.
+- 2026-09-25 qmd MCP fails to connect at the start of some Claude
+  sessions ("recent failure cached", 15 min), while `claude mcp list` in
+  the same session says Connected. qmd itself is fine since the move out
+  of the app's private folder (docs/tech/qmd.md). Cause of the start-up
+  failure not measured. Workaround: a new session, or `/mcp` in a
+  terminal `claude`. Not yet seen working from Claudian.
+- 2026-09-24 qmd MCP `query` returned `Object is disposed` on 6 calls in
+  a row (right after a burst of calls that were cancelled mid-flight);
+  the same calls worked on retry, and 12 later calls had no error. Cause
+  not found (docs/tech/qmd-bench.md). If it recurs: retry once, then
+  grep. The qmd indexes (`code`, `history`) are not refreshed by
+  themselves: docs/tech/qmd.md says how.
+- 2026-09-24 "redo one picture" was hard to find: key P (c52336d) was
+  not seen either (2026-09-28). Now also menu line "Redo ONE picture
+  only" (line 8 on What Is Love) and a button "Only ONE picture..." in
+  the recording window — 98c638b. Window walked by a script up to the
+  pick (returns the number); the reopened one-picture window and a real
+  take have not been tried. **Not yet used by Jacek.**
+  2026-09-29: the menu line shows once there is a narration (b601a7d);
+  the window button too — before an edit its screen says so and Continue
+  cuts the narration, then asks which picture. Both window paths walked
+  by a script; a real one-picture take still not tried.
+  2026-09-29: Jacek could not use it on It Reads Us. Two faults: (a)
+  after an intro retake film.yaml named the discarded take and every
+  picture recording refused ("file not found") -- fixed 37f0bd6; (b) the
+  line is hidden until an edit exists, and he re-recorded the narration
+  3x before the edit was made -- fixed b601a7d (offered once there is a
+  narration; `record --picture` rewrites a missing or older edit first,
+  measured on a copy with real takes, both cases). Sandbox for Jacek's
+  test: projects/zz_redo_test (a copy of It Reads Us). Measured on a copy of It
+  Reads Us, `--no-window`, real Samson take of 4 s: picture 2 re-pointed,
+  only s03 changed in film.yaml, draft renders (109.6 s), and a full
+  `go --rewrite` afterwards keeps the redo. The window route (menu 6 ->
+  window on one picture) with a real take is still untried: Jacek tests
+  it the evening of 2026-09-29.
+- 2026-09-29 intro captions came out in made-up Polish (Whisper guessed
+  pl, p = 0.49, from two Polish names) -- fixed 998cd67, English unless
+  `--lang`. Rebuilt copy of It Reads Us: intro opens "Michał Kosiński,"
+  in English. Not yet seen by Jacek in a render.
+---
+
+## Fixed (with the commit, once Jacek has seen it work)
+- 2026-10-06 a slide can show a clip instead of its picture (`clip:`) --
+  2e7356a. Zeroing a Rifle Sight: 5 ai-manim clips in place of the
+  stills, timed to his words. Jacek watched the draft: "yes they played",
+  slide 04 legible on the phone.
+- 2026-10-06 slides narrated over got no captions from `film go`: the
+  shortened copy of the narration (analysis/tight/) was not taken for
+  the recording, so it was never listened to, and the presses of Next
+  were looked for beside the copy -- 7e43083 (kinds.recording_of).
+  Zeroing a Rifle Sight: 28 captions on its 5 slides, cuts kept. Jacek
+  rendered the draft: "captions show on the slides now". Films
+  narrated since 2026-10-05 need `film caption --apply --audio
+  analysis/tight/<copy>.wav` per take to get theirs.
+- 2026-10-05 every new film plays at 1.25 and its narration pauses of
+  0.6 s+ are cut to 0.4 s -- bfc57a2 (decision 0015). SUMIFS SUMPRODUCT
+  vs DAX final.mp4 168.2 s with s08's repeats cut (8bb2109). Jacek
+  watched it: "status of SUMIFS is good, 1.25 is good, pause tightening
+  looks good".
+- 2026-09-28 `render.source_maps` widened the parallax grid to float64 —
+  231bdf0 (decision 0013): 98.9 -> ~41 ms/call, isolated benchmark.
+  Real `film final` of What Is Love with the fix (258.9 s, 11 shots,
+  depth 0.5, no profiler): **1297.5 s** wall, 550 MB. No earlier What Is
+  Love final time was recorded, so the whole-film speed-up is not known.
+  Other float math in the frame path checked: stays float32. Jacek:
+  "fast enough".
+- 2026-09-24 the check_film hook fails on a folder name with "ł" (`film
+  check` itself worked run by hand) — the hook read Claude Code's event
+  with Windows' own code page instead of UTF-8, so "ł" became "Å‚" and no
+  folder matched. Proven on numbers: replayed the real hook on "Frankfurt
+  School vs Kołakowski Emancipation and Domination/film.yaml" -- before
+  the fix, "No project found"; after, `film check` reports OK, 13 shots,
+  172.9s. 928 tests pass.
+- 2026-09-24 last word of a camera intro/closing cut mid-vowel (caused
+  by c802fcd) — 2881ea5. Proven on numbers, not by ear (Jacek judges
+  sound by numbers): What Is Love, cut after 2881ea5, draft 1a74892,
+  50 ms RMS. s01 end (20.70 s): speech falls from -22 dB 0.35 s before
+  the cut to -44..-48 dB in the last 0.2 s. Film end (259.00 s): -22 dB
+  0.40 s before, -49..-57 dB in the last 0.2 s. Bauhaus before the fix
+  had -11.5 dB in the last 54 ms. Bauhaus's own hand fix (d93b059) never
+  heard: old footage, skipped.
+- 2026-09-28 v0.2 parallax (`depth:`), built 154cf49, tagged v0.2.0.
+  Jacek watched What Is Love (7 photos, s02-s08) in motion at 0.5, 0.6,
+  0.7, 0.8 (drafts 1cd1859, 3096f2b, ea53b44, fdbaf33): 0.8 smears
+  (shot not named), 0.7 uncertain, 0.5 kept (1a74892): "it is ok".
+  `film init` now writes `depth: 0.5` on (decision 0013). Still true at
+  the time: +85 % final render time (234 -> 433 s on 4 photos). Bauhaus
+  (2ddee70) never watched: old footage, skipped.
+- 2026-09-28 WON'T REDO (Jacek: old films are done): the clipped last
+  camera word in films cut before 2881ea5 (Turn Heat, Trade Behind War
+  and older) is left as it is. 17 old films removed from projects/;
+  their thumbnail and title pictures kept in archive/thumbnails/.
+- 2026-09-24 lips drift ±0.5 s in a FINAL (camera's varying frame rate;
+  drafts hide it) — 646de5c. Measured on the take (−0.017 s) and in the
+  Frankfurt final (−0.02–0.00 s). 2026-09-28 Jacek watched the What Is
+  Love final (259.1 s): "lips look fine". Every final with a camera take
+  made before 646de5c keeps the drift until re-rendered.
+- 2026-09-28 `film caption` dropped a script line whose names were
+  misheard ("In one study,", "A 2018 meta-analysis by Kathrin Karsay,"
+  on What Is Love); misheard words were counted as a false start —
+  eec1145. What Is Love 361 -> 371/371 script words captioned; `film
+  check` now names half a sentence on screen. Re-captioned and drafted,
+  a8cd38d. Jacek watched it: "captions look right now". Note: `film
+  caption --apply` ADDS to existing captions; remove them first.
+  Earlier films keep their old captions until re-captioned.
+- 2026-09-24 music went silent at the last word (ducking stops with the
+  speech) — 878207e. Happy Birthday final: -25..-33 LUFS over the 20 s
+  closing card (was -55.4). Jacek heard it: "it works". Earlier films
+  that end on a silent picture keep the silence until re-rendered.
+- 2026-09-23 lips drift from the sound in camera takes — c802fcd.
+  Cause measured: the microphone starts 0.849 s after the camera; fixed by
+  `audio.sound_lag` (intro +40 ms, closing −80 ms, were −483 / −314 ms).
+  Jacek watched the Turn Heat draft: "good enough", accepted provisionally
+  — reopen if it shows again. **Still not measured:** that picture and
+  sound stop together at the end of a take.
+- 2026-09-23 a very tall photo is cut in a vertical film — 78801ad.
+  Move `rise` (bottom to top, no zoom) for photos >10% narrower than the
+  frame. Jacek watched `4_evaporograph.jfif`: it stays longer at the
+  bottom, then travels to the top; "looks good", accepted provisionally.
+- 2026-09-23 `.jfif` pictures missing from the narration window — 74461ac
+- 2026-09-23 retaken intro/closing played twice / at the wrong end;
+  intro and closing shared one text — 576fdaf, 4a2b029
+- 2026-09-23 menu: intro first; back to the menu after a stopped take —
+  132379c
+- 2026-09-23 "file not found" after retakes — 50cd700

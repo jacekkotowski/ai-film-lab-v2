@@ -1,0 +1,408 @@
+# Edited in `film edit`. Comments are not preserved by the editor —
+# use `note:` fields, which are data and survive.
+
+fps: 24
+resolution: [1080, 1920]
+
+music_volume: 0.6
+music_fade: 2.0
+music_duck: 0.5
+look:
+  preset: old_film
+  glow: 0.25
+bokeh: 1
+depth: 0.5
+
+shots:
+
+  - id: s01
+    src: analysis/title.jpg
+    duration: 2.0
+    move: static
+    ease: sine_in_out
+    focus: [0.500, 0.500]
+    note: "the opening card -- the same picture and the same words as the thumbnail, so clicking the miniature lands you on the frame you clicked. Made from your library; delete this whole block if you would rather open on yourself talking."
+
+  - id: s02
+    src: media/0_rec_20261007-111320.mp4
+    in: "00:00.74"
+    out: "00:23.50"
+    speed: 1.25
+    move: static
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.448, 0.327]
+    note: "kept whole -- there is sound on this one, so none of what you said is cut. Trim in:/out: if it drags"
+    captions:
+      - text: "I am a humble data scientist."
+        at: 0.2
+        dur: 1.5
+        pos: lower_third
+        words: [0.00, 0.15, 0.30, 0.46, 0.68, 0.97]
+      - text: "Every model I build that answers yes or no,"
+        at: 2.2
+        dur: 2.4
+        pos: lower_third
+        words: [0.00, 0.16, 0.40, 0.59, 0.90, 1.26, 1.68, 1.97, 2.16]
+      - text: "sick or healthy, fraud or not,"
+        at: 5.0
+        dur: 2.1
+        pos: lower_third
+        words: [0.00, 0.30, 0.48, 1.28, 1.47, 1.79]
+      - text: "is judged by one table of four numbers."
+        at: 7.4
+        dur: 2.0
+        pos: lower_third
+        words: [0.00, 0.15, 0.46, 0.76, 0.97, 1.21, 1.42, 1.62]
+      - text: "Doctors judge screening tests with the same table."
+        at: 10.4
+        dur: 2.5
+        pos: lower_third
+        words: [0.00, 0.30, 0.72, 1.15, 1.54, 1.79, 1.97, 2.14]
+      - text: "Here is what it tells a pregnant woman whose"
+        at: 13.4
+        dur: 2.1
+        pos: lower_third
+        words: [0.00, 0.16, 0.42, 0.62, 0.74, 0.93, 1.10, 1.33, 1.71]
+      - text: "test comes back positive."
+        at: 15.5
+        dur: 1.8
+        pos: lower_third
+        words: [0.00, 0.35, 0.77, 1.56]
+
+  - id: s03
+    src: media/01_scr-accuracy.png
+    clip: clips/01_scr-accuracy.mp4
+    voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
+    in: "00:02.15"
+    out: "00:21.95"
+    duration: 16.24
+    move: tilt_up
+    ease: sine_in_out
+    focus: [0.498, 0.587]
+    note: "picture 1 of 5 -- holds while these words are said"
+    captions:
+      - text: "A pregnant woman's test flags a high risk of Down syndrome,"
+        at: 0.2
+        dur: 3.7
+        pos: lower_third
+        words: [0.00, 0.16, 0.54, 1.25, 1.44, 2.14, 2.43, 2.64, 2.91, 3.07, 3.30]
+      - text: "a condition caused by an extra chromosome,"
+        at: 4.4
+        dur: 2.1
+        pos: lower_third
+        words: [0.00, 0.10, 0.43, 0.98, 1.28, 1.41, 1.68]
+      - text: "and her doctor calls the test 95 percent accurate."
+        at: 7.0
+        dur: 2.6
+        pos: lower_third
+        words: [0.00, 0.11, 0.26, 0.54, 0.90, 1.10, 1.33, 1.76, 2.19]
+      - text: "A test that called every pregnancy healthy"
+        at: 10.0
+        dur: 2.5
+        pos: lower_third
+        words: [0.00, 0.12, 0.41, 0.74, 1.40, 1.61, 2.04]
+      - text: "would score 99.8 percent."
+        at: 12.8
+        dur: 2.9
+        pos: lower_third
+        words: [0.00, 0.26, 0.62, 1.36]
+
+  - id: s04
+    src: media/02_scr-outcomes.png
+    clip: clips/02_scr-outcomes.mp4
+    voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
+    in: "00:23.85"
+    out: "00:59.15"
+    duration: 28.64
+    move: push_in
+    ease: sine_in_out
+    focus: [0.670, 0.536]
+    note: "picture 2 of 5 -- holds while these words are said"
+    captions:
+      - text: "Of 10,000 pregnancies,"
+        at: 0.2
+        dur: 1.8
+        pos: lower_third
+        words: [0.00, 0.44, 0.63, 1.08]
+      - text: "20 have Down syndrome."
+        at: 2.3
+        dur: 1.7
+        pos: lower_third
+        words: [0.00, 0.29, 1.06, 1.28]
+      - text: "The test flags 18, the true positives,"
+        at: 4.4
+        dur: 2.5
+        pos: lower_third
+        words: [0.00, 0.09, 0.39, 0.70, 1.80, 1.93, 2.10]
+      - text: "and misses 2, the false negatives."
+        at: 7.3
+        dur: 2.1
+        pos: lower_third
+        words: [0.00, 0.18, 0.43, 1.34, 1.41, 1.63]
+      - text: "It flags 499 healthy ones,"
+        at: 9.8
+        dur: 2.8
+        pos: lower_third
+        words: [0.00, 0.14, 0.48, 1.86, 2.46]
+      - text: "the false positives,"
+        at: 13.1
+        dur: 0.7
+        pos: lower_third
+        words: [0.00, 0.08, 0.29]
+      - text: "and clears 9,481,"
+        at: 14.2
+        dur: 2.9
+        pos: lower_third
+        words: [0.00, 0.14, 0.56]
+      - text: "the true negatives."
+        at: 17.6
+        dur: 1.0
+        pos: lower_third
+        words: [0.00, 0.08, 0.64]
+      - text: "Sensitivity, affected babies caught,"
+        at: 19.1
+        dur: 2.3
+        pos: lower_third
+        words: [0.00, 1.24, 1.54, 2.10]
+      - text: "is 90 percent."
+        at: 21.9
+        dur: 1.5
+        pos: lower_third
+        words: [0.00, 0.21]
+      - text: "Specificity, healthy ones cleared,"
+        at: 23.6
+        dur: 2.3
+        pos: lower_third
+        words: [0.00, 1.36, 1.66, 1.94]
+      - text: "is 95 percent."
+        at: 26.4
+        dur: 1.8
+        pos: lower_third
+        words: [0.00, 0.52]
+
+  - id: s05
+    src: media/03_scr-meaning.png
+    clip: clips/03_scr-meaning.mp4
+    voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
+    in: "01:00.40"
+    out: "01:41.00"
+    duration: 32.88
+    move: pull_out
+    ease: sine_in_out
+    focus: [0.499, 0.483]
+    note: "picture 3 of 5 -- holds while these words are said"
+    captions:
+      - text: "Of 517 flagged women,"
+        at: 0.2
+        dur: 2.3
+        pos: lower_third
+        words: [0.00, 0.21, 1.30, 2.11]
+      - text: "18 carry an affected baby,"
+        at: 3.0
+        dur: 2.4
+        pos: lower_third
+        words: [0.00, 0.42, 1.09, 1.50, 1.97]
+      - text: "a positive predictive value of 1 in 29."
+        at: 5.8
+        dur: 2.8
+        pos: lower_third
+        words: [0.00, 0.11, 0.40, 0.78, 1.31, 1.76, 2.03, 2.24]
+      - text: "Of 9,483 cleared,"
+        at: 9.0
+        dur: 2.7
+        pos: lower_third
+        words: [0.00, 0.21, 2.21]
+      - text: "9,481 are healthy,"
+        at: 12.4
+        dur: 2.8
+        pos: lower_third
+        words: [0.00, 1.94, 2.38]
+      - text: "a negative predictive value of 99.98 percent."
+        at: 15.8
+        dur: 4.3
+        pos: lower_third
+        words: [0.00, 0.10, 0.46, 0.91, 1.36, 1.65, 2.22]
+      - text: "Gerd Gigerenzer, a psychologist,"
+        at: 20.2
+        dur: 2.5
+        pos: lower_third
+        words: [0.00, 0.51, 1.76, 1.94]
+      - text: "asked 160 gynecologists the same about breast screening,"
+        at: 23.1
+        dur: 4.5
+        pos: lower_third
+        words: [0.00, 0.21, 1.38, 2.30, 2.85, 3.22, 3.52, 3.95]
+      - text: "and they most often answered 9 in 10,"
+        at: 28.0
+        dur: 2.7
+        pos: lower_third
+        words: [0.00, 0.10, 0.32, 0.56, 1.07, 2.06, 2.27, 2.45]
+      - text: "not 1 in 10."
+        at: 31.2
+        dur: 1.0
+        pos: lower_third
+        words: [0.00, 0.22, 0.55, 0.76]
+
+  - id: s06
+    src: media/04_scr-rarity.png
+    clip: clips/04_scr-rarity.mp4
+    voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
+    in: "01:45.65"
+    out: "02:16.60"
+    duration: 25.16
+    move: drift_right
+    ease: sine_in_out
+    focus: [0.472, 0.357]
+    note: "picture 4 of 5 -- holds while these words are said"
+    captions:
+      - text: "Blood tests catch 99.7 percent of Down syndrome and were sold"
+        at: 0.2
+        dur: 4.5
+        pos: lower_third
+        words: [0.00, 0.26, 0.82, 1.34, 1.81, 2.77, 3.20, 3.39, 3.58, 4.03, 4.35]
+      - text: "as highly accurate for rarer chromosome defects,"
+        at: 5.2
+        dur: 3.0
+        pos: lower_third
+        words: [0.00, 0.29, 0.59, 1.07, 1.42, 1.95, 2.26]
+      - text: "yet the New York Times calculated about"
+        at: 8.6
+        dur: 2.2
+        pos: lower_third
+        words: [0.00, 0.56, 0.69, 0.85, 0.99, 1.30, 1.73]
+      - text: "85 percent of their positives are wrong."
+        at: 11.1
+        dur: 2.5
+        pos: lower_third
+        words: [0.00, 0.34, 0.89, 1.21, 1.37, 1.83, 2.18]
+      - text: "The fairest score is the positive likelihood ratio,"
+        at: 14.1
+        dur: 3.0
+        pos: lower_third
+        words: [0.00, 0.13, 0.56, 0.93, 1.33, 1.62, 1.94, 2.38]
+      - text: "sensitivity divided by the false-alarm rate,"
+        at: 17.5
+        dur: 2.8
+        pos: lower_third
+        words: [0.00, 0.62, 1.14, 1.63, 1.82, 2.05, 2.42]
+      - text: "because rarity does not change it."
+        at: 20.5
+        dur: 2.0
+        pos: lower_third
+        words: [0.00, 0.31, 0.87, 1.43, 1.77]
+      - text: "Hers is 18."
+        at: 22.8
+        dur: 1.5
+        pos: lower_third
+        words: [0.00, 0.20, 1.12]
+
+  - id: s07
+    src: media/05_scr-cost.png
+    clip: clips/05_scr-cost.mp4
+    voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
+    in: "02:19.35"
+    out: "02:48.75"
+    duration: 23.92
+    move: push_in
+    ease: sine_in_out
+    focus: [0.498, 0.299]
+    note: "picture 5 of 5 -- holds while these words are said"
+    captions:
+      - text: "Each of the 499 false alarms is a mother told her"
+        at: 0.2
+        dur: 4.0
+        pos: lower_third
+        words: [0.00, 0.26, 0.52, 0.68, 1.62, 2.23, 2.68, 3.05, 3.22, 3.45, 3.77]
+      - text: "baby may be ill."
+        at: 4.3
+        dur: 1.1
+        pos: lower_third
+        words: [0.00, 0.34, 0.53, 0.72]
+      - text: "She can wait until week 15 for amniocentesis,"
+        at: 5.7
+        dur: 3.7
+        pos: lower_third
+        words: [0.00, 0.19, 0.38, 0.66, 1.07, 1.39, 2.05, 2.70]
+      - text: "a needle into the womb,"
+        at: 9.9
+        dur: 1.4
+        pos: lower_third
+        words: [0.00, 0.21, 0.51, 0.88, 1.07]
+      - text: "then up to two weeks for the result."
+        at: 11.6
+        dur: 1.9
+        pos: lower_third
+        words: [0.00, 0.26, 0.59, 0.75, 0.93, 1.14, 1.36, 1.50]
+      - text: "That needle ends about 3 pregnancies in 1,000,"
+        at: 13.9
+        dur: 3.5
+        pos: lower_third
+        words: [0.00, 0.18, 0.52, 1.11, 1.48, 1.91, 2.63, 2.94]
+      - text: "so if all 499 take it,"
+        at: 17.8
+        dur: 2.9
+        pos: lower_third
+        words: [0.00, 0.72, 0.82, 1.10, 1.98, 2.62]
+      - text: "one or two healthy babies are lost."
+        at: 21.0
+        dur: 2.2
+        pos: lower_third
+        words: [0.00, 0.16, 0.43, 0.67, 0.94, 1.46, 1.79]
+
+  - id: s08
+    src: media/close_rec_20261007-111642.mp4
+    in: "00:00.71"
+    out: "00:32.82"
+    speed: 1.25
+    move: static
+    ease: sine_in_out
+    amount: 0.60
+    focus: [0.444, 0.333]
+    note: "closer"
+    captions:
+      - text: "So when a test comes back positive,"
+        at: 0.2
+        dur: 2.0
+        pos: lower_third
+        words: [0.00, 0.60, 0.84, 1.03, 1.24, 1.45, 1.62]
+      - text: "ask two questions."
+        at: 2.6
+        dur: 1.1
+        pos: lower_third
+        words: [0.00, 0.30, 0.60]
+      - text: "How common is the condition in people like me?"
+        at: 4.4
+        dur: 2.4
+        pos: lower_third
+        words: [0.00, 0.10, 0.45, 0.82, 0.99, 1.41, 1.62, 1.87, 2.10]
+      - text: "And how many false alarms does the test raise for"
+        at: 7.2
+        dur: 3.3
+        pos: lower_third
+        words: [0.00, 0.52, 0.67, 0.90, 1.18, 1.54, 2.03, 2.29, 2.51, 2.88]
+      - text: "every case it finds?"
+        at: 10.5
+        dur: 1.0
+        pos: lower_third
+        words: [0.00, 0.32, 0.58, 0.70]
+      - text: "Here it was 499 false alarms for 18 cases."
+        at: 12.5
+        dur: 4.0
+        pos: lower_third
+        words: [0.00, 0.26, 0.56, 0.74, 1.60, 2.21, 2.56, 2.90, 3.39]
+      - text: "The same table judges every yes-or-no model,"
+        at: 17.5
+        dur: 2.1
+        pos: lower_third
+        words: [0.00, 0.10, 0.27, 0.53, 0.83, 1.23, 1.46, 1.60, 1.78]
+      - text: "a logistic regression included:"
+        at: 20.0
+        dur: 1.5
+        pos: lower_third
+        words: [0.00, 0.18, 0.61, 0.96]
+      - text: "accuracy alone hides the rare case."
+        at: 21.9
+        dur: 2.5
+        pos: lower_third
+        words: [0.00, 0.53, 1.12, 1.42, 1.97, 2.19]

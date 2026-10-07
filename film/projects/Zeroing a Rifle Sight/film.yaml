@@ -1,0 +1,376 @@
+# Written by `film init`. Everything here is a starting point.
+# Change the numbers. That is what this file is for.
+#
+# Filename hints `init` understood, if you used any:
+#   00_ 01_ ...     explicit order
+#   open_ close_    which shot opens / closes the film
+#   open_close_     the SAME image opens AND closes it
+#   quote_          held longer, filename becomes a centered title
+#
+#   uv run film peek    seconds    -- is the ORDER right?
+#   uv run film draft   <1 min     -- does the MOTION feel right?
+#   uv run film final   minutes    -- ship it
+
+fps: 24
+resolution: [1080, 1920]   # vertical, for YouTube Shorts
+# Each picture carries its own piece of
+# media/voiceover_20261006-112634.wav -- see `voice:` below.
+# The newest of 2 recordings in media/. The older one(s) are not used;
+# move them to media/_discarded/ to tidy up.
+# title: the words on the thumbnail. Left out, the film is
+#        called what its folder is called.
+# music: found on its own -- this project's music/ folder if it
+#        has one, otherwise your library/music/ folder.
+music_volume: 0.6      # the level when nobody is talking
+music_fade: 2.0        # seconds of fade in and out
+music_duck: 0.5        # how far the music drops while you talk
+                       # 0 = never drops. 1 = gets right out of the way
+
+look:
+  preset: old_film      # clean | warm | old_film | projector
+  glow: 0.25            # lifts shadows -- better lighting
+
+# Uncomment if a wide clip is losing too much to a tall frame.
+# `blur` keeps the picture whole on a blurred copy of itself
+# instead of cropping it. fill_aspect is the shape of the sharp
+# part: 1.0 square, 0.8 taller and bigger, 1.33 shorter and safer.
+# fill: blur
+# fill_aspect: 1.0
+
+# The room behind you softly blurred, you sharp -- on your own
+# recordings (rec_*) only. 0 = off, 2 = twice as soft. About +45%
+# render time. Barely shows in a vertical close-up: the crop is
+# nearly all face. Another clip can ask for it with its own `bokeh:`.
+bokeh: 1
+
+# Photographs with depth: as the camera moves, what is near
+# slides past what is far (parallax). 0 = flat. Photos only;
+# a .png .gif .svg is a chart and stays flat by itself.
+# 0.8 smears. Needs `uv sync --extra depth` once, flat without
+# it; see docs/decisions/0013.
+depth: 0.5
+
+shots:
+
+  - id: s00
+    src: analysis/title.jpg
+    duration: 2.0
+    move: static
+    note: "the opening card -- the same picture and the same words
+      as the thumbnail, so clicking the miniature lands you on the
+      frame you clicked. Made from your library; delete this whole
+      block if you would rather open on yourself talking."
+
+  - id: s01
+    src: media/rec_20261006-111723.mp4
+    in: "00:02.33"
+    out: "00:34.73"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.456, 0.341]
+    note: "kept whole -- there is sound on this one, so none of what you said is cut. Trim in:/out: if it drags"
+    captions:
+      - text: "Zeroing a rifle sight comes down to one division,"
+        at: 0.91
+        dur: 2.35
+        pos: lower_third
+        words: [0.00, 0.14, 0.40, 0.80, 1.28, 1.57, 1.74, 1.98]
+      - text: "and I'll show it on two optics,"
+        at: 4.00
+        dur: 1.95
+        pos: lower_third
+        words: [0.00, 0.64, 0.86, 1.08, 1.22, 1.32, 1.51]
+      - text: "a Vortex Triumph red dot"
+        at: 6.38
+        dur: 1.72
+        pos: lower_third
+        words: [0.00, 0.19, 0.69, 1.26, 1.47]
+      - text: "and a Primary Arms SLx five-power MicroPrism."
+        at: 9.08
+        dur: 2.70
+        pos: lower_third
+        words: [0.00, 0.21, 0.38, 0.62, 1.28, 2.28, 2.38]
+      - text: "One minute of angle, or MOA,"
+        at: 13.72
+        dur: 2.19
+        pos: lower_third
+        words: [0.00, 0.13, 0.37, 0.53, 0.91, 1.28]
+      - text: "is 2.9 centimetres at 100 metres."
+        at: 16.20
+        dur: 2.62
+        pos: lower_third
+        words: [0.00, 0.24, 0.51, 1.18, 1.62, 2.19]
+      - text: "A mil, the unit on the SLx reticle,"
+        at: 19.90
+        dur: 2.86
+        pos: lower_third
+        words: [0.00, 0.11, 0.98, 1.10, 1.34, 1.60, 1.76, 2.37]
+      - text: "is 10 centimetres at the same distance."
+        at: 23.44
+        dur: 2.07
+        pos: lower_third
+        words: [0.00, 0.23, 0.47, 0.87, 1.37, 1.48, 1.67]
+
+  - id: s02
+    src: media/01_zero-group.png
+    clip: clips/01_zero-group.mp4
+    voice: analysis/tight/picture1_20261006-112835__tight_9de60803.wav
+    in: "00:00.75"
+    out: "00:21.29"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: tilt_up
+    focus: [0.518, 0.270]
+    note: "picture 1 of 5 -- said again, picture1_20261006-112835.wav"
+    captions:
+      - text: "Fire four shots at the same point from a sandbag or bipod."
+        at: 0.24
+        dur: 3.38
+        pos: lower_third
+        words: [0.00, 0.28, 0.66, 0.95, 1.21, 1.30, 1.45, 1.75, 2.02, 2.22, 2.57, 2.86]
+      - text: "Mark the middle of the four holes,"
+        at: 3.96
+        dur: 1.39
+        pos: lower_third
+        words: [0.00, 0.18, 0.43, 0.64, 0.82, 0.93, 1.10]
+      - text: "because that middle is where the rifle really shoots"
+        at: 5.35
+        dur: 2.52
+        pos: lower_third
+        words: [0.00, 0.34, 0.69, 0.96, 1.25, 1.44, 1.58, 1.84, 2.14]
+      - text: "while single shots scatter."
+        at: 8.20
+        dur: 1.42
+        pos: lower_third
+        words: [0.00, 0.24, 0.61, 0.98]
+      - text: "Then measure how far it sits from your aim point."
+        at: 10.16
+        dur: 2.47
+        pos: lower_third
+        words: [0.00, 0.31, 0.81, 1.08, 1.29, 1.43, 1.67, 1.91, 2.04, 2.22]
+      - text: "If one hole strays far from the rest, fire a fresh group."
+        at: 13.08
+        dur: 3.10
+        pos: lower_third
+        words: [0.00, 0.11, 0.29, 0.51, 0.93, 1.17, 1.38, 1.50, 2.12, 2.37, 2.64, 2.85]
+
+  - id: s03
+    src: media/02_zero-clicks.png
+    clip: clips/02_zero-clicks.mp4
+    voice: analysis/tight/voiceover_20261006-112634__tight_9f513a4f.wav
+    in: "00:32.80"
+    out: "01:03.00"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.457, 0.319]
+    note: "picture 2 of 5 -- holds while these words are said"
+    captions:
+      - text: "Divide each distance by what one click moves."
+        at: 0.24
+        dur: 2.82
+        pos: lower_third
+        words: [0.00, 0.46, 0.66, 1.10, 1.46, 1.86, 2.07, 2.33]
+      - text: "At 100 metres the Triumph's half-MOA click moves"
+        at: 3.68
+        dur: 3.30
+        pos: lower_third
+        words: [0.00, 0.10, 0.50, 0.79, 1.18, 1.80, 2.14, 2.49, 2.87]
+      - text: "the impact 1.45 centimetres,"
+        at: 6.98
+        dur: 2.17
+        pos: lower_third
+        words: [0.00, 0.40, 0.70, 0.94, 1.60]
+      - text: "and the SLx's quarter-MOA click moves it 0.73."
+        at: 9.80
+        dur: 3.61
+        pos: lower_third
+        words: [0.00, 0.19, 0.37, 0.94, 1.22, 1.63, 1.86, 2.24, 2.50, 2.93]
+      - text: "A group five centimetres low and four and a half to the left"
+        at: 14.20
+        dur: 3.35
+        pos: lower_third
+        words: [0.00, 0.13, 0.60, 0.82, 1.20, 1.66, 1.95, 2.22, 2.62, 2.86, 3.02]
+      - text: "needs about three clicks each way on the Triumph,"
+        at: 17.80
+        dur: 2.94
+        pos: lower_third
+        words: [0.00, 0.24, 0.69, 1.09, 1.41, 1.78, 2.10, 2.38, 2.53]
+      - text: "but seven and six on the SLx."
+        at: 21.04
+        dur: 2.77
+        pos: lower_third
+        words: [0.00, 0.18, 0.57, 1.06, 1.48, 1.91, 2.09]
+
+  - id: s04
+    src: media/03_zero-mil.png
+    clip: clips/03_zero-mil.mp4
+    voice: analysis/tight/voiceover_20261006-112634__tight_9f513a4f.wav
+    in: "01:08.30"
+    out: "01:19.80"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: pull_out
+    focus: [0.502, 0.366]
+    note: "picture 3 of 5 -- holds while these words are said"
+    captions:
+      - text: "The SLx turrets count in MOA."
+        at: 0.24
+        dur: 2.53
+        pos: lower_third
+        words: [0.00, 0.25, 1.02, 1.51, 1.83, 2.06]
+      - text: "But its Aurora reticle counts in mils."
+        at: 3.16
+        dur: 2.89
+        pos: lower_third
+        words: [0.00, 0.29, 0.61, 1.25, 1.73, 2.18, 2.40]
+      - text: "And one mil equals about fourteen clicks."
+        at: 6.32
+        dur: 2.37
+        pos: lower_third
+        words: [0.00, 0.36, 0.66, 0.86, 1.22, 1.53, 1.98]
+
+  - id: s05
+    src: media/04_zero-reticle.png
+    clip: clips/04_zero-reticle.mp4
+    voice: analysis/tight/voiceover_20261006-112634__tight_9f513a4f.wav
+    in: "01:20.95"
+    out: "01:45.35"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    focus: [0.518, 0.484]
+    note: "picture 4 of 5 -- holds while these words are said"
+    captions:
+      - text: "This is the SLx's Aurora MIL reticle."
+        at: 0.24
+        dur: 2.59
+        pos: lower_third
+        words: [0.00, 0.22, 0.42, 0.61, 1.22, 1.70, 1.94]
+      - text: "The tip of the chevron is the aim point."
+        at: 3.24
+        dur: 1.91
+        pos: lower_third
+        words: [0.00, 0.14, 0.36, 0.50, 0.60, 0.94, 1.21, 1.48, 1.70]
+      - text: "The numbered bars range a man one metre seventy-eight tall:"
+        at: 5.63
+        dur: 3.53
+        pos: lower_third
+        words: [0.00, 0.22, 0.58, 0.98, 1.50, 1.68, 1.84, 2.10, 2.34, 3.02]
+      - text: "the six fits him at 550 metres."
+        at: 9.64
+        dur: 2.13
+        pos: lower_third
+        words: [0.00, 0.12, 0.72, 0.89, 1.21, 1.54]
+      - text: "The dots below are one mil apart,"
+        at: 13.00
+        dur: 1.78
+        pos: lower_third
+        words: [0.00, 0.06, 0.23, 0.55, 0.97, 1.27, 1.42]
+      - text: "for wind and drop holds."
+        at: 15.12
+        dur: 1.48
+        pos: lower_third
+        words: [0.00, 0.13, 0.45, 0.78, 1.07]
+      - text: "And the heavy dot marks five mils."
+        at: 17.04
+        dur: 2.23
+        pos: lower_third
+        words: [0.00, 0.10, 0.22, 0.43, 0.64, 0.98, 1.63]
+
+  - id: s06
+    src: media/05_zero-range.png
+    clip: clips/05_zero-range.mp4
+    voice: analysis/tight/voiceover_20261006-112634__tight_9f513a4f.wav
+    in: "01:47.05"
+    out: "02:04.45"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.470, 0.323]
+    note: "picture 5 of 5 -- holds while these words are said"
+    captions:
+      - text: "Its width marks also range targets."
+        at: 0.24
+        dur: 2.61
+        pos: lower_third
+        words: [0.00, 0.22, 0.55, 1.35, 1.83, 2.18]
+      - text: "A target fifty centimetres wide"
+        at: 3.52
+        dur: 1.65
+        pos: lower_third
+        words: [0.00, 0.07, 0.34, 0.73, 1.13]
+      - text: "fills the central arrowhead at 300 metres,"
+        at: 5.60
+        dur: 2.98
+        pos: lower_third
+        words: [0.00, 0.33, 0.68, 0.97, 1.29, 1.64, 2.24, 2.49]
+      - text: "and the next three marks at 400,"
+        at: 9.16
+        dur: 2.46
+        pos: lower_third
+        words: [0.00, 0.14, 0.30, 0.46, 0.82, 1.56, 2.04]
+      - text: "500 and 600 metres."
+        at: 11.83
+        dur: 1.07
+        pos: lower_third
+        words: [0.00, 0.19, 0.72]
+
+  - id: s07
+    src: media/close_rec_20261006-113139.mp4
+    in: "00:00.90"
+    out: "00:25.55"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.400, 0.375]
+    note: "closer"
+    captions:
+      - text: "Before shooting, set the SLx diopter,"
+        at: 0.24
+        dur: 2.37
+        pos: lower_third
+        words: [0.00, 0.18, 0.90, 1.03, 1.29, 1.82]
+      - text: "the ring that focuses the reticle."
+        at: 2.84
+        dur: 1.58
+        pos: lower_third
+        words: [0.00, 0.16, 0.38, 0.56, 0.93, 1.22]
+      - text: "Stare at a blank wall, close your eyes,"
+        at: 4.96
+        dur: 1.94
+        pos: lower_third
+        words: [0.00, 0.31, 0.49, 0.58, 0.78, 1.24, 1.40, 1.61]
+      - text: "glance through the sight and turn the ring until"
+        at: 7.12
+        dur: 2.32
+        pos: lower_third
+        words: [0.00, 0.16, 0.61, 0.78, 1.09, 1.39, 1.60, 1.78, 2.00]
+      - text: "the reticle looks sharp at once."
+        at: 9.80
+        dur: 1.39
+        pos: lower_third
+        words: [0.00, 0.10, 0.45, 0.66, 0.94, 1.10]
+      - text: "Then turning the elevation turret"
+        at: 12.08
+        dur: 1.65
+        pos: lower_third
+        words: [0.00, 0.47, 0.73, 0.92, 1.34]
+      - text: "counterclockwise raises the impact,"
+        at: 13.73
+        dur: 2.14
+        pos: lower_third
+        words: [0.00, 0.88, 1.55, 1.79]
+      - text: "and the windage turret counterclockwise moves it right."
+        at: 16.24
+        dur: 3.11
+        pos: lower_third
+        words: [0.00, 0.14, 0.31, 0.55, 1.20, 2.16, 2.38, 2.88]
+
+# 7 shots, about 159 seconds.
+#
+# 5 slide(s), one per picture, each holding its own piece of
+# the 129s narration. Each `in:`/`out:` is that picture's words, on
+# the narration's own clock. Move a shot and its words move with it;
+# swap `src:` to put a different picture under the same words; hold
+# one longer with `duration:` and the words stay where they were said.
+#
+# Cut where you pressed Next while recording, each cut moved to the
+# nearest pause so no word is split. To change one, move these
+# `in:`/`out:` numbers, or record the narration again.

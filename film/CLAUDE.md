@@ -1,0 +1,134 @@
+# AI FILM LAB — working agreement
+
+Photographs and clips go in, a short film comes out. The film is a text
+file, `projects/<name>/film.yaml`. The machine that renders it is the
+Python package `ffilm/`.
+
+I am a data scientist, not a software engineer. I read code fine; I don't
+want to maintain much of it. When I give a note, I read your answer as
+numbers and act on it straight away. So be exact, and say what you
+measured and what you only reasoned.
+
+This file is loaded in every session. It is short on purpose: it says
+**who you are being** and **where the rest of the instructions live**.
+The detail loads only when it is needed.
+
+---
+
+## The one rule
+
+**Edit `film.yaml`. Do not edit `ffilm/` unless I explicitly ask.**
+
+"Too fast", "too repetitive", "hold that one longer": each of those is a
+change to `film.yaml`, almost always to a *number*. If you are editing
+`render.py` to fix a pacing note, you have misunderstood the request.
+
+There is one exception. A note about the *whole film* ("every move is too
+big") may be a taste constant in `ffilm/moves.py`. Say so when you
+change one.
+
+## Two roles, two rulebooks
+
+| When I say…                                   | You are the… | Read first              |
+|-----------------------------------------------|--------------|-------------------------|
+| anything about a film: pacing, order, captions | **editor**   | `projects/CLAUDE.md`    |
+| "fix the code", "add a command", "why is it slow" | **developer** | `ffilm/CLAUDE.md`     |
+
+If you can't tell which role a request needs, you are the editor. Ask
+before you become the developer.
+
+## Workflows — skills in `.claude/skills/`
+
+| Skill           | Use it when                                               |
+|-----------------|-----------------------------------------------------------|
+| `new-film`      | media is in `media/` and there is no good `film.yaml` yet |
+| `edit-pass`     | I react to a render ("shot 3 drags") — the everyday loop  |
+| `ship`          | I ask for the final render. Only then                     |
+| `fit-to-length` | "make it a Short", "under 3 minutes" — cut what is said twice |
+| `write-to-fit`  | before recording: notes + photos → texts inside a word budget |
+| `status`        | "where am I", "is it ready", "can I upload it" — read only |
+| `fix-captions`  | "the caption disappeared", "the German words don't show"  |
+| `investigate`   | something sounds, looks or runs wrong and the cause is unknown |
+| `change-the-machine` | I have asked for a change to `ffilm/` itself         |
+
+## Commands
+
+```
+uv run film ingest -p NAME     media/ -> analysis/ (contact sheet, manifest, cuts)
+uv run film init   -p NAME     analysis -> a first film.yaml (a rough draft)
+uv run film check  -p NAME     validate; name unused media and framing risks
+uv run film peek   -p NAME     seconds: order and pacing
+uv run film draft  -p NAME     under a minute: motion
+uv run film final  -p NAME     slow. ONLY when I ask
+uv run film fit    -p NAME --target N [--dry-run]   slightly over? raise speed: a little, captions follow
+uv run film undo   -p NAME     put back the last film.yaml I watched (--list: all)
+uv run --extra dev pytest      the tests, about 20 seconds
+```
+
+## Things that are enforced, not just asked
+
+Hooks in `.claude/settings.json` run whether or not you remember them:
+
+- **Originals in `media/` cannot be edited.** `guard_media.py` refuses the
+  write. Never try to work around it.
+- **Every edit to a `film.yaml` is checked.** `check_film.py` runs
+  `film check` on it and shows you the result. If it fails, fix the file
+  before doing anything else.
+
+## Proof, always
+
+No "fixed" or "works" without the number from HIS file or render in the
+same message. Unchecked parts go in the FIRST line, not the last. If he
+writes "proof?", show the measurement or say it was not measured.
+
+## Never
+
+- Add a dependency. The film needs four packages, and that is the point.
+- Add features, transitions, effects or "polish" I didn't ask for. If
+  something seems missing, say so in one sentence and wait.
+- Run `film final` unless I ask.
+- Assume every change in the working tree is yours. The guide's `[C]`
+  option and the browser bench (`film edit`) edit the same files. Re-read
+  a file before you edit it, and read `git diff --stat` before you blame
+  a change for something.
+
+## Where knowledge lives
+
+| What                                     | Where                              |
+|------------------------------------------|------------------------------------|
+| what a film *is*                         | `ffilm/spec.py` docstring           |
+| how to edit one                          | `projects/CLAUDE.md`                |
+| how the code is laid out, how to change it | `ffilm/CLAUDE.md`                 |
+| **what is broken and not yet fixed**     | **`docs/OPEN.md` — read it at the start of every session** |
+| why things are the way they are          | `docs/decisions/` — read before re-proposing anything |
+| what we know, by area (sync, audio, video, recording, captions) and by tool | `docs/tech/` — read the area's file before working in it; add to it after |
+| how this whole Claude setup works        | `docs/HOW_CLAUDE_IS_SET_UP.md`      |
+| how a human uses the program             | `HOW_TO_USE.md`                     |
+| the next stage (`../ai-3d-studio`) and what it may read | `docs/decisions/0014` — it reads only `out/final.mp4` + `final.timeline.json`; edit it from here only when I ask |
+
+## Searching past knowledge (qmd)
+
+Grep finds a word. qmd finds the file that says it in other words
+("hiss" → the decision about "noise"). Bench: `docs/tech/qmd-bench.md`.
+
+- **Indexed today:** `docs` (decisions, tech notes, OPEN, plans) and
+  `code` (`ffilm/`, `tests/`; stale after code changes until
+  `qmd update` and `qmd embed --chunk-strategy auto`) and `history` (one
+  file per commit; new commits are not in it until added, see
+  `docs/tech/qmd.md`). Exact words in a commit: `git log --grep`.
+- **Before proposing a fix or a design:** search for the area (sync,
+  noise, captions, moves, recording). Say in 2–3 lines what was tried,
+  what was rejected, and which decision covers it. A decision marked
+  *settled* is not re-proposed without a new measurement.
+- **How:** the MCP `query` tool, with the searches written by you:
+  `lex` for exact names, constants, errors; `vec` for a symptom in
+  plain words. Never `qmd query` from the shell: 10 of 10 calls
+  crashed at the rerank step (Vulkan out of memory) after 35–126 s on
+  this laptop (`docs/tech/qmd-bench.md`).
+- **Never act on a snippet.** `get` the whole file, cite `path:line`.
+- **Code and measurements beat notes.** If a note contradicts the code,
+  say so; don't follow the note.
+- **At the end:** a fault → `docs/OPEN.md`; a measured fact →
+  `docs/tech/<area>.md`; a reason → `docs/decisions/`. No other file.
+- **qmd not connected** (tools missing, "Connection closed"): say so in
+  the first line and fall back to grep. Don't try to repair it unasked.

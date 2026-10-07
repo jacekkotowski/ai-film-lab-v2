@@ -97,6 +97,12 @@ def find_project(arg: str | None) -> Path:
         candidates.append(toolkit_root() / p)
         candidates.append(toolkit_root() / "projects" / p.name)
 
+    if not p.is_absolute() and (toolkit_root() / "projects").is_dir():
+        by_slug = timeline.project_by_slug(
+            p.name, [q for q in (toolkit_root() / "projects").iterdir() if q.is_dir()])
+        if by_slug is not None:
+            candidates.append(by_slug)
+
     for c in candidates:
         if (c / "media").is_dir() or (c / "film.yaml").exists():
             found = c.resolve()

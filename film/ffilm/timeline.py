@@ -81,6 +81,12 @@ def slug(name: str) -> str:
     return re.sub(r"[^a-z0-9]+", "-", plain.lower()).strip("-") or "film"
 
 
+def project_by_slug(name: str, folders) -> "Path | None":
+    """The folder whose slug is `name`: a film's one name in slides/,
+    film/ and fly/ (ai-film-lab-v2, 2026-10-07). None when no folder has it."""
+    return next((f for f in folders if name and slug(f.name) == name), None)
+
+
 def file_sha256(path: Path) -> str | None:
     """The video's fingerprint. A later stage stores it and compares, so a
     re-render is seen even when the length is unchanged. None when there

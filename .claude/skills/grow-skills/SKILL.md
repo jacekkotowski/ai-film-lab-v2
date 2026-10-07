@@ -46,6 +46,9 @@ climb: name the inputs (sizes, counts, widths), not this slide's numbers.
 3. **A helper** in `aimanim/` — stdlib only, except `kit.py` which may use
    Manim (decision 0002) — with a test in `tests/` (stdlib, no Manim).
    Pure part separate from the file/tool part, so it can be tested.
+   An existing helper's signature or default look changes only after
+   asking Jacek: published slides use it. Add an optional parameter
+   instead (2026-10-08, from a Manim agent example he read).
 4. **A command** — a `main()` in that module, plain `python -m aimanim.<m>`
    (or `uv run --directory slides --extra render python -m aimanim.kit` if it needs Manim),
    printing only what to act on, `PROBLEM` + exit 1 when something is wrong.

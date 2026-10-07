@@ -20,8 +20,9 @@ Newest first. An entry stays until it is measured or fixed AND Jacek has seen it
   ../ai-film-lab / ../ai-3d-studio prose fixed in film/ and fly/ CLAUDE.md,
   SETUP.md, decision 0014 (dated note). The post-commit qmd refresh WORKS:
   075567b was in `v2-history` minutes after the commit, although
-  .local/knowledge.log was empty. Not yet tried: `SLIDES.bat <slug> look`,
-  a real FLY.bat render, FILM.bat by double-click. The .script.txt notes
+  .local/knowledge.log was empty. `SLIDES.bat screening-95-percent-accurate
+  look` (later, run by Claude): 5 stills 1080x1920, 0 problem lines, ~144 s
+  rehearsed. Not yet tried: a real FLY.bat render, FILM.bat by double-click. The .script.txt notes
   still show the old short names (his files, left).
 
 - 2026-10-07 ai-film-lab-v2 is the one project (slides/, film/, fly/; root

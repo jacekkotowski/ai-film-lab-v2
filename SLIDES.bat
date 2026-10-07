@@ -6,7 +6,7 @@ REM    SLIDES.bat screening-95-percent-accurate check     rehearse every step ag
 REM    SLIDES.bat screening-95-percent-accurate publish   stills + script into the film's project
 REM    SLIDES.bat screening-95-percent-accurate clips     after narrating + film go: the clips
 REM    SLIDES.bat screening-95-percent-accurate look      every still, its notes, margins, timing
-REM  Films: slides\films\*.txt, each named by its film's slug (film\projects\<Title>)
+REM  Films: projects\<Title>\slides.txt, each typed by its film's slug
 REM ============================================================
 cd /d "%~dp0slides"
 where uv >nul 2>nul
@@ -17,7 +17,7 @@ if errorlevel 1 (
 )
 if "%~1"=="" (
   echo Films:
-  dir /b films\*.txt | findstr /v ".script.txt"
+  uv run python -c "from aimanim.film import film_names; print(chr(10).join(film_names()))"
   echo.
   echo Usage: SLIDES.bat ^<film^> check^|publish^|clips^|look
   pause

@@ -101,7 +101,7 @@ class Gate(unittest.TestCase):
             self.assertFalse(film.narrated("f", root))
             (root / "scenes" / "a" / "timing.json").write_text("{}", encoding="utf-8")
             self.assertTrue(film.narrated("f", root))
-            self.assertEqual(film.gate(root), ["f: narrated, skipped"])
+            self.assertEqual(film.gate(root, root / "projects"), ["f: narrated, skipped"])
 
 
 if __name__ == "__main__":

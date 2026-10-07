@@ -26,7 +26,22 @@ test, no shared package); go for phases 0 and 1. Phase 4 and decisions 5–6 not
 - **Decided (Jacek):** both test projects move; the fly demo moves too
   (`projects/ai-in-obsidian/fly/`, a folder with no film): nothing stays behind.
   Phase 4: now (after phase 2).
-- **Phase 2 DRY RUN shown, NOT run.** `python film/docs/plans/2026-10-07/move.py`:
+- **Phase 2 DONE** (Jacek: "go and phase 4"). `move.py --go`: 51 moves, 16 stops.json
+  rewritten (old kept as `stops.json.pre-unify`), list in `.local/unify/moves.json`.
+  Gate `.local/unify/gate.py` vs `after-phase1/` → `.local/unify/after-phase2/gate.txt`:
+  all 2,100 files back-mapped, sizes equal (expected only: 16 stops.json + 16 .pre-unify);
+  104 texts equal (3 published.json now `slides.published.json`, same sha256);
+  67 video lengths equal; 25 of 26 checks byte-identical, test_story differs only in
+  the path of its known missing picture. Suites 1034 / 86 / 10. Root `.gitignore` has
+  the project rules; root `.gitattributes` `projects/** -text` keeps film.yaml's CRLF
+  bytes (without it git normalised them: 97 % renames). `SLIDES.bat` lists films by
+  `film_names`; qmd `v2` reads `projects/*/slides.script.txt`; slides `gate` takes a
+  projects folder (two tests read the real films after the move). Measured after:
+  `aimanim.film screening-95-percent-accurate check` ~144 s as before;
+  `fly.existing('screening-95-percent-accurate')` → `projects/Screening - 95 Percent Accurate/fly`.
+  LEFT BEHIND: `slides/films/zeroing-a-rifle-sight/0[2-5]_*.png` (4 untracked stills,
+  2026-10-05, not in the plan's list; Jacek's to keep or drop).
+- **Phase 2 dry run (before):** `python film/docs/plans/2026-10-07/move.py`:
   51 moves (CLAUDE.md, 23 film folders, 6 slides texts + 3 published.json,
   17 fly folders, .lastfilm), 16 stops.json rewritten, "no problems". Still to do in
   the same commit as `--go`: root .gitignore gets film's project rules (track

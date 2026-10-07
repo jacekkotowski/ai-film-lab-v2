@@ -3,3 +3,17 @@
 .venv/
 __pycache__/
 .claude/settings.local.json
+.lastfilm
+
+# The films (UNIFY.md): media, renders and texts stay off git. Tracked: the
+# edit (film.yaml), the slides' order and words, the editor's rulebook,
+# test_story's script (read by the film tests) and the fly demo.
+projects/*/*
+!projects/*/film.yaml
+!projects/*/slides.txt
+!projects/*/slides.script.txt
+!projects/test_story/script.txt
+!projects/ai-in-obsidian/fly/
+projects/ai-in-obsidian/fly/preview/*
+projects/ai-in-obsidian/fly/out/*
+!projects/ai-in-obsidian/fly/out/.gitkeep

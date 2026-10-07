@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 HISTORY = Path.home() / ".cache" / "qmd" / "v2-history"
 MASK = ("CLAUDE.md,.claude/skills/**/*.md,"
         "slides/CLAUDE.md,slides/PLAN.md,slides/docs/**/*.md,slides/scenes/*/spec.md,"
-        "slides/films/*.script.txt,"
+        "projects/*/slides.script.txt,"
         "film/CLAUDE.md,film/ffilm/CLAUDE.md,film/*.md,film/docs/**/*.md,"
         "fly/*.md,fly/recipes/**/*.md")
 CODE_MASK = "film/ffilm/**/*.py,film/tests/**/*.py,slides/aimanim/*.py,slides/tests/*.py"

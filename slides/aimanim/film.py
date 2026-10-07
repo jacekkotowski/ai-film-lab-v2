@@ -430,11 +430,12 @@ def narrated(name: str, root: Path = ROOT) -> bool:
     return all((root / "scenes" / s.scene / "timing.json").exists() for s in film.slides)
 
 
-def gate(root: Path = ROOT) -> list[str]:
+def gate(root: Path = ROOT, projects: Path | None = None) -> list[str]:
     """For the pre-commit hook: rehearse every film not yet narrated; any
-    PROBLEM line fails the commit. Narrated films are skipped."""
+    PROBLEM line fails the commit. Narrated films are skipped. `projects`
+    as in `film_names` (a test gives its own, so the real films stay out)."""
     out = []
-    for name in film_names(root):
+    for name in film_names(root, projects):
         if narrated(name, root):
             out.append(f"{name}: narrated, skipped")
             continue

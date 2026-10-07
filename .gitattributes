@@ -10,3 +10,6 @@
 *.wav binary
 *.onnx binary
 *.tflite binary
+# The films' tracked files keep their bytes, as under film/ (film/.gitattributes):
+# film.yaml is committed by every render and read back by `film undo`.
+projects/** -text

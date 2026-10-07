@@ -30,6 +30,7 @@ from pathlib import Path
 STUDIO = Path(__file__).resolve().parents[2]
 RIGS = STUDIO / "library" / "rigs"
 PROJECTS = STUDIO / "projects"
+REPO = STUDIO.parent
 BLENDER_GUESSES = [
     r"C:\Program Files\Blender\blender.exe",
     r"C:\Program Files\Blender Foundation\Blender*\blender.exe",
@@ -76,14 +77,42 @@ def slugify(title):
     return re.sub(r"[^a-z0-9]+", "-", ascii_title.lower()).strip("-") or "film"
 
 
+def one_folder():
+    """ai-film-lab-v2's one projects/ folder (film/docs/plans/2026-10-07/UNIFY.md),
+    when the repo's FILM.bat and that folder exist -- the rule of
+    film/ffilm/paths.py `projects_root`. There a flight is projects/<Title>/fly/."""
+    if (REPO / "FILM.bat").is_file() and (REPO / "projects").is_dir():
+        return REPO / "projects"
+    return None
+
+
+def all_stops():
+    one = one_folder()
+    return sorted(PROJECTS.glob("*/stops.json")) + (sorted(one.glob("*/fly/stops.json")) if one else [])
+
+
+def slug_of(project):
+    """The film's one name for a flight folder: projects/<Title>/fly -> slug of Title."""
+    return slugify(project.parent.name) if project.name == "fly" else project.name
+
+
+def existing(slug):
+    """The flight already made for the film with this slug, or None."""
+    return next((s.parent for s in all_stops() if slug_of(s.parent) == slug), None)
+
+
 def project_for(timeline):
     """The project already made from this timeline, or a new one named after the film.
     The name is the slug ai-film-lab writes (its decision 0014); older timelines
-    have none, so the folder name is slugified here as before."""
+    have none, so the folder name is slugified here as before. A film in the one
+    projects/ folder gets its flight beside it, in its own fly/."""
     source = timeline.as_posix()
-    for stops in PROJECTS.glob("*/stops.json"):
+    for stops in all_stops():
         if f'"source": "{source}"' in stops.read_text(encoding="utf-8"):
             return stops.parent, False
+    one = one_folder()
+    if one and timeline.parent.name == "out" and timeline.parents[2] == one:
+        return timeline.parents[1] / "fly", True
     slug = json.loads(timeline.read_text(encoding="utf-8")).get("slug")
     if not slug:
         title = timeline.parents[1].name if timeline.parent.name == "out" else timeline.stem
@@ -142,8 +171,8 @@ def main():
               "(winget install Gyan.FFmpeg).")
 
     target = args[0]
-    if (PROJECTS / target / "stops.json").is_file():             # an existing project by name
-        project = PROJECTS / target
+    if existing(target):                                          # an existing project by name
+        project = existing(target)
     else:
         timeline = find_timeline(target)
         project, new = project_for(timeline)
@@ -165,7 +194,7 @@ def main():
         nxt = ask("\nNext?  [d] draft   [v] full video   [s] stills again   [q] quit : ")
         step = {"d": "draft", "v": "video", "s": "stills"}.get(nxt)
         if not step:
-            print(f"\nLater:  FLY.bat {project.name} --draft   (or --video)")
+            print(f"\nLater:  FLY.bat {slug_of(project)} --draft   (or --video)")
             return
 
 

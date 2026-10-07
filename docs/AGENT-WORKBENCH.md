@@ -145,6 +145,7 @@ and `PROBLEM` + exit 1 when something is wrong:
 - [ ] CLAUDE.md: who the owner is, the one rule, stages, commands, proof, never-list, where knowledge lives
 - [ ] `docs/OPEN.md`, `docs/decisions/0001-*.md`, `PLAN.md` with step 1 = a trial that measures the tools
 - [ ] `.claude/settings.json` (tracked): the allow list; `.githooks/` + `git config core.hooksPath .githooks`
+- [ ] `.gitattributes` with `* text=auto eol=lf` (on Windows, `core.autocrlf=true` otherwise warns on every file the agent writes and breaks sh hooks)
 - [ ] `docs/SETUP.md`: everything a new machine needs, in order
 
 **Week 1 — the loop, measured**

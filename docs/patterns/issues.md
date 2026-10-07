@@ -161,6 +161,19 @@ Format and ladder: `README.md`. Newest IDs at the end; the order is by kind.
 - **cause**: `cd … &&`, `VAR=…` prefixes, heredocs, multi-line `python -c` do not match the allow list
 - **fix**: commands as written in CLAUDE.md; files with Write/Edit
 
+### I24 — "LF will be replaced by CRLF" on every commit / a hook fails with "\r"
+- **status**: helper — `.gitattributes` `* text=auto eol=lf` (2026-10-07)
+- **seen**: every commit 2026-10-06 and 10-07 (one warning per file written), the new hooks
+- **cause**: Git for Windows sets `core.autocrlf=true` in its system config;
+  Claude's Write/Edit write LF; checkout turned files CRLF (42 of 114 were);
+  sh cannot run a CRLF hook
+- **fix**:
+      .gitattributes:  * text=auto eol=lf   (+ binary for png/mp4/wav)
+      git add --renormalize .               # the index was LF already: no change
+      convert the CRLF working files to LF  # content identical, git diff empty
+- **check**: `git ls-files --eol` → every text file `i/lf w/lf`; no warning on commit
+- **new project**: the same .gitattributes on day 0 (docs/AGENT-WORKBENCH.md §9)
+
 ### I23 — "the font looks different" on one line
 - **status**: note (scr-rarity "LR+ = 0.90 / 0.05", 2026-10-06)
 - **cause**: none — it was the same DejaVu Serif; the half-size still misled

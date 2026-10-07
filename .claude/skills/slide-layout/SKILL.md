@@ -73,6 +73,7 @@ A `PROBLEM` line = fix it (exit code 1). Plain commands only (CLAUDE.md).
 | `the word 'x' was not heard` | I17 |
 | clip shorter than its slide | I18 |
 | 854×480 output · `UnicodeEncodeError` · "Allow once" | I20 · I21 · I22 |
+| "LF will be replaced by CRLF", a hook failing on `\r` | I24 |
 
 Making a slide: T01 the loop · T02 a share · T03/T04 a 2×2 table and its
 rates · T05 A vs B · T06 a sweep · T07/T08 calculation, formula · T09 to

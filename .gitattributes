@@ -1,2 +1,9 @@
-# Git hooks are run by sh: CRLF would break them ("\r: command not found").
-.githooks/* text eol=lf
+# Every text file is LF, in git AND on disk (issue I24, docs/patterns/issues.md).
+# Git for Windows sets core.autocrlf=true system-wide: without this, files
+# written with LF (Claude's Write/Edit) warn "LF will be replaced by CRLF"
+# on every commit, the checkout turns them CRLF, and a CRLF shell hook
+# breaks ("\r: command not found").
+* text=auto eol=lf
+*.png binary
+*.mp4 binary
+*.wav binary

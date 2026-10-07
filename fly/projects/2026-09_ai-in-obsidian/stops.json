@@ -1,0 +1,12 @@
+{
+  "title": "AI in Obsidian",
+  "format": "vertical short, ~30 s",
+  "stops": [
+    {"title": "AI in Obsidian", "body": "Your vault becomes an agent's workspace"},
+    {"title": "Claudian", "body": "Claude Code inside the vault: reads, writes and edits your notes"},
+    {"title": "Git", "body": "Every AI edit versioned: diff, review, roll back"},
+    {"title": "Connectors", "body": "MCP links the vault to calendar, mail and the web"},
+    {"title": "Skills", "body": "Reusable workflows: weekly review, summarise, tag"},
+    {"title": "Local vectors", "body": "Ollama embeddings: semantic search, private, offline"}
+  ]
+}

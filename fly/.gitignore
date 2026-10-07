@@ -1,0 +1,9 @@
+# Projects are personal work: never committed. The one exception is the demo the README uses.
+projects/*
+!projects/2026-09_ai-in-obsidian/
+projects/2026-09_ai-in-obsidian/preview/*
+projects/2026-09_ai-in-obsidian/out/*
+!projects/2026-09_ai-in-obsidian/out/.gitkeep
+*.blend
+*.blend1
+__pycache__/

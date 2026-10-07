@@ -1,0 +1,543 @@
+{
+  "version": 1,
+  "slug": "what-is-love",
+  "video": "final.mp4",
+  "video_sha256": "a1ea069a5afe42f2bb84fc3328ce934932e651d1adc1b18b4402270ec49c2ae8",
+  "title": "What Is Love",
+  "project_dir": "projects/What Is Love",
+  "fps": 24,
+  "width": 1080,
+  "height": 1920,
+  "frames": 6217,
+  "duration": 259.042,
+  "shots": [
+    {
+      "id": "s00",
+      "role": "title",
+      "title": "What Is Love",
+      "start_frame": 0,
+      "end_frame": 48,
+      "start": 0.0,
+      "end": 2.0,
+      "kind": "still",
+      "src": "analysis/title.jpg",
+      "voice": null,
+      "captions": []
+    },
+    {
+      "id": "s01",
+      "role": "intro",
+      "title": "Love combines sexual attraction,",
+      "start_frame": 48,
+      "end_frame": 496,
+      "start": 2.0,
+      "end": 20.667,
+      "kind": "video",
+      "src": "media/0_rec_20260928-180338.mp4",
+      "voice": null,
+      "captions": [
+        {
+          "text": "Love combines sexual attraction,",
+          "start": 2.0,
+          "end": 4.78
+        },
+        {
+          "text": "attachment, parental investment,",
+          "start": 5.13,
+          "end": 7.14
+        },
+        {
+          "text": "cooperation and empathy.",
+          "start": 7.49,
+          "end": 9.15
+        },
+        {
+          "text": "Yet humans can value another person's existence so highly",
+          "start": 9.93,
+          "end": 14.31
+        },
+        {
+          "text": "that they sacrifice resources,",
+          "start": 14.31,
+          "end": 16.69
+        },
+        {
+          "text": "opportunities and sometimes their own survival.",
+          "start": 17.06,
+          "end": 20.14
+        }
+      ]
+    },
+    {
+      "id": "s02",
+      "role": "slide",
+      "title": "Plato",
+      "start_frame": 496,
+      "end_frame": 1162,
+      "start": 20.667,
+      "end": 48.417,
+      "kind": "still",
+      "src": "media/1 Plato.jfif",
+      "voice": "media/voiceover_20260928-175224.wav",
+      "captions": [
+        {
+          "text": "In Plato's Symposium,",
+          "start": 20.667,
+          "end": 22.527
+        },
+        {
+          "text": "love begins with desire for one beautiful body.",
+          "start": 22.897,
+          "end": 25.977
+        },
+        {
+          "text": "But Diotima describes a ladder:",
+          "start": 26.667,
+          "end": 28.997
+        },
+        {
+          "text": "from one body to all beautiful bodies,",
+          "start": 28.997,
+          "end": 32.207
+        },
+        {
+          "text": "then to beautiful souls,",
+          "start": 32.587,
+          "end": 34.117
+        },
+        {
+          "text": "laws and knowledge,",
+          "start": 34.767,
+          "end": 36.177
+        },
+        {
+          "text": "and finally to Beauty itself.",
+          "start": 36.997,
+          "end": 38.827
+        },
+        {
+          "text": "Eros can therefore grow from wanting a particular person into",
+          "start": 40.597,
+          "end": 44.527
+        },
+        {
+          "text": "admiring something no one can possess.",
+          "start": 44.537,
+          "end": 47.497
+        }
+      ]
+    },
+    {
+      "id": "s03",
+      "role": "slide",
+      "title": "Religion",
+      "start_frame": 1162,
+      "end_frame": 1742,
+      "start": 48.417,
+      "end": 72.583,
+      "kind": "still",
+      "src": "media/2 Religion.jfif",
+      "voice": "media/voiceover_20260928-175224.wav",
+      "captions": [
+        {
+          "text": "Religions gave this widening of love their own names:",
+          "start": 48.567,
+          "end": 53.067
+        },
+        {
+          "text": "Christian agape, Buddhist karuna,",
+          "start": 53.397,
+          "end": 56.577
+        },
+        {
+          "text": "Islamic rahma and Hindu bhakti.",
+          "start": 57.547,
+          "end": 60.657
+        },
+        {
+          "text": "The meanings differ,",
+          "start": 61.417,
+          "end": 62.477
+        },
+        {
+          "text": "but each can turn love away from owning or",
+          "start": 62.847,
+          "end": 66.047
+        },
+        {
+          "text": "trading and toward giving,",
+          "start": 66.047,
+          "end": 68.257
+        },
+        {
+          "text": "mercy,",
+          "start": 68.267,
+          "end": 69.107
+        },
+        {
+          "text": "compassion or devotion.",
+          "start": 69.547,
+          "end": 71.627
+        }
+      ]
+    },
+    {
+      "id": "s04",
+      "role": "slide",
+      "title": "Darwin",
+      "start_frame": 1742,
+      "end_frame": 2257,
+      "start": 72.583,
+      "end": 94.042,
+      "kind": "still",
+      "src": "media/3 Darwin.jfif",
+      "voice": "media/voiceover_20260928-175224.wav",
+      "captions": [
+        {
+          "text": "Charles Darwin saw sympathy and social instincts",
+          "start": 72.803,
+          "end": 76.603
+        },
+        {
+          "text": "as products of evolution,",
+          "start": 76.603,
+          "end": 78.633
+        },
+        {
+          "text": "not human inventions.",
+          "start": 79.663,
+          "end": 80.803
+        },
+        {
+          "text": "Animals help, defend and care for one another.",
+          "start": 81.913,
+          "end": 84.903
+        },
+        {
+          "text": "That posed a puzzle:",
+          "start": 85.683,
+          "end": 87.313
+        },
+        {
+          "text": "helping others can cost an individual its own chances",
+          "start": 87.813,
+          "end": 91.353
+        },
+        {
+          "text": "to survive and reproduce.",
+          "start": 91.363,
+          "end": 92.903
+        }
+      ]
+    },
+    {
+      "id": "s05",
+      "role": "slide",
+      "title": "Hamilton",
+      "start_frame": 2257,
+      "end_frame": 3273,
+      "start": 94.042,
+      "end": 136.375,
+      "kind": "still",
+      "src": "media/4 Hamilton.jfif",
+      "voice": "media/voiceover_20260928-175224.wav",
+      "captions": [
+        {
+          "text": "In 1964,",
+          "start": 94.192,
+          "end": 95.722
+        },
+        {
+          "text": "William Donald Hamilton offered an answer.",
+          "start": 95.722,
+          "end": 99.302
+        },
+        {
+          "text": "His theory of inclusive fitness shows that costly help can be",
+          "start": 100.022,
+          "end": 104.522
+        },
+        {
+          "text": "favoured by evolution when the benefit to a relative,",
+          "start": 104.992,
+          "end": 108.472
+        },
+        {
+          "text": "weighted by how closely related they are,",
+          "start": 108.762,
+          "end": 111.612
+        },
+        {
+          "text": "outweighs the cost to the helper.",
+          "start": 112.242,
+          "end": 113.952
+        },
+        {
+          "text": "His rule is rb > c:",
+          "start": 114.792,
+          "end": 117.522
+        },
+        {
+          "text": "relatedness times benefit must exceed cost.",
+          "start": 118.272,
+          "end": 121.522
+        },
+        {
+          "text": "This explains the extreme self-sacrifice of ants and bees.",
+          "start": 122.692,
+          "end": 127.192
+        },
+        {
+          "text": "It does not mean genes love,",
+          "start": 128.712,
+          "end": 130.802
+        },
+        {
+          "text": "or that human kindness is just",
+          "start": 130.812,
+          "end": 132.922
+        },
+        {
+          "text": "genetic self-interest in disguise.",
+          "start": 132.922,
+          "end": 135.402
+        }
+      ]
+    },
+    {
+      "id": "s06",
+      "role": "slide",
+      "title": "Devaal",
+      "start_frame": 3273,
+      "end_frame": 3912,
+      "start": 136.375,
+      "end": 163.0,
+      "kind": "still",
+      "src": "media/5 deVaal.jfif",
+      "voice": "media/voiceover_20260928-175224.wav",
+      "captions": [
+        {
+          "text": "Frans de Waal documented consolation,",
+          "start": 136.885,
+          "end": 139.685
+        },
+        {
+          "text": "reconciliation and cooperation among chimpanzees.",
+          "start": 140.215,
+          "end": 143.715
+        },
+        {
+          "text": "In one study,",
+          "start": 144.485,
+          "end": 145.465
+        },
+        {
+          "text": "researchers examined 3,003 fights",
+          "start": 145.465,
+          "end": 149.055
+        },
+        {
+          "text": "and what happened afterwards.",
+          "start": 149.065,
+          "end": 151.025
+        },
+        {
+          "text": "Chimpanzees who had not been involved sometimes went to the",
+          "start": 152.115,
+          "end": 155.895
+        },
+        {
+          "text": "victim and comforted them.",
+          "start": 155.905,
+          "end": 157.585
+        },
+        {
+          "text": "Empathy and attachment are far older than our species.",
+          "start": 158.085,
+          "end": 162.085
+        }
+      ]
+    },
+    {
+      "id": "s07",
+      "role": "slide",
+      "title": "Exploitation",
+      "start_frame": 3912,
+      "end_frame": 4548,
+      "start": 163.0,
+      "end": 189.5,
+      "kind": "still",
+      "src": "media/5 Exploitation.jfif",
+      "voice": "media/voiceover_20260928-175224.wav",
+      "captions": [
+        {
+          "text": "The opposite of care is using a person.",
+          "start": 163.27,
+          "end": 165.8
+        },
+        {
+          "text": "Someone can become a source of labour, money,",
+          "start": 166.59,
+          "end": 169.53
+        },
+        {
+          "text": "status, entertainment or sex,",
+          "start": 169.88,
+          "end": 172.79
+        },
+        {
+          "text": "while their own needs stop counting.",
+          "start": 172.79,
+          "end": 175.68
+        },
+        {
+          "text": "Les Misérables shows how this happens:",
+          "start": 177.76,
+          "end": 179.6
+        },
+        {
+          "text": "once Fantine is poor and loses her job,",
+          "start": 180.46,
+          "end": 183.61
+        },
+        {
+          "text": "her body and her work become things she must",
+          "start": 183.87,
+          "end": 187.03
+        },
+        {
+          "text": "sell to stay alive.",
+          "start": 187.04,
+          "end": 188.73
+        }
+      ]
+    },
+    {
+      "id": "s08",
+      "role": "slide",
+      "title": "Sexualization",
+      "start_frame": 4548,
+      "end_frame": 5503,
+      "start": 189.5,
+      "end": 229.292,
+      "kind": "still",
+      "src": "media/6 Sexualization.jfif",
+      "voice": "media/voiceover_20260928-175224.wav",
+      "captions": [
+        {
+          "text": "Sexual desire is not the same as sexualization.",
+          "start": 189.66,
+          "end": 192.94
+        },
+        {
+          "text": "Sexualization happens when a person is reduced mainly to their",
+          "start": 193.72,
+          "end": 197.95
+        },
+        {
+          "text": "sexual appearance or use.",
+          "start": 197.96,
+          "end": 199.86
+        },
+        {
+          "text": "A 2018 meta-analysis by Kathrin Karsay,",
+          "start": 200.84,
+          "end": 205.34
+        },
+        {
+          "text": "Johannes Knoll and Jörg Matthes pooled 54 papers,",
+          "start": 206.16,
+          "end": 210.66
+        },
+        {
+          "text": "50 independent studies and 261 effect sizes.",
+          "start": 212.21,
+          "end": 216.71
+        },
+        {
+          "text": "It found a moderate link between",
+          "start": 217.73,
+          "end": 219.92
+        },
+        {
+          "text": "sexualizing media and self-objectification,",
+          "start": 219.92,
+          "end": 224.28
+        },
+        {
+          "text": "where people come to see themselves as objects (r = .19).",
+          "start": 224.66,
+          "end": 228.29
+        }
+      ]
+    },
+    {
+      "id": "s09",
+      "role": "closing",
+      "title": "Biology can explain attraction, attachment,",
+      "start_frame": 5503,
+      "end_frame": 5826,
+      "start": 229.292,
+      "end": 242.75,
+      "kind": "video",
+      "src": "media/close_rec_20260928-180612.mp4",
+      "voice": null,
+      "captions": [
+        {
+          "text": "Biology can explain attraction, attachment,",
+          "start": 230.142,
+          "end": 233.042
+        },
+        {
+          "text": "kin selection, reciprocity and empathy,",
+          "start": 233.642,
+          "end": 236.642
+        },
+        {
+          "text": "and culture can transform these capacities into",
+          "start": 237.512,
+          "end": 240.372
+        },
+        {
+          "text": "complex forms of relationship.",
+          "start": 240.372,
+          "end": 242.332
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "role": "closing",
+      "title": "The human phenomenon of love emerges from their interaction:",
+      "start_frame": 5826,
+      "end_frame": 6217,
+      "start": 242.75,
+      "end": 259.042,
+      "kind": "video",
+      "src": "media/close_rec_20260928-180612.mp4",
+      "voice": null,
+      "captions": [
+        {
+          "text": "The human phenomenon of love emerges from their interaction:",
+          "start": 242.75,
+          "end": 246.71
+        },
+        {
+          "text": "desire can coexist with attachment,",
+          "start": 246.71,
+          "end": 250.16
+        },
+        {
+          "text": "empathy and the recognition that another person has a life and",
+          "start": 250.66,
+          "end": 255.16
+        },
+        {
+          "text": "value independent of what they provide.",
+          "start": 255.69,
+          "end": 258.58
+        }
+      ]
+    }
+  ]
+}

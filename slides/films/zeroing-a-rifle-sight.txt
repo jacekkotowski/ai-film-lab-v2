@@ -1,7 +1,7 @@
 # zeroing -- the film's slides in order.
-# project: the ai-film-lab project (ai-film-lab/projects/<this>).
+# project: the film-lab project (film/projects/<this>); this file is named by its slug.
 # Then one line per slide: its number among the pictures you narrate
-# over, and the scene. `python -m aimanim.film zeroing publish` / `clips`.
+# over, and the scene. `python -m aimanim.film zeroing-a-rifle-sight publish` / `clips`.
 project: Zeroing a Rifle Sight
 01 zero-group
 02 zero-clicks

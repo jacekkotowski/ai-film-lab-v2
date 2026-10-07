@@ -2,6 +2,19 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-07 One name per film in all stages: the slug of its film-lab
+  folder. slides/films/screening.txt -> screening-95-percent-accurate.txt
+  (zeroing -> zeroing-a-rifle-sight, mil-measure ->
+  measuring-with-a-mil-reticle); `film.load` refuses a file not named by
+  its project's slug and lists the films for an old name. fly/projects/
+  lost the month (2026-10_x -> x; trade-behind-war -> the-trade-behind-war,
+  its film's slug). The 15 fly stops.json that pointed at the frozen
+  ../ai-film-lab now point at film/projects (flight.py would have stopped
+  on "film not found"; fly.py would have made a second project). Measured:
+  all 16 films with a timeline map to their fly folder by name. Not yet
+  done: `SLIDES.bat <slug> look` and a real FLY.bat run were not tried;
+  the .script.txt notes still show the old short names (his files, left).
+
 - 2026-10-07 ai-film-lab-v2 is the one project (slides/, film/, fly/; root
   SLIDES/FILM/FLY.bat; one CLAUDE.md with the agreements; all 18 skills in
   .claude/skills; film-lab's hooks wired with repo-relative paths; memory of

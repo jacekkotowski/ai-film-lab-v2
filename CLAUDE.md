@@ -73,8 +73,10 @@ stage (`python -m aimanim.look …`); from here, prefix `uv run --directory <sta
 |---|---|
 | open problems | `slides/docs/OPEN.md`, `film/docs/OPEN.md` |
 | decisions | `slides/docs/decisions/`, `film/docs/decisions/` |
-| the films (projects, media, out) | `film/projects/<film>/` (not in git, except film.yaml & co.) |
-| a film's slides: order and script | `slides/films/<film>.txt`, `.script.txt` |
+| a film's one name in all stages | its slug: `Screening - 95 Percent Accurate` → `screening-95-percent-accurate` (film-lab writes it in `final.timeline.json`) |
+| the films (projects, media, out) | `film/projects/<Title>/` (not in git, except film.yaml & co.) |
+| a film's flight | `fly/projects/<slug>/` |
+| a film's slides: order and script | `slides/films/<slug>.txt`, `.script.txt` |
 | every fix and slide recipe | `slides/docs/patterns/` |
 | skills (all stages) | `.claude/skills/` |
 | how the workbench is built | `slides/docs/AGENT-WORKBENCH.md`, `slides/docs/SETUP.md` |

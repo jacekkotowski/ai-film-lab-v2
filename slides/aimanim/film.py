@@ -1,11 +1,13 @@
-"""film.py -- a film's slides, in order, straight into its ai-film-lab project.
+"""film.py -- a film's slides, in order, straight into its film-lab project.
 
-A film is `films/<name>.txt`:
+A film is `films/<name>.txt`, <name> the slug of its project (the one
+name of a film in slides/, film/ and fly/):
 
-    project: Zeroing a Rifle Sight     # ai-film-lab/projects/<this>
+    project: Zeroing a Rifle Sight     # film/projects/<this>
     01 zero-group                      # picture number, scene
     02 zero-clicks
 
+as films/zeroing-a-rifle-sight.txt,
 and its words are `films/<name>.script.txt`, sections marked `[intro]`,
 `[01]`, `[02]`... `[outro]`. Two moments, one command each:
 
@@ -30,9 +32,9 @@ library only; film.yaml is read by film-lab's own Python.
             / RUN_TIMES rehearsed against its paragraph at 2.5 words/s,
             with the same matcher the clips use. Renders nothing.
 
-    python -m aimanim.film zeroing check
-    python -m aimanim.film zeroing publish
-    python -m aimanim.film zeroing clips
+    python -m aimanim.film zeroing-a-rifle-sight check
+    python -m aimanim.film zeroing-a-rifle-sight publish
+    python -m aimanim.film zeroing-a-rifle-sight clips
 """
 
 from __future__ import annotations
@@ -44,6 +46,7 @@ import shutil
 import struct
 import subprocess
 import sys
+import unicodedata
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -67,7 +70,7 @@ class Slide:
 
 @dataclass
 class Film:
-    project: str = ""                 # folder name under ai-film-lab/projects
+    project: str = ""                 # folder name under film/projects
     slides: list[Slide] = field(default_factory=list)
 
 
@@ -186,8 +189,26 @@ def clip_of(scene_dir: Path) -> Path:
             f"{frame.HEIGHT}p{frame.FPS}" / "Slide.mp4")
 
 
+def slug(name: str) -> str:
+    """The film's one name in all three stages: film-lab's folder name as
+    film/ffilm/timeline.py `slug` writes it ("It Reads Us - We Can't Read
+    It" -> "it-reads-us-we-can-t-read-it"); a copy, as this package reads
+    no film-lab code. The Polish ł has no NFKD form, so it is spelled out."""
+    name = name.replace("ł", "l").replace("Ł", "L")
+    plain = unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+    return re.sub(r"[^a-z0-9]+", "-", plain.lower()).strip("-") or "film"
+
+
 def load(name: str, root: Path = ROOT) -> tuple[Film, dict[str, str]]:
-    film = parse((root / "films" / f"{name}.txt").read_text(encoding="utf-8"))
+    path = root / "films" / f"{name}.txt"
+    if not path.is_file():
+        films = sorted(p.stem for p in (root / "films").glob("*.txt")
+                       if not p.name.endswith(".script.txt"))
+        raise SystemExit(f"no film '{name}'. Films: " + ", ".join(films))
+    film = parse(path.read_text(encoding="utf-8"))
+    if film.project and slug(film.project) != name:
+        raise SystemExit(f"films/{name}.txt: a film is named by its project's slug; "
+                         f"rename it films/{slug(film.project)}.txt (and its .script.txt)")
     sp = root / "films" / f"{name}.script.txt"
     parts = script_parts(sp.read_text(encoding="utf-8")) if sp.exists() else {}
     return film, parts

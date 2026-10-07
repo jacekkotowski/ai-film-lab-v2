@@ -8,9 +8,10 @@ no Claude: only Python (standard library), Blender and ffmpeg.
 
 <film> is any of: the film's final.timeline.json, its final.mp4 (the
 timeline must sit beside it), its out/ folder or its project folder.
-<slug> is a folder name under projects/, e.g. 2026-09_what-is-love.
+<slug> is a folder name under projects/, e.g. what-is-love: the film's one
+name in slides/, film/ and fly/ (no month in front since 2026-10-07).
 
-A new film gets projects/<yyyy-mm_title>/stops.json, then the stills. After
+A new film gets projects/<slug>/stops.json, then the stills. After
 the stills (and the draft) it asks what to do next. An existing stops.json is
 never overwritten, so your edits to titles are kept. FLY.bat calls this.
 """
@@ -24,7 +25,6 @@ import subprocess
 import sys
 import unicodedata
 import webbrowser
-from datetime import date
 from pathlib import Path
 
 STUDIO = Path(__file__).resolve().parents[2]
@@ -69,6 +69,9 @@ def find_timeline(path):
 
 
 def slugify(title):
+    """film/ffilm/timeline.py `slug`, for timelines older than 0014: the
+    Polish ł has no NFKD form, so it is spelled out first."""
+    title = title.replace("ł", "l").replace("Ł", "L")
     ascii_title = unicodedata.normalize("NFKD", title).encode("ascii", "ignore").decode()
     return re.sub(r"[^a-z0-9]+", "-", ascii_title.lower()).strip("-") or "film"
 
@@ -85,7 +88,7 @@ def project_for(timeline):
     if not slug:
         title = timeline.parents[1].name if timeline.parent.name == "out" else timeline.stem
         slug = slugify(title)
-    return PROJECTS / f"{date.today():%Y-%m}_{slug}", True
+    return PROJECTS / slug, True
 
 
 def film_changed(stops, timeline):

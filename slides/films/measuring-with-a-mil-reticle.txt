@@ -1,7 +1,7 @@
 # mil-measure -- what the Aurora MIL reticle measures, and how.
-# project: the ai-film-lab project (ai-film-lab/projects/<this>).
+# project: the film-lab project (film/projects/<this>); this file is named by its slug.
 # Then one line per slide: its number among the pictures you narrate
-# over, and the scene. `python -m aimanim.film mil-measure publish` / `clips`.
+# over, and the scene. `python -m aimanim.film measuring-with-a-mil-reticle publish` / `clips`.
 project: Measuring with a MIL Reticle
 01 mil-unit
 02 mil-man

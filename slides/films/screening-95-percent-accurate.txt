@@ -1,8 +1,8 @@
 # screening -- what "95 % accurate" means for a rare condition: the
 # confusion matrix of a Down syndrome screen, read both ways.
-# project: the ai-film-lab project (ai-film-lab/projects/<this>).
+# project: the film-lab project (film/projects/<this>); this file is named by its slug.
 # Then one line per slide: its number among the pictures you narrate
-# over, and the scene. `python -m aimanim.film screening publish` / `clips`.
+# over, and the scene. `python -m aimanim.film screening-95-percent-accurate publish` / `clips`.
 project: Screening - 95 Percent Accurate
 01 scr-accuracy
 02 scr-outcomes

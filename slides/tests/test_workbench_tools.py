@@ -93,7 +93,7 @@ class Gate(unittest.TestCase):           # item 4
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             (root / "films").mkdir()
-            (root / "films" / "f.txt").write_text("project: P\n01 a\n02 b\n", encoding="utf-8")
+            (root / "films" / "f.txt").write_text("project: F\n01 a\n02 b\n", encoding="utf-8")
             for s in ("a", "b"):
                 (root / "scenes" / s).mkdir(parents=True)
             (root / "scenes" / "a" / "timing.json").write_text("{}", encoding="utf-8")

@@ -2,6 +2,13 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-07 Unify (one projects folder): phases 0 and 1 done on branch
+  `unify` (tag `pre-unify` = main before it). The code of all three stages
+  now looks in `<repo>/projects/` first, falls back to today's folders; no
+  file moved. Suites 1034 / 86 / 10; all 26 checks identical before/after.
+  Status and the phase 2 findings: film/docs/plans/2026-10-07/UNIFY.md.
+  Not merged into main yet; phase 2 (the move) waits for Jacek's go.
+
 - 2026-10-07 One name per film in all stages: the slug of its film-lab
   folder. slides/films/screening.txt -> screening-95-percent-accurate.txt
   (zeroing -> zeroing-a-rifle-sight, mil-measure ->

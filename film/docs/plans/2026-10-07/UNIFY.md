@@ -1,7 +1,28 @@
-# Unify: one projects folder, shared names, one door — PLAN (not started)
+# Unify: one projects folder, shared names, one door — PLAN
 
-2026-10-07. Nothing below is built. Everything under "Today" was measured
-in this session; everything under "Plan" is proposed and waits for Jacek.
+2026-10-07. Everything under "Today" was measured in this session.
+
+## Status
+
+Jacek, 2026-10-07: "Recommended on all" (folder = title, scenes stay, agreement
+test, no shared package); go for phases 0 and 1. Phase 4 and decisions 5–6 not yet asked.
+
+- **Phase 0 DONE.** Tag `pre-unify` (main 6f8c206), branch `unify`. Baseline in
+  `.local/unify/before/` by `.local/unify/baseline.py`: film 1,783 files /
+  13,483,560,060 bytes, fly 304 / 3,560,710,509, slides 13 / 302,026; 104 texts
+  hashed, 67 videos timed, 26 checks (test_story already fails: a missing picture).
+  Suites 1029 / 80 / 7.
+- **Phase 1 DONE** (4229431 film, then slides + fly). Suites 1034 / 86 / 10.
+  Gate `.local/unify/after-phase1/`: counts equal, texts, lengths and all 26 checks
+  identical. Only difference: `analysis/music.json` in 21 films grew (4,958 bytes) —
+  `film check` adds to that cache, keyed by absolute path; caused by the first
+  baseline run, not by phase 1. Use `after-phase1/` as the reference from now on.
+- **Found for phase 2:** each of the 16 fly `stops.json` has TWO absolute paths,
+  `"source"` and `"film"`; both must be rewritten. `music.json` gets new keys after the
+  move (re-measured once, seconds) — leave it out of the byte gate. Also to move:
+  `film/projects/CLAUDE.md` (the editor's rulebook; `pack.TOOLKIT` names it),
+  `film/.lastfilm` (now written beside the projects folder → root .gitignore).
+  `SLIDES.bat` lists films with `dir films\*.txt` → use `film_names`.
 
 ## Today (measured)
 

@@ -8,9 +8,10 @@ Newest first. An entry stays until it is measured or fixed AND Jacek has seen it
   sizes, texts, 67 video lengths; 25 of 26 checks identical (test_story: only
   the path). Suites film 1043, slides 86, fly 10. FILM.bat's guide now offers
   publish / clips / fly / "explain a problem" where due. Not yet seen by
-  Jacek: FILM.bat double-click, a FLY render from the menu. Left behind:
-  4 old stills in slides/films/zeroing-a-rifle-sight/ (untracked, 2026-10-05).
-  Not merged into main. Phase 3 (remove fallbacks, prose) after his next film.
+  Jacek: FILM.bat double-click, a FLY render from the menu. The 4 old
+  stills left in slides/films/zeroing-a-rifle-sight/ went to the Recycle
+  Bin (his ask); slides/films/ holds 3 empty folders. Merged into main
+  and pushed (6d151c2). Phase 3 (remove fallbacks, prose) after his next film.
 - 2026-10-07 Unify (one projects folder): phases 0 and 1 done on branch
   `unify` (tag `pre-unify` = main before it). The code of all three stages
   now looks in `<repo>/projects/` first, falls back to today's folders; no

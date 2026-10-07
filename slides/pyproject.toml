@@ -1,0 +1,14 @@
+[project]
+name = "aimanim"
+version = "0.0.1"
+description = "Animated slides for narrated Shorts: a problem in words in, a vertical clip out."
+requires-python = ">=3.11"
+# The helpers in aimanim/ use the standard library only.
+dependencies = []
+
+[project.optional-dependencies]
+# Only what renders. Not installed until PLAN step 1:  uv sync --extra render
+render = ["manim>=0.19"]
+
+[tool.uv]
+package = false

@@ -1,0 +1,53 @@
+{
+  "lines": [
+    {
+      "text": "A plate fifty centimetres wide works the same way.",
+      "start": 0.24,
+      "end": 3.51,
+      "words": [
+        0.24,
+        0.36,
+        0.63,
+        1.16,
+        1.54,
+        2.48,
+        2.71,
+        3.05,
+        3.24
+      ]
+    },
+    {
+      "text": "It fills two mils, from dot to dot.",
+      "start": 4.04,
+      "end": 6.5,
+      "words": [
+        4.04,
+        4.17,
+        4.84,
+        4.97,
+        5.72,
+        5.85,
+        6.02,
+        6.22
+      ]
+    },
+    {
+      "text": "Half a metre times a thousand, divided by two:",
+      "start": 6.88,
+      "end": 9.73,
+      "words": [
+        6.88,
+        7.03,
+        7.19,
+        7.42,
+        8.06,
+        8.3,
+        8.6,
+        9.06,
+        9.4
+      ]
+    }
+  ],
+  "total": 12.24,
+  "source": "film.yaml s04"
+}

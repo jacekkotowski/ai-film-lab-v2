@@ -1,0 +1,111 @@
+{
+  "lines": [
+    {
+      "text": "Wind from the side makes the bullet drift.",
+      "start": 0.24,
+      "end": 2.79,
+      "words": [
+        0.24,
+        0.5,
+        0.86,
+        1.03,
+        1.42,
+        1.93,
+        2.18,
+        2.39
+      ]
+    },
+    {
+      "text": "The drift is not the wind pushing for the whole flight:",
+      "start": 3.27,
+      "end": 5.74,
+      "words": [
+        3.27,
+        3.35,
+        3.65,
+        4.04,
+        4.21,
+        4.41,
+        4.58,
+        4.9,
+        5.11,
+        5.21,
+        5.41
+      ]
+    },
+    {
+      "text": "it is the wind speed times the lag,",
+      "start": 6.28,
+      "end": 8.07,
+      "words": [
+        6.28,
+        6.39,
+        6.52,
+        6.7,
+        6.86,
+        7.14,
+        7.56,
+        7.78
+      ]
+    },
+    {
+      "text": "how much longer the flight takes than it would without air.",
+      "start": 8.48,
+      "end": 11.78,
+      "words": [
+        8.48,
+        8.6,
+        8.79,
+        9.03,
+        9.21,
+        9.46,
+        10.24,
+        10.5,
+        10.92,
+        11.13,
+        11.43
+      ]
+    },
+    {
+      "text": "Thirty centimetres of drift at three hundred metres is thirty",
+      "start": 12.87,
+      "end": 15.86,
+      "words": [
+        12.87,
+        13.17,
+        13.53,
+        13.89,
+        14.29,
+        14.9,
+        15.41
+      ]
+    },
+    {
+      "text": "times ten over three hundred:",
+      "start": 15.86,
+      "end": 17.46,
+      "words": [
+        15.86,
+        16.2,
+        16.48,
+        16.92
+      ]
+    },
+    {
+      "text": "one mil to hold into the wind.",
+      "start": 17.96,
+      "end": 19.75,
+      "words": [
+        17.96,
+        18.14,
+        18.36,
+        18.65,
+        18.95,
+        19.26,
+        19.45
+      ]
+    }
+  ],
+  "total": 20.48,
+  "source": "film.yaml s08"
+}

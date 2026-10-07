@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+media/
+scenes/*/out/
+films/*/
+.claude/settings.local.json
+.local/

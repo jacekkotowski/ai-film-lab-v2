@@ -1,0 +1,70 @@
+{
+  "lines": [
+    {
+      "text": "Its width marks also range targets.",
+      "start": 0.24,
+      "end": 2.85,
+      "words": [
+        0.24,
+        0.46,
+        0.79,
+        1.59,
+        2.07,
+        2.42
+      ]
+    },
+    {
+      "text": "A target fifty centimetres wide",
+      "start": 3.52,
+      "end": 5.17,
+      "words": [
+        3.52,
+        3.59,
+        3.86,
+        4.25,
+        4.65
+      ]
+    },
+    {
+      "text": "fills the central arrowhead at 300 metres,",
+      "start": 5.6,
+      "end": 8.58,
+      "words": [
+        5.6,
+        5.93,
+        6.28,
+        6.57,
+        6.89,
+        7.24,
+        7.84,
+        8.09
+      ]
+    },
+    {
+      "text": "and the next three marks at 400,",
+      "start": 9.16,
+      "end": 11.62,
+      "words": [
+        9.16,
+        9.3,
+        9.46,
+        9.62,
+        9.98,
+        10.72,
+        11.2
+      ]
+    },
+    {
+      "text": "500 and 600 metres.",
+      "start": 11.83,
+      "end": 12.9,
+      "words": [
+        11.83,
+        12.02,
+        12.55
+      ]
+    }
+  ],
+  "total": 14.32,
+  "source": "film.yaml s06"
+}

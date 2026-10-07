@@ -1,0 +1,6 @@
+#!/bin/sh
+# ai-manim post-commit (Workbench item 1): the new commit becomes searchable.
+# Runs in the background (embedding takes minutes); log in .local/knowledge.log.
+mkdir -p .local
+( python -m aimanim.knowledge refresh > .local/knowledge.log 2>&1 & )
+exit 0

@@ -1,0 +1,129 @@
+{
+  "lines": [
+    {
+      "text": "Take a man one metre seventy-eight tall.",
+      "start": 0.24,
+      "end": 2.7,
+      "words": [
+        0.24,
+        0.42,
+        0.54,
+        0.86,
+        1.18,
+        1.47,
+        2.05
+      ]
+    },
+    {
+      "text": "Put his head on the tip of the chevron",
+      "start": 3.12,
+      "end": 4.81,
+      "words": [
+        3.12,
+        3.2,
+        3.39,
+        3.65,
+        3.81,
+        3.95,
+        4.14,
+        4.29,
+        4.43
+      ]
+    },
+    {
+      "text": "and read his feet on the ladder:",
+      "start": 5.4,
+      "end": 7.72,
+      "words": [
+        5.4,
+        5.55,
+        6.05,
+        6.5,
+        6.83,
+        7.34,
+        7.49
+      ]
+    },
+    {
+      "text": "six mils.",
+      "start": 8.32,
+      "end": 8.52,
+      "words": [
+        8.32
+      ]
+    },
+    {
+      "text": "Further away he shrinks to four mils, three, two.",
+      "start": 9.78,
+      "end": 12.67,
+      "words": [
+        9.78,
+        10.4,
+        10.53,
+        10.82,
+        11.0,
+        11.22,
+        11.76,
+        12.48
+      ]
+    },
+    {
+      "text": "His distance is his height times a thousand,",
+      "start": 13.16,
+      "end": 15.96,
+      "words": [
+        13.16,
+        13.31,
+        13.74,
+        14.08,
+        14.45,
+        15.24,
+        15.49,
+        15.66
+      ]
+    },
+    {
+      "text": "divided by the mils.",
+      "start": 15.97,
+      "end": 16.97,
+      "words": [
+        15.97,
+        16.4,
+        16.82
+      ]
+    },
+    {
+      "text": "Four mils:",
+      "start": 17.68,
+      "end": 17.89,
+      "words": [
+        17.68
+      ]
+    },
+    {
+      "text": "one point seven eight times a thousand,",
+      "start": 17.89,
+      "end": 20.92,
+      "words": [
+        17.89,
+        18.72,
+        18.91,
+        19.67,
+        20.35,
+        20.59
+      ]
+    },
+    {
+      "text": "over four, is four hundred and forty-five metres.",
+      "start": 21.32,
+      "end": 22.63,
+      "words": [
+        21.32,
+        21.54,
+        22.32
+      ]
+    }
+  ],
+  "total": 25.56,
+  "source": "film.yaml s03"
+}

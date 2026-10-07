@@ -1,0 +1,60 @@
+SCREENING -- script (2026-10-06), Jacek's corrected draft, word for word (250 words)
+Slides 01-05 are narrated (2026-10-07, voiceover_20261007-110422). Intro
+and outro are camera takes (0_rec_20261007-111320, close_rec_20261007-111642),
+drafted by Claude, his edits copied back from film-lab ("humble", 2026-10-07).
+`python -m aimanim.film screening publish` puts them there. A line starting
+with a section mark in brackets starts a section. One sentence per step
+(BEAT_LINES); the word each step starts on is BEAT_WORDS in each scene.py.
+
+
+[intro]
+
+I am a humble data scientist. Every model I build that answers yes or no, sick or healthy, fraud or not, is judged by one table of four numbers. Doctors judge screening tests with the same table. Here is what it tells a pregnant woman whose test comes back positive.
+
+
+[01] Intro   (slide scr-accuracy)
+
+A pregnant woman's test flags a high risk of Down syndrome, a condition caused by an extra chromosome, and her doctor calls the test 95 percent accurate. A test that called every pregnancy healthy would score 99.8 percent.
+
+
+[02] Four outcomes   (slide scr-outcomes)
+
+Of 10,000 pregnancies, 20 have Down syndrome. The test flags 18, the true positives, and misses 2, the false negatives. It flags 499 healthy ones, the false positives, and clears 9,481, the true negatives. Sensitivity, affected babies caught, is 90 percent. Specificity, healthy ones cleared, is 95 percent.
+
+
+[03] What a result means   (slide scr-meaning)
+
+Of 517 flagged women, 18 carry an affected baby, a positive predictive value of 1 in 29. Of 9,483 cleared, 9,481 are healthy, a negative predictive value of 99.98 percent. Gerd Gigerenzer, a psychologist, asked 160 gynecologists the same about breast screening, and they most often answered 9 in 10, not 1 in 10.
+
+
+[04] Ninety-nine percent   (slide scr-rarity)
+
+Blood tests catch 99.7 percent of Down syndrome and were sold as highly accurate for rarer chromosome defects, yet the New York Times calculated about 85 percent of their positives are wrong. The fairest score is the positive likelihood ratio, sensitivity divided by the false-alarm rate, because rarity does not change it. Hers is 18.
+
+
+[05] The price of a false alarm   (slide scr-cost)
+
+Each of the 499 false alarms is a mother told her baby may be ill. She can wait until week 15 for amniocentesis, a needle into the womb, then up to two weeks for the result. That needle ends about 3 pregnancies in 1,000, so if all 499 take it, one or two healthy babies are lost.
+
+
+[outro]
+
+So when a test comes back positive, ask two questions. How common is the condition in people like me? And how many false alarms does the test raise for every case it finds? Here it was 499 false alarms for 18 cases. The same table judges every yes-or-no model, a logistic regression included: accuracy alone hides the rare case.
+
+
+-----------------------------------------------------------------------
+Checked 2026-10-06 (every number: scenes/scr-*/spec.md, maths in aimanim/diagnostic.py,
+tests/test_a_screening_table_adds_up.py):
+- 18 / 2 / 499 / 9,481, accuracy 94.99 %, "always healthy" 99.8 %, PPV 18/517
+  = 1 in 28.7 ("1 in 29"), NPV 99.98 %, LR+ 18: all follow from 20 in 10,000,
+  90 % and 95 %. 20:9,980 x 18 = 360:9,980 = 18:499, the flagged row again.
+- Gigerenzer: 47 % of the 160 chose 90 %, the most frequent answer (search
+  snippets; the 2007 paper not re-read). Mammography PPV there ~ 1 in 10.
+- Gil 2017: > 99 % of trisomy 21 (99.7 %), 0.04 % false positives -> LR+ 2,492,
+  "≈ 2,500" on slide 04 only.
+- NYT, Kliff & Bhatia, 1 Jan 2022: title and date confirmed; the 85 % and
+  80-93 % from your bibliography, not re-read.
+- Salomon 2019: amniocentesis 0.30 % (95 % CI 0.11-0.49 %). 499 x 0.003 = 1.5.
+- Kagan, 75,821 pregnancies: not checked this session.
+Length: 250 words is about 1:40 at 2.5 words a second, not 2:30. Your
+mil-measure script ran 420 words for ~2:30. Nothing added: these are your words.

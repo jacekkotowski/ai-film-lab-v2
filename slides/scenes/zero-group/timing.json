@@ -1,0 +1,102 @@
+{
+  "lines": [
+    {
+      "text": "Fire four shots at the same point from a sandbag or bipod.",
+      "start": 0.24,
+      "end": 3.62,
+      "words": [
+        0.24,
+        0.52,
+        0.9,
+        1.19,
+        1.45,
+        1.54,
+        1.69,
+        1.99,
+        2.26,
+        2.46,
+        2.81,
+        3.1
+      ]
+    },
+    {
+      "text": "Mark the middle of the four holes,",
+      "start": 3.96,
+      "end": 5.35,
+      "words": [
+        3.96,
+        4.14,
+        4.39,
+        4.6,
+        4.78,
+        4.89,
+        5.06
+      ]
+    },
+    {
+      "text": "because that middle is where the rifle really shoots",
+      "start": 5.35,
+      "end": 7.87,
+      "words": [
+        5.35,
+        5.69,
+        6.04,
+        6.31,
+        6.6,
+        6.79,
+        6.93,
+        7.19,
+        7.49
+      ]
+    },
+    {
+      "text": "while single shots scatter.",
+      "start": 8.2,
+      "end": 9.62,
+      "words": [
+        8.2,
+        8.44,
+        8.81,
+        9.18
+      ]
+    },
+    {
+      "text": "Then measure how far it sits from your aim point.",
+      "start": 10.16,
+      "end": 12.63,
+      "words": [
+        10.16,
+        10.47,
+        10.97,
+        11.24,
+        11.45,
+        11.59,
+        11.83,
+        12.07,
+        12.2,
+        12.38
+      ]
+    },
+    {
+      "text": "If one hole strays far from the rest, fire a fresh group.",
+      "start": 13.08,
+      "end": 16.18,
+      "words": [
+        13.08,
+        13.19,
+        13.37,
+        13.59,
+        14.01,
+        14.25,
+        14.46,
+        14.58,
+        15.2,
+        15.45,
+        15.72,
+        15.93
+      ]
+    }
+  ],
+  "total": 16.832,
+  "source": "film.yaml s02"
+}

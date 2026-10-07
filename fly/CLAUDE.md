@@ -19,7 +19,7 @@ rules: `film/docs/decisions/0014`. Tests: `python -m unittest discover tests`.
 - `.claude/skills/`: idea-to-spec, build-preview
 - `recipes/`: one half-page template per output type (presi-flight, plot3d, machine, photo-planes)
 - `library/`: reusable scripts, rigs, objects. Something moves here only after it's been used in 2 projects.
-- `projects/<slug>/`: `input/idea.md` → `stops.json` or `spec.md` → `preview/` → `out/`
+- `../projects/<Title>/fly/`, beside its film (the repo's one projects/ folder): `input/idea.md` → `stops.json` or `spec.md` → `preview/` → `out/`
 
 ## Render rules (weak PC)
 - Engine: Eevee. Never Cycles unless asked.

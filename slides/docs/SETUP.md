@@ -33,5 +33,5 @@ python -m aimanim.look still scr-meaning      # one real render: notes, size, ma
 - `.local/renders.csv` (render log, `look stats`), `.local/knowledge.log`
 - qmd index and models: `~/.cache/qmd/`, config `~/.config/qmd/index.yml`,
   commit files `~/.cache/qmd/manim-history/`
-- rendered output `scenes/*/out/`, film working files `films/*/`
+- rendered output `scenes/*/out/` (a film's own files are in the repo's `projects/<Title>/`)
 - Claude's auto-memory for this project (Jacek's standing preferences)

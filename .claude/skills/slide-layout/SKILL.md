@@ -58,7 +58,7 @@ A `PROBLEM` line = fix it (exit code 1). Plain commands only (CLAUDE.md).
 - A few marks in a crowd: ring or recolour, never only fade (I12); one dot size per comparison, areas by `layout.area_radius` (I13).
 - Rotated row names: row ≥ 2.9 tall at 56, x ≥ −3.58.
 - ≤ 3 objects move in one step (VGroup the rest). No effects he did not ask for.
-- Metric only on screen; numbers computed in scene.py from the spec, rounded as he says them; a changed number → `films/<film>.script.txt` in the same turn.
+- Metric only on screen; numbers computed in scene.py from the spec, rounded as he says them; a changed number → `projects/<Title>/slides.script.txt` in the same turn.
 
 ## 4. Quick map: what you see → the entry in docs/patterns/issues.md
 | you see | entry |

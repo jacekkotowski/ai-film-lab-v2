@@ -2,6 +2,14 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-08 Unify phase 3 DONE on main: no fallbacks in any stage; one
+  place per film, projects/<Title>/. Suites 1044 / 85 / 11; 25 of 26 film
+  checks as before (test_story: path only). Fault found and repaired: the
+  merge's `git switch` gave all 25 film.yaml a new time, so finished films
+  looked edited (peek offered instead of Done); times restored from git.
+  Screening was re-rendered by Jacek at 23:15-23:30 because of it (final
+  rendered again, film.yaml unchanged). Not yet seen: `film pack` on a
+  real film, FLY from the menu.
 - 2026-10-07 Unify phases 2 and 4 DONE on branch `unify` (2a07fe1 move,
   then the guide). Every film's files are in `projects/<Title>/` (slides.txt,
   slides.script.txt, slides.published.json, fly/). Gate: same 2,100 files and

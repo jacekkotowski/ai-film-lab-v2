@@ -25,7 +25,7 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    goes in the script's notes and your answer, never silently into the
    text. A cut you make must be said in the FIRST lines (2026-10-06).
 
-1b. **Which film?** Every slide belongs to a film: `films/<film>.txt`
+1b. **Which film?** Every slide belongs to a film: `projects/<Title>/slides.txt`
    (one line per slide: picture number, scene). New film → new file.
    Add the slide's line now, with its picture number among his photos.
 
@@ -68,7 +68,7 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    picture he narrates over. Report its path and size (ffprobe).
 
 8. **The script.** If the slide changes what he says (a number, a unit,
-   a sentence split), update `films/<film>.script.txt` — the whole film's
+   a sentence split), update `projects/<Title>/slides.script.txt` — the whole film's
    narration in one file, sections marked `[NN]` by picture.
 
 9. **Tell him the next step in one line**:

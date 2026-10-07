@@ -21,7 +21,7 @@ winget install Python.Python.3.12
 - Python, Blender and ffmpeg (Setup above). Blender doesn't need to be on PATH: `FLY.bat` also looks in `C:\Program Files\Blender` and `C:\Program Files\Blender Foundation\Blender *`, or set `BLENDER=C:\path\to\blender.exe`.
 
 **Steps**
-1. **Drag the film onto `FLY.bat`.** You can drag its `final.mp4`, its `final.timeline.json`, its `out` folder or its whole project folder. It makes `projects/<slug>/stops.json`, renders the stills (about 30 s) and opens `preview/`.
+1. **Drag the film onto `FLY.bat`.** You can drag its `final.mp4`, its `final.timeline.json`, its `out` folder or its whole project folder. It makes `projects/<Title>/fly/stops.json` (beside the film; only films in the repo's `projects/` can fly), renders the stills (about 30 s) and opens `preview/`.
 2. **Look at the stills.** `opening` shows the lit hub with the rest as dim ghosts, each `v<N>_stop_<M>` is a screen shown full-screen, each `v<N>_glide` is a cut, and `overview` is the whole map lit. Titles come from the picture file names. To change one, edit `"title"` in `stops.json`, then press `s` to render the stills again.
 3. **Press `d` for the draft** (25% size, a few minutes). Watch `preview/flight_draft_film.mp4` for motion.
 4. **Press `v` for the video** (about 10 minutes). The result is `out/flight_film.mp4`, 1080×1920, with the film's own frames and sound.
@@ -32,19 +32,19 @@ To come back later: `FLY.bat <slug> --draft` or `--video`. Dragging the same fil
 
 **By hand** (what `FLY.bat` runs):
 ```
-python library/rigs/film_to_stops.py "<film>/out/final.timeline.json" projects/<slug>
-blender -b -P library/rigs/flight.py -- projects/<slug>/stops.json --stills   (then --draft, --video)
+python library/rigs/film_to_stops.py "../projects/<Title>/out/final.timeline.json" "../projects/<Title>/fly"
+blender -b -P library/rigs/flight.py -- "../projects/<Title>/fly/stops.json" --stills   (then --draft, --video)
 ```
 Settings (glide speed `GLIDE_S`, ghost brightness `DIM`, spread, colours) are the UPPER_CASE constants at the top of `library/rigs/flight.py`; `recipes/presi-flight.md` explains them.
 
 ## First run
 ```
-blender -b -P library/rigs/flight.py -- projects/ai-in-obsidian/stops.json --stills
+blender -b -P library/rigs/flight.py -- ../projects/ai-in-obsidian/fly/stops.json --stills
 ```
-Stills land in `projects/ai-in-obsidian/preview/`.
+Stills land in `../projects/ai-in-obsidian/fly/preview/`.
 
 ## New idea
-Make `projects/<slug>/input/idea.md`, then tell Claude: *"run idea-to-spec on <slug>"*.
+Make `../projects/<idea>/fly/input/idea.md`, then tell Claude: *"run idea-to-spec on <slug>"*.
 
 ## Plan
 See `PLAN.md` for what is done and what comes next.

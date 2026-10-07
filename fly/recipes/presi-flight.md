@@ -3,7 +3,7 @@
 Prezi-like camera flight through an idea map. A hub sits in the middle with branches around it, the camera glides to each stop and holds, and it ends on an overview.
 
 **Script:** `library/rigs/flight.py`
-**Input:** `projects/<slug>/stops.json`
+**Input:** `../projects/<Title>/fly/stops.json`
 
 ```json
 { "stops": [
@@ -15,9 +15,9 @@ The first stop is the hub; the rest are branches (4–6 works best).
 
 **Run**
 ```
-blender -b -P library/rigs/flight.py -- projects/<slug>/stops.json --stills   # 7 PNGs, ~30 s
-blender -b -P library/rigs/flight.py -- projects/<slug>/stops.json --draft    # low-res MP4
-blender -b -P library/rigs/flight.py -- projects/<slug>/stops.json --video    # final MP4
+blender -b -P library/rigs/flight.py -- "../projects/<Title>/fly/stops.json" --stills   # 7 PNGs, ~30 s
+blender -b -P library/rigs/flight.py -- "../projects/<Title>/fly/stops.json" --draft    # low-res MP4
+blender -b -P library/rigs/flight.py -- "../projects/<Title>/fly/stops.json" --video    # final MP4
 ```
 Add `--frames=113,383` to render just those frames (check a glide). Add `--blend` to also save `flight.blend` so you can open and tweak it by hand.
 

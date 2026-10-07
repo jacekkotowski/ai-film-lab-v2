@@ -1,8 +1,8 @@
 """A film is found by its slug.
 
 Since 2026-10-07 a film has one name in all three stages of
-ai-film-lab-v2: the slug of its folder here (slides/films/<slug>.txt,
-fly/projects/<slug>/). `film ... -p screening-95-percent-accurate` finds
+ai-film-lab-v2: the slug of its folder, projects/<Title>/ (which holds
+its slides and its flight too). `film ... -p screening-95-percent-accurate` finds
 "Screening - 95 Percent Accurate" as the title does.
 """
 

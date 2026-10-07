@@ -48,7 +48,18 @@ test, no shared package); go for phases 0 and 1. Phase 4 and decisions 5–6 not
   problem with animated slides (empty film → C). Read off the 25 real films: 20 finished
   ones offer the flight; none of the 3 slides films is due publish or clips (all
   published, clips newer). NOT run from the menu: a real FLY render, a publish, clips.
-- **Phase 3 (tidy) not started:** after Jacek has made one film in the new layout.
+- **Phase 3 DONE** (Jacek: "do phase 3, only then we know it really works"). No
+  fallbacks: film `paths.projects_root` = `<repo>/projects`; `film pack` builds the copy in
+  the repo's shape (it had lost `projects/CLAUDE.md` in phase 2); slides reads only
+  `projects/<Title>/slides.txt` (slides/films/ removed); fly only `projects/<Title>/fly/`,
+  a film elsewhere is refused. film/ and fly/ .gitignore project rules removed (root has
+  them). Prose fixed: root/slides/fly CLAUDE.md, 6 skills, fly README + recipe, SETUP.
+  Suites 1044 / 85 / 11. Gate `.local/unify/after-phase3/gate.txt`: 25 of 26 checks
+  identical (test_story: path only), texts/sizes/lengths equal except Jacek's own renders
+  of 2026-10-07 evening. FOUND on the way: `git switch main` for the merge rewrote all
+  25 film.yaml (same bytes, new mtime), so every finished film's guide/check said peek
+  instead of Done (22 checks differed). Each film.yaml got back the time of its last
+  content commit; then the checks matched again.
 - **Phase 2 dry run (before):** `python film/docs/plans/2026-10-07/move.py`:
   51 moves (CLAUDE.md, 23 film folders, 6 slides texts + 3 published.json,
   17 fly folders, .lastfilm), 16 stops.json rewritten, "no problems". Still to do in

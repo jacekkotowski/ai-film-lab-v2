@@ -95,9 +95,10 @@ did not match my allow list and asked me "Allow once" again and again
 - The class is always called `Slide`. One scene file = one slide.
 - New scene = copy `scenes/_template/`. Layout: load the `slide-layout`
   skill first; `kit.run` prints `[layout]` notes — fix or explain each.
-- Every slide belongs to a film: `films/<film>.txt` (picture number +
-  scene, in order) and `films/<film>.script.txt` (the narration, kept
-  current whenever a slide changes what I say).
+- Every slide belongs to a film: `projects/<Title>/slides.txt` (picture
+  number + scene, in order) and `projects/<Title>/slides.script.txt` (the
+  narration, kept current whenever a slide changes what I say), in the
+  repo's one projects/ folder, beside the film.
 - Metric only on screen.
 - Formulas: `Text` with Unicode for plain ones; `MathTex` renders
   (measured 2026-10-05, TinyTeX packages in `docs/tech/manim.md`).
@@ -133,7 +134,7 @@ number) was probably met before. First `python -m aimanim.patterns find
 | measured facts about Manim here | `docs/tech/manim.md`     |
 | layout rules and lessons       | `.claude/skills/slide-layout/SKILL.md` + `docs/patterns/` + `aimanim/kit.py` |
 | measured text widths           | `docs/tech/sizes.json` (`python -m aimanim.layout sizes <text>`) |
-| a film: order and script       | `films/<film>.txt`, `films/<film>.script.txt` |
+| a film: order and script       | `../projects/<Title>/slides.txt`, `slides.script.txt` |
 | the plan and its status        | `PLAN.md`                 |
 | this repo's docs and history, searchable | qmd `manim`, `manim-history` (refreshed on every commit) |
 | film-lab's docs, code, history | qmd `docs`, `code`, `history` (last indexed 2026-09-24) |

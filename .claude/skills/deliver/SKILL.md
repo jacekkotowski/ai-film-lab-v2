@@ -12,7 +12,7 @@ nothing is copied by hand.
 
 ## Steps
 
-1. `films/<film>.txt` names the project. List
+1. The film is `projects/<Title>/` (its slides in `slides.txt`). List
    `<project>/media/NN_<scene>.png` and `<project>/clips/NN_<scene>.mp4`.
 2. ffprobe each: 1080x1920, 24 fps, and each clip's length against its
    slide's duration in film.yaml (within 2 frames). Anything else goes in

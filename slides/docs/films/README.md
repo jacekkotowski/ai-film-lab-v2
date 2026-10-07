@@ -2,7 +2,7 @@
 
 One contact sheet per film (its stills in order, 270 px wide each), made
 from the full-size stills in `scenes/<scene>/out/`. Script and numbers:
-`films/<film>.script.txt`, `scenes/<scene>/spec.md`. Remake a sheet after a
+`projects/<Title>/slides.script.txt`, `scenes/<scene>/spec.md`. Remake a sheet after a
 slide changes:
 `ffmpeg -i <still 1> ... -i <still n> -filter_complex "hstack=inputs=n,scale=n*270:-1" docs/films/<film>.png`
 

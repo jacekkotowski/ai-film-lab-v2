@@ -8,9 +8,9 @@ description: Build an approved studio spec and render preview stills, then itera
 
 1. Open the recipe named in the spec (`fly/recipes/<name>.md`). It says which script to run.
 2. Render stills, from the repo root (Blender is not on PATH), e.g.
-   `"C:\Program Files\Blender\blender.exe" -b -P fly/library/rigs/flight.py -- fly/projects/<slug>/stops.json --stills`
-3. Look at every PNG in `fly/projects/<slug>/preview/` yourself before showing the user. Check for cut-off cards, unreadable text, lines crossing text, and colours that are too grey.
+   `"C:\Program Files\Blender\blender.exe" -b -P fly/library/rigs/flight.py -- "projects/<Title>/fly/stops.json" --stills`
+3. Look at every PNG in `projects/<Title>/fly/preview/` yourself before showing the user. Check for cut-off cards, unreadable text, lines crossing text, and colours that are too grey.
 4. Fix by patching data first (`stops.json`), code constants second, logic last.
 5. Show the user 2–3 stills. Iterate until they approve.
-6. `--draft` → check motion → `--video` → `fly/projects/<slug>/out/`.
+6. `--draft` → check motion → `--video` → `projects/<Title>/fly/out/`.
 7. If a new object or rig worked well and is reusable, suggest promoting it to `fly/library/`.

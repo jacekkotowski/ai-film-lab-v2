@@ -9,7 +9,7 @@ description: After Jacek has narrated a film's slides in ai-film-lab (and run `f
 
 ## Steps
 
-1. **Which film?** `films/<film>.txt` names the film-lab project. Load
+1. **Which film?** `projects/<Title>/slides.txt`, typed by its slug. Load
    `slide-layout` before changing any scene.
 
 1a. **Before he narrates** (any time): `uv run --directory slides python -m aimanim.film <film> check`

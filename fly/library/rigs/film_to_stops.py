@@ -8,10 +8,10 @@ node plays which frames of the film. flight.py flies into each node as its
 part of the film plays there, full screen, with the film's own sound.
 
 Standard library only. Run it with any Python 3.9+:
-  python library/rigs/film_to_stops.py "<film>/out/final.timeline.json" projects/<slug>
+  python library/rigs/film_to_stops.py "../projects/<Title>/out/final.timeline.json" "../projects/<Title>/fly"
 
 Then edit the titles in stops.json if you like, and render:
-  blender -b -P library/rigs/flight.py -- projects/<slug>/stops.json --stills
+  blender -b -P library/rigs/flight.py -- "../projects/<Title>/fly/stops.json" --stills
 """
 
 import json

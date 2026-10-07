@@ -8,10 +8,11 @@ no Claude: only Python (standard library), Blender and ffmpeg.
 
 <film> is any of: the film's final.timeline.json, its final.mp4 (the
 timeline must sit beside it), its out/ folder or its project folder.
-<slug> is a folder name under projects/, e.g. what-is-love: the film's one
-name in slides/, film/ and fly/ (no month in front since 2026-10-07).
+<slug> is the film's one name in slides/, film/ and fly/, e.g. what-is-love
+for projects/What Is Love/.
 
-A new film gets projects/<slug>/stops.json, then the stills. After
+A film gets its flight beside it, projects/<Title>/fly/stops.json, then the
+stills; only films in the repo's projects/ folder can fly. After
 the stills (and the draft) it asks what to do next. An existing stops.json is
 never overwritten, so your edits to titles are kept. FLY.bat calls this.
 """
@@ -29,8 +30,9 @@ from pathlib import Path
 
 STUDIO = Path(__file__).resolve().parents[2]
 RIGS = STUDIO / "library" / "rigs"
-PROJECTS = STUDIO / "projects"
-REPO = STUDIO.parent
+# ai-film-lab-v2's one projects/ folder (film/docs/plans/2026-10-07/UNIFY.md):
+# a film's flight is projects/<Title>/fly/. No second place.
+PROJECTS = STUDIO.parent / "projects"
 BLENDER_GUESSES = [
     r"C:\Program Files\Blender\blender.exe",
     r"C:\Program Files\Blender Foundation\Blender*\blender.exe",
@@ -77,23 +79,13 @@ def slugify(title):
     return re.sub(r"[^a-z0-9]+", "-", ascii_title.lower()).strip("-") or "film"
 
 
-def one_folder():
-    """ai-film-lab-v2's one projects/ folder (film/docs/plans/2026-10-07/UNIFY.md),
-    when the repo's FILM.bat and that folder exist -- the rule of
-    film/ffilm/paths.py `projects_root`. There a flight is projects/<Title>/fly/."""
-    if (REPO / "FILM.bat").is_file() and (REPO / "projects").is_dir():
-        return REPO / "projects"
-    return None
-
-
 def all_stops():
-    one = one_folder()
-    return sorted(PROJECTS.glob("*/stops.json")) + (sorted(one.glob("*/fly/stops.json")) if one else [])
+    return sorted(PROJECTS.glob("*/fly/stops.json"))
 
 
 def slug_of(project):
     """The film's one name for a flight folder: projects/<Title>/fly -> slug of Title."""
-    return slugify(project.parent.name) if project.name == "fly" else project.name
+    return slugify(project.parent.name)
 
 
 def existing(slug):
@@ -102,22 +94,17 @@ def existing(slug):
 
 
 def project_for(timeline):
-    """The project already made from this timeline, or a new one named after the film.
-    The name is the slug ai-film-lab writes (its decision 0014); older timelines
-    have none, so the folder name is slugified here as before. A film in the one
-    projects/ folder gets its flight beside it, in its own fly/."""
+    """The project already made from this timeline, or a new one beside the
+    film, in its own fly/. A film outside the projects folder gets none."""
     source = timeline.as_posix()
     for stops in all_stops():
         if f'"source": "{source}"' in stops.read_text(encoding="utf-8"):
             return stops.parent, False
-    one = one_folder()
-    if one and timeline.parent.name == "out" and timeline.parents[2] == one:
+    if timeline.parent.name == "out" and timeline.parents[2] == PROJECTS:
         return timeline.parents[1] / "fly", True
-    slug = json.loads(timeline.read_text(encoding="utf-8")).get("slug")
-    if not slug:
-        title = timeline.parents[1].name if timeline.parent.name == "out" else timeline.stem
-        slug = slugify(title)
-    return PROJECTS / slug, True
+    sys.exit(f"{timeline}\nis not a film in {PROJECTS}.\n"
+             f"A flight sits beside its film: projects/<Title>/fly/. "
+             f"Drag the film's out\\ folder from there.")
 
 
 def film_changed(stops, timeline):

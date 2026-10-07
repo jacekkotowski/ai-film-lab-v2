@@ -1,11 +1,18 @@
-"""One name per film in all three stages: the slug of its film-lab folder
-(film/ffilm/timeline.py `slug`, which fly/ also uses). slides/films/<slug>.txt,
-film/projects/<Title>/, fly/projects/<slug>/."""
+"""One name per film in all three stages: the slug of its folder,
+projects/<Title>/ (film/ffilm/timeline.py `slug`, which fly/ also uses)."""
 import tempfile
 import unittest
 from pathlib import Path
 
 from aimanim import film
+
+
+def projects_with(base: Path, slides: str) -> Path:
+    p = base / "projects" / "Screening - 95 Percent Accurate"
+    p.mkdir(parents=True)
+    (p / "slides.txt").write_text(slides, encoding="utf-8")
+    (p / "slides.script.txt").write_text("", encoding="utf-8")
+    return base / "projects"
 
 
 class AFilmIsNamedByTheSlugOfItsProject(unittest.TestCase):
@@ -19,44 +26,32 @@ class AFilmIsNamedByTheSlugOfItsProject(unittest.TestCase):
         self.assertEqual(film.slug("Frankfurt School vs Kołakowski Emancipation and Domination"),
                          "frankfurt-school-vs-kolakowski-emancipation-and-domination")
 
-    def test_a_film_file_named_otherwise_is_refused_with_the_right_name(self):
+    def test_a_slides_file_naming_another_project_is_refused(self):
         with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "films").mkdir()
-            (root / "films" / "screening.txt").write_text(
-                "project: Screening - 95 Percent Accurate\n01 scr-accuracy\n", encoding="utf-8")
+            projects = projects_with(Path(d), "project: Screening\n01 scr-accuracy\n")
             with self.assertRaises(SystemExit) as e:
-                film.load("screening", root)
-            self.assertIn("screening-95-percent-accurate", str(e.exception))
+                film.load("screening-95-percent-accurate", projects)
+            self.assertIn("Screening - 95 Percent Accurate", str(e.exception))
 
     def test_an_old_or_unknown_name_lists_the_films(self):
         with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "films").mkdir()
-            (root / "films" / "screening-95-percent-accurate.txt").write_text(
-                "project: Screening - 95 Percent Accurate\n01 scr-accuracy\n", encoding="utf-8")
-            (root / "films" / "screening-95-percent-accurate.script.txt").write_text("", encoding="utf-8")
+            projects = projects_with(Path(d), "01 scr-accuracy\n")
             with self.assertRaises(SystemExit) as e:
-                film.load("screening", root)
+                film.load("screening", projects)
             self.assertIn("screening-95-percent-accurate", str(e.exception))
-            self.assertNotIn(".script", str(e.exception))
 
-    def test_a_film_file_named_by_the_slug_loads(self):
+    def test_a_film_is_loaded_by_the_slug_of_its_folder(self):
         with tempfile.TemporaryDirectory() as d:
-            root = Path(d)
-            (root / "films").mkdir()
-            (root / "films" / "screening-95-percent-accurate.txt").write_text(
-                "project: Screening - 95 Percent Accurate\n01 scr-accuracy\n", encoding="utf-8")
-            f, _ = film.load("screening-95-percent-accurate", root)
+            projects = projects_with(
+                Path(d), "project: Screening - 95 Percent Accurate\n01 scr-accuracy\n")
+            f, _ = film.load("screening-95-percent-accurate", projects)
             self.assertEqual(f.project, "Screening - 95 Percent Accurate")
 
-    def test_every_film_in_the_repo_is_named_by_its_slug(self):
-        for txt in sorted((film.ROOT / "films").glob("*.txt")):
-            if txt.name.endswith(".script.txt"):
-                continue
-            with self.subTest(txt.name):
-                f = film.parse(txt.read_text(encoding="utf-8"))
-                self.assertEqual(txt.stem, film.slug(f.project))
+    def test_every_slides_file_in_the_repo_agrees_with_its_folder(self):
+        for name in film.film_names():
+            with self.subTest(name):
+                f, _ = film.load(name)
+                self.assertEqual(film.slug(f.project), name)
 
 
 if __name__ == "__main__":

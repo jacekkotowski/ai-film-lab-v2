@@ -6,8 +6,8 @@ branches around it), links them, and animates a camera that glides
 from stop to stop, holds, and ends on an overview.
 
 Run (from the studio folder):
-  blender -b -P library/rigs/flight.py -- projects/<idea>/stops.json --stills
-  blender -b -P library/rigs/flight.py -- projects/<idea>/stops.json --video
+  blender -b -P library/rigs/flight.py -- "../projects/<Title>/fly/stops.json" --stills
+  blender -b -P library/rigs/flight.py -- "../projects/<Title>/fly/stops.json" --video
 
 --stills : one PNG per stop + overview, 50% resolution  -> <project>/preview/
 --draft  : quick low-res MP4 (25%, 1 sample) to check motion -> <project>/preview/

@@ -1,14 +1,14 @@
 """film.py -- a film's slides, in order, straight into its film-lab project.
 
-A film is `films/<name>.txt`, <name> the slug of its project (the one
-name of a film in slides/, film/ and fly/):
+A film's slides are `projects/<Title>/slides.txt`, beside its film.yaml,
+typed by the slug of that folder (the one name of a film in slides/,
+film/ and fly/: zeroing-a-rifle-sight):
 
-    project: Zeroing a Rifle Sight     # film/projects/<this>
     01 zero-group                      # picture number, scene
     02 zero-clicks
 
-as films/zeroing-a-rifle-sight.txt,
-and its words are `films/<name>.script.txt`, sections marked `[intro]`,
+(a `project: <Title>` line may stay; it must name the folder),
+and its words are `slides.script.txt`, sections marked `[intro]`,
 `[01]`, `[02]`... `[outro]`. Two moments, one command each:
 
   publish   before narrating. Creates the film-lab project if needed
@@ -70,7 +70,7 @@ class Slide:
 
 @dataclass
 class Film:
-    project: str = ""                 # folder name under film/projects
+    project: str = ""                 # folder name under projects/
     slides: list[Slide] = field(default_factory=list)
 
 
@@ -200,13 +200,10 @@ def slug(name: str) -> str:
 
 
 def projects_root() -> Path:
-    """Where the films are: film/ffilm/paths.py `projects_root`, copied (this
-    package reads no film-lab code). The repo's one projects/ once it exists
-    (film/docs/plans/2026-10-07/UNIFY.md), else film/projects."""
-    repo = FILMLAB.parent
-    if (repo / "FILM.bat").is_file() and (repo / "projects").is_dir():
-        return repo / "projects"
-    return FILMLAB / "projects"
+    """Where the films are: the repo's one projects/, beside film/
+    (film/ffilm/paths.py `projects_root`, copied: this package reads no
+    film-lab code; film/docs/plans/2026-10-07/UNIFY.md). No second place."""
+    return FILMLAB.parent / "projects"
 
 
 @dataclass
@@ -216,43 +213,40 @@ class Files:
     stamp: Path           # what publish last wrote (published.json)
 
 
-def _moved(projects: Path) -> list[Path]:
-    """Project folders that hold their own slides.txt."""
+def _films(projects: Path) -> list[Path]:
+    """Project folders that have slides: projects/<Title>/slides.txt."""
     if not projects.is_dir():
         return []
     return sorted(p for p in projects.iterdir() if (p / "slides.txt").is_file())
 
 
-def files_of(name: str, root: Path = ROOT, projects: Path | None = None) -> Files:
-    """A film's slides files: in its own project folder when it has them
-    (projects/<Title>/slides.txt, .script.txt, .published.json), else
-    films/<name>.txt, .script.txt and <name>/published.json as before."""
-    proj = next((p for p in _moved(projects or projects_root()) if slug(p.name) == name), None)
-    if proj is not None:
-        return Files(proj / "slides.txt", proj / "slides.script.txt",
-                     proj / "slides.published.json")
-    return Files(root / "films" / f"{name}.txt", root / "films" / f"{name}.script.txt",
-                 root / "films" / name / "published.json")
+def files_of(name: str, projects: Path | None = None) -> Files | None:
+    """A film's slides files, in its own project folder (slides.txt,
+    slides.script.txt, slides.published.json); None if no folder's slug
+    is `name`."""
+    proj = next((p for p in _films(projects or projects_root()) if slug(p.name) == name), None)
+    if proj is None:
+        return None
+    return Files(proj / "slides.txt", proj / "slides.script.txt",
+                 proj / "slides.published.json")
 
 
-def film_names(root: Path = ROOT, projects: Path | None = None) -> list[str]:
-    old = [p.stem for p in (root / "films").glob("*.txt")
-           if not p.name.endswith(".script.txt")]
-    new = [slug(p.name) for p in _moved(projects or projects_root())]
-    return sorted(set(old) | set(new))
+def film_names(projects: Path | None = None) -> list[str]:
+    return sorted(slug(p.name) for p in _films(projects or projects_root()))
 
 
-def load(name: str, root: Path = ROOT, projects: Path | None = None
-         ) -> tuple[Film, dict[str, str]]:
-    files = files_of(name, root, projects)
-    if not files.order.is_file():
-        raise SystemExit(f"no film '{name}'. Films: " + ", ".join(film_names(root, projects)))
+def load(name: str, projects: Path | None = None) -> tuple[Film, dict[str, str]]:
+    """The film is its folder: `project:` in slides.txt, if there, must
+    name that folder."""
+    files = files_of(name, projects)
+    if files is None:
+        raise SystemExit(f"no film '{name}'. Films: " + ", ".join(film_names(projects)))
     film = parse(files.order.read_text(encoding="utf-8"))
-    if files.order.name == "slides.txt":
-        film.project = film.project or files.order.parent.name
-    if film.project and slug(film.project) != name:
-        raise SystemExit(f"films/{name}.txt: a film is named by its project's slug; "
-                         f"rename it films/{slug(film.project)}.txt (and its .script.txt)")
+    folder = files.order.parent.name
+    if film.project and film.project != folder:
+        raise SystemExit(f"{files.order}: says 'project: {film.project}' but is in "
+                         f"the folder of '{folder}'; take the line out")
+    film.project = folder
     sp = files.script
     parts = script_parts(sp.read_text(encoding="utf-8")) if sp.exists() else {}
     return film, parts
@@ -291,7 +285,7 @@ def stale_stills(media: Path, film: Film, root: Path = ROOT) -> list[Path]:
 # ---- the two moments -----------------------------------------------------------
 
 def publish(name: str, root: Path = ROOT) -> list[str]:
-    film, parts = load(name, root)
+    film, parts = load(name)
     proj = project_dir(film)
     report = []
     if not proj.exists():
@@ -316,7 +310,7 @@ def publish(name: str, root: Path = ROOT) -> list[str]:
 
     # the words, where the recording window shows them -- never over a
     # file Jacek changed in film-lab since the last publish
-    stamp = files_of(name, root).stamp
+    stamp = files_of(name).stamp
     last = json.loads(stamp.read_text(encoding="utf-8")) if stamp.exists() else {}
     files = {"narration.txt": narration_text(film, parts)}
     if parts.get("intro"):
@@ -366,7 +360,7 @@ def read_slides(proj: Path) -> list[dict]:
 
 
 def clips(name: str, root: Path = ROOT) -> list[str]:
-    film, _ = load(name, root)
+    film, _ = load(name)
     proj = project_dir(film)
     if not (proj / "film.yaml").exists():
         raise SystemExit(f"no film.yaml in {proj} yet: narrate, then `film go` there")
@@ -398,11 +392,11 @@ def clips(name: str, root: Path = ROOT) -> list[str]:
     return report
 
 
-def check(name: str, root: Path = ROOT) -> list[str]:
+def check(name: str, root: Path = ROOT, projects: Path | None = None) -> list[str]:
     """Before he narrates: every slide's steps rehearsed against its
     paragraph of the script (beats.rehearse, 2.5 words/s). Nothing is
     rendered or written."""
-    film, parts = load(name, root)
+    film, parts = load(name, projects)
     report, total = [], 0.0
     for s in film.slides:
         words = parts.get(f"{s.picture:02d}", "")
@@ -423,10 +417,10 @@ def check(name: str, root: Path = ROOT) -> list[str]:
     return report
 
 
-def narrated(name: str, root: Path = ROOT) -> bool:
+def narrated(name: str, root: Path = ROOT, projects: Path | None = None) -> bool:
     """Every slide has a timing.json: its clips follow his real voice, so a
     rehearsal (a prediction) no longer matters."""
-    film, _ = load(name, root)
+    film, _ = load(name, projects)
     return all((root / "scenes" / s.scene / "timing.json").exists() for s in film.slides)
 
 
@@ -435,11 +429,11 @@ def gate(root: Path = ROOT, projects: Path | None = None) -> list[str]:
     PROBLEM line fails the commit. Narrated films are skipped. `projects`
     as in `film_names` (a test gives its own, so the real films stay out)."""
     out = []
-    for name in film_names(root, projects):
-        if narrated(name, root):
+    for name in film_names(projects):
+        if narrated(name, root, projects):
             out.append(f"{name}: narrated, skipped")
             continue
-        probs = [ln for ln in check(name, root) if "PROBLEM" in ln]
+        probs = [ln for ln in check(name, root, projects) if "PROBLEM" in ln]
         out.append(f"{name}: " + ("rehearsed, ok" if not probs else f"{len(probs)} PROBLEM"))
         out += probs
     return out

@@ -69,22 +69,5 @@ class AReRenderedFilmIsSeen(unittest.TestCase):
         self.assertIsNone(film_changed(stops, t))
 
 
-class AFlightIsNamedByTheFilmsSlug(unittest.TestCase):
-    """One name per film in all three stages: slides/films/<slug>.txt,
-    fly/projects/<slug>/ (no month in front, since 2026-10-07)."""
-
-    def test_a_new_flight_is_projects_slash_the_slug(self):
-        import tempfile
-        with tempfile.TemporaryDirectory() as d:
-            old = fly.PROJECTS
-            fly.PROJECTS = Path(d)
-            try:
-                project, new = fly.project_for(FIXTURE)
-            finally:
-                fly.PROJECTS = old
-        self.assertTrue(new)
-        self.assertEqual(project, Path(d) / "what-is-love")
-
-
 if __name__ == "__main__":
     unittest.main()

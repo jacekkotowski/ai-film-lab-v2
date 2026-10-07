@@ -95,13 +95,14 @@ class Gate(unittest.TestCase):
     def test_a_narrated_film_is_skipped(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            (root / "films").mkdir()
-            (root / "films" / "f.txt").write_text("project: F\n01 a\n", encoding="utf-8")
+            projects = root / "projects"
+            (projects / "F").mkdir(parents=True)
+            (projects / "F" / "slides.txt").write_text("01 a\n", encoding="utf-8")
             (root / "scenes" / "a").mkdir(parents=True)
-            self.assertFalse(film.narrated("f", root))
+            self.assertFalse(film.narrated("f", root, projects))
             (root / "scenes" / "a" / "timing.json").write_text("{}", encoding="utf-8")
-            self.assertTrue(film.narrated("f", root))
-            self.assertEqual(film.gate(root, root / "projects"), ["f: narrated, skipped"])
+            self.assertTrue(film.narrated("f", root, projects))
+            self.assertEqual(film.gate(root, projects), ["f: narrated, skipped"])
 
 
 if __name__ == "__main__":

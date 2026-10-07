@@ -92,15 +92,16 @@ class Gate(unittest.TestCase):           # item 4
     def test_a_film_is_narrated_when_every_slide_has_timing(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
-            (root / "films").mkdir()
-            (root / "films" / "f.txt").write_text("project: F\n01 a\n02 b\n", encoding="utf-8")
+            projects = root / "projects"
+            (projects / "F").mkdir(parents=True)
+            (projects / "F" / "slides.txt").write_text("01 a\n02 b\n", encoding="utf-8")
             for s in ("a", "b"):
                 (root / "scenes" / s).mkdir(parents=True)
             (root / "scenes" / "a" / "timing.json").write_text("{}", encoding="utf-8")
-            self.assertFalse(film.narrated("f", root))
+            self.assertFalse(film.narrated("f", root, projects))
             (root / "scenes" / "b" / "timing.json").write_text("{}", encoding="utf-8")
-            self.assertTrue(film.narrated("f", root))
-            self.assertEqual(film.gate(root, root / "projects"), ["f: narrated, skipped"])
+            self.assertTrue(film.narrated("f", root, projects))
+            self.assertEqual(film.gate(root, projects), ["f: narrated, skipped"])
 
 
 if __name__ == "__main__":

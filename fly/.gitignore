@@ -1,9 +1,5 @@
-# Projects are personal work: never committed. The one exception is the demo the README uses.
-projects/*
-!projects/2026-09_ai-in-obsidian/
-projects/2026-09_ai-in-obsidian/preview/*
-projects/2026-09_ai-in-obsidian/out/*
-!projects/2026-09_ai-in-obsidian/out/.gitkeep
+# The flights live beside their films, projects/<Title>/fly/; what of them is
+# tracked (only the demo) is in the root .gitignore (UNIFY.md, phase 3).
 *.blend
 *.blend1
 __pycache__/

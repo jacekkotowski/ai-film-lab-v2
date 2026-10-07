@@ -6,6 +6,24 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [slides] R charts on slides, a TEST (scratchpad only, no repo
+  code). R 4.6.1 in C:\Program Files\R\R-4.6.1 (Rscript not on PATH);
+  present: ggplot2 4.0.3, svglite, ragg, systemfonts, leaflet 2.2.3,
+  webshot2 (Chrome found), sf, arrow; missing: gganimate, mapview,
+  maptiles. Measured: (1) ggplot SVG in Manim 0.21: all 11 texts dropped
+  ("Unsupported element type: Text"), transparent background drawn white
+  -> not usable as is. (2) ggplot PNG + Manim callouts WORKS: R writes
+  the panel's pixel box (grid.force + seekViewport("panel.*") +
+  deviceLoc; ggplot2 4 pops its viewports otherwise) and the ranges
+  (ggplot_build) to JSON; the rings landed on the curve at 1 in 500 and
+  1 in 10 (checked against the grid lines on the 1080x1920 still).
+  Matching the slides: ragg::agg_png, base_family "DejaVu Serif", 8x8 in
+  at 240 dpi shown 8 units wide, base_size 58 = MIN_FONT's cap height
+  (71 px). Open: at 58 pt "10,000" and "100" touch on the x axis; the
+  "1 in 29" label crosses the curve and kit.check cannot see it (marks
+  inside a PNG are invisible to the check). Leaflet not tried. Jacek
+  asked for a skill (ggplot, maybe leaflet) with snippets/templates:
+  not decided, not built.
 - 2026-10-08 [all] Deeper integration, Jacek's 1-2-3: (1) ONE OPEN.md, this
   file (343 of 343 entry lines kept, counted); (2) the `status` skill covers
   slides (published / rehearsal PROBLEMs / clips vs narration) and the

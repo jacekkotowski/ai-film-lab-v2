@@ -45,6 +45,13 @@ Done when: one clip whose length equals the narrated picture's span (measured). 
 - [ ] `clips`
 - R / Excel code shown as it is typed (code slides)
 
+## Film 3 — screening (a yes/no test: Down syndrome screening), Jacek's script
+- [x] 5 slides, specs with the maths, full-size stills, script word for word;
+      skill `binary-diagnostics`, `aimanim/diagnostic.py` + test (2026-10-06)
+- [ ] Jacek: agrees to slide 04's illustration, narrates, `film go`
+- [ ] `clips`
+- next in the subject: the cutoff (logistic curve → table), ROC/AUC
+
 ## Ideas for scenes (Jacek's subjects)
 - back-azimuth in mils (6400 to the circle) — the trial
 - resection: own position from two known bearings

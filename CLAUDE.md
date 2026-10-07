@@ -46,6 +46,7 @@ in time with a video.
 | `time-to-words`  | I have narrated over the still → the clip, timed to my sentences |
 | `deliver`        | the clip is approved → say exactly what to copy where           |
 | `shooting-optics` | a script or slide about sights, reticles, zeroing, MOA, mil, ranging: the checked numbers |
+| `binary-diagnostics` | a script or slide about a yes/no outcome: a test, false positives, base rates, a classifier or logistic regression at a cutoff (confusion matrix, sensitivity, PPV, LR) |
 
 ## Commands
 
@@ -64,6 +65,11 @@ python -m unittest discover tests                    tests, no install needed
 
 Never use `-ql`/`-qm`/`-qh` alone: they reset the size to landscape
 (16:9). Always give `-r` (measured: `-ql` gives 854×480).
+
+Run commands as they are written above: from the repo root, no `cd …
+&&`, no `VAR=… ` prefix, no multi-line `python -c`, no heredocs. Those
+did not match my allow list and asked me "Allow once" again and again
+(2026-10-06). Files: the Write / Edit tools, not `cat > … <<EOF`.
 
 ## Scene rules (a phone, scrolled past)
 
@@ -108,3 +114,5 @@ same message. Unchecked parts go in the FIRST line.
 | layout rules, sizes, lessons   | `.claude/skills/slide-layout/SKILL.md` + `aimanim/kit.py` |
 | a film: order and script       | `films/<film>.txt`, `films/<film>.script.txt` |
 | the plan and its status        | `PLAN.md`                 |
+| what we said in past sessions, film-lab's docs and code | qmd (`history`, `docs`, `code` collections; history last indexed 2026-09-24) and `git log` |
+| reusable maths for a yes/no test | `aimanim/diagnostic.py` (stdlib, tested) |

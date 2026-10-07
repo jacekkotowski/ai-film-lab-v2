@@ -27,5 +27,14 @@ slide changes:
 | 07 | mil-wind | drift = wind × lag; 30 cm at 300 m = 1 mil |
 | 08 | mil-finale | size, distance, angle, movement, trajectory: a measuring instrument |
 
+## screening — Screening - 95 Percent Accurate (5 slides, 2026-10-06) — `screening.png`
+| # | scene | the one idea |
+|---|---|---|
+| 01 | scr-accuracy | 95.0 % accurate loses to "always healthy" 99.8 % (20 in 10,000) |
+| 02 | scr-outcomes | 10,000 split by truth, then by test: TP 18, FN 2, FP 499, TN 9,481 |
+| 03 | scr-meaning | read by rows: 18 / 517 = 1 in 29 flagged; 99.98 % of cleared healthy |
+| 04 | scr-rarity | same 99.7 % test, rarer condition: 7 real + 40 false = 85 % wrong; LR+ 18 |
+| 05 | scr-cost | 499 mothers, weeks 12 → 15 → 17, 499 × 0.3 % ≈ 1.5 lost per 10,000 |
+
 Not yet made, and asked about or natural next: holds on the MIL grid (drop
 and wind together), leads with a measured time of flight, MOA vs mil.

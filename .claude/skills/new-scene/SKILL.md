@@ -14,7 +14,14 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
 1a. **Reuse before drawing.** `docs/films/README.md` says what every slide
    made so far shows; a subject with its own skill (sights and reticles:
    `shooting-optics`) has its checked numbers and its reusable drawings
-   there (the Aurora: `docs/aurora/`, `kit.reticle`, `kit.chain`).
+   there (the Aurora: `docs/aurora/`, `kit.reticle`, `kit.chain`). A test,
+   a classifier, false positives: `binary-diagnostics` (the numbers from
+   `aimanim/diagnostic.py`, the population pictures from `kit.dots`).
+
+1c. **His words are his.** When he gives a finished narration, use it word
+   for word. Any change you think is needed (a number, a claim, a length)
+   goes in the script's notes and your answer, never silently into the
+   text. A cut you make must be said in the FIRST lines (2026-10-06).
 
 1b. **Which film?** Every slide belongs to a film: `films/<film>.txt`
    (one line per slide: picture number, scene). New film → new file.

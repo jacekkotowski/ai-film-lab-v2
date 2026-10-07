@@ -41,6 +41,9 @@ the layout check). Never copy an older scene's construct loop.
 | "drop ≈ ½ g t²" at 72, "drift = wind × lag" | 6.77, 7.07 | |
 | "measuring instrument" | 8.74 → too wide | |
 | "TRAJECTORY" | 5.37 | |
+| "screening" (gauge label), "affected" | 3.81, 3.12 | |
+| "sensitivity 90%", "18 / 517 = 1 in 29" | 5.90, 6.96 | |
+| "healthy pregnancies", "per 10,000 screened" | 7.94, 8.09 → too wide | |
 Rule of thumb: ~17 digits/characters fill the safe width at 56; ~11 at 80.
 Measure anything new with `kit.fits("text")` BEFORE placing it.
 
@@ -95,6 +98,17 @@ Consequences already paid for:
   it is `x`, and the chain moved right (mil-drop).
 - **A target behind the reticle** (plate, car): `set_z_index(-1)` and a fill
   of opacity 0.35–0.6, so the reticle lines stay on top.
+- **Many people (hundreds to 10,000): `kit.dots` / `kit.people`**, one
+  VMobject each, placed by `kit.grid_points`; never one Dot per person.
+  They Transform as one object (the 10,000 → 2×2 split, scr-outcomes).
+  Figures below h 0.26 with a body 1.5 heads wide read as ovals (scr-cost).
+  Statistics slides: the `binary-diagnostics` skill §6.
+- **Light a column or row: `kit.box`** (four Lines). A Rectangle is one
+  box to the check, so every text inside it gets a "touches" note.
+- **Two text lines 0.7 apart touch** when the upper has a descender
+  ("screening" over "test"): 0.8 apart (scr-accuracy).
+- **Row names rotated** need the row as tall as the word is wide (2.9 for
+  "flagged" at 56), and x ≥ −3.58 to stay inside SIDE (scr-outcomes).
 - At most 3 objects move in one step: group parts with `VGroup`.
 - No effects or polish Jacek didn't ask for.
 

@@ -18,6 +18,7 @@ import math
 import sys
 from pathlib import Path
 
+import numpy as np
 from manim import (Arrow, Circle, Dot, Group, Line, Mobject, RoundedRectangle,
                    Text, VGroup, VMobject)
 
@@ -156,6 +157,77 @@ def chain(items, top_baseline: float, x: float = 0.0, step: float = CHAIN_STEP,
                   max_tip_length_to_length_ratio=0.5, tip_length=0.15)
         rows.append(VGroup(a, t))
     return VGroup(*rows)
+
+
+# ---- populations: thousands of people, one shape -----------------------------
+# A slide about a test counts people: 10,000 pregnancies, 499 false alarms.
+# One Dot per person is 10,000 mobjects; one VMobject whose subpaths are
+# the dots draws in one go and moves (Transform, shift) as one object.
+# Screening film, 2026-10-06. One dot is one person, always: a picture
+# that shows 9,481 shows 9,481 (binary-diagnostics skill).
+
+_K = 0.5523          # cubic Bezier handle for a quarter circle
+
+
+def grid_points(n: int, cols: int, pitch: float, left: float, top: float,
+                pitch_y: float | None = None) -> list[tuple[float, float]]:
+    """Centres of `n` places, row by row from the top left: the first
+    centre is (left + pitch/2, top - pitch_y/2). Width cols x pitch."""
+    py = pitch if pitch_y is None else pitch_y
+    return [(left + (i % cols + 0.5) * pitch, top - (i // cols + 0.5) * py)
+            for i in range(n)]
+
+
+def _ellipses(points, rx: float, ry: float) -> np.ndarray:
+    one = np.array([[1, 0], [1, _K], [_K, 1], [0, 1],
+                    [0, 1], [-_K, 1], [-1, _K], [-1, 0],
+                    [-1, 0], [-1, -_K], [-_K, -1], [0, -1],
+                    [0, -1], [_K, -1], [1, -_K], [1, 0]], dtype=float) * (rx, ry)
+    c = np.asarray(points, dtype=float).reshape(-1, 1, 2)
+    xy = (c + one).reshape(-1, 2)
+    return np.column_stack([xy, np.zeros(len(xy))])
+
+
+def dots(points, radius: float, color=frame.HEALTHY, opacity: float = 1.0) -> VMobject:
+    """One filled circle at each point, all ONE VMobject."""
+    m = VMobject()
+    if len(points):
+        m.set_points(_ellipses(points, radius, radius))
+    return m.set_fill(color, opacity).set_stroke(width=0)
+
+
+def people(points, height: float, color=frame.HEALTHY, opacity: float = 1.0) -> VMobject:
+    """A small standing figure centred on each point, ONE VMobject: a
+    round head over an oval body. 16 points for the head, 16 for the body."""
+    # head 0.2 of the height, body 1.5 heads wide: at 0.17 and 1.1 the
+    # 499 of scr-cost read as thin ovals at 1080x1920
+    pts = np.asarray(points, dtype=float).reshape(-1, 2)
+    head_r = 0.2 * height
+    body_h = height - 2 * head_r - 0.06 * height
+    heads = _ellipses(pts + (0, height / 2 - head_r), head_r, head_r)
+    bodies = _ellipses(pts + (0, -height / 2 + body_h / 2), head_r * 1.5, body_h / 2)
+    m = VMobject()
+    if len(pts):
+        m.set_points(np.concatenate([heads.reshape(-1, 16, 3),
+                                     bodies.reshape(-1, 16, 3)], axis=1).reshape(-1, 3))
+    return m.set_fill(color, opacity).set_stroke(width=0)
+
+
+def box(left: float, bottom: float, right: float, top: float,
+        color=frame.ACCENT, width: float = 5) -> VGroup:
+    """A rectangle as four Lines: lights a column or a row of a table.
+    A Rectangle is one box to the layout check, so every text inside it
+    would be reported as touching it; four thin lines are not."""
+    c = [(left, bottom, 0), (right, bottom, 0), (right, top, 0), (left, top, 0)]
+    return VGroup(*[Line(c[i], c[(i + 1) % 4]) for i in range(4)]).set_stroke(color, width)
+
+
+def strike(t: Mobject, color=frame.SECOND, width: float = 6) -> Line:
+    """A line through a text, corner to corner of its middle band:
+    "9 in 10" crossed out."""
+    l, r = t.get_left()[0] - 0.1, t.get_right()[0] + 0.1
+    y = t.get_center()[1]
+    return Line((l, y - 0.12, 0), (r, y + 0.12, 0)).set_stroke(color, width)
 
 
 # ---- the steps, on the words ------------------------------------------------

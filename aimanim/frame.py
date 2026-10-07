@@ -28,3 +28,5 @@ INK = "#E8E6E3"
 ACCENT = "#F2B33D"     # the thing being explained
 SECOND = "#5DADE2"     # the thing it is compared with
 DIM = "#6B7178"
+SICK = "#E5534B"       # a case: sick, affected (population pictures)
+HEALTHY = "#8A9097"    # everyone else in a population picture

@@ -2,6 +2,19 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-06 screening film: 5 slides, stills only, waiting for him to
+  narrate. Not checked: Kagan's 75,821; the NYT's 85 % (title and date
+  only); Gigerenzer and Gil from search snippets, not the papers. Slide 04's
+  "1 in 14,000" is derived (the prevalence where the blood test's own rates
+  give 85 % wrong), not the NYT's data — he has not yet agreed to it.
+  Only scr-outcomes' draft clip was looked at (4 frames); the other four
+  animate unseen. His script is 250 words, ~1:40, not the 2:30 first asked.
+- 2026-10-06 "Allow once" prompts kept coming although settings.local.json
+  allows `Bash(python:*)`, `Bash(uv:*)` and (now) all of Bash, and the
+  session reported bypass mode. Cause not found; suspected: `cd … &&`,
+  env-var prefixes, heredocs, multi-line `python -c`. CLAUDE.md now says
+  not to use them. Not yet confirmed that the prompts stopped.
+
 - 2026-10-06 mil-measure film: the wind slide's lag rule (drift = wind ×
   (t − D/v₀)) is cited from memory (McCoy, Litz), not re-read this session.
   The film changes three things in Jacek's plan (script notes): no stadia

@@ -76,7 +76,7 @@ shots:
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "00:02.15"
     out: "00:21.95"
-    duration: 16.24
+    speed: 1.25
     move: tilt_up
     ease: sine_in_out
     focus: [0.498, 0.587]
@@ -114,7 +114,7 @@ shots:
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "00:23.85"
     out: "00:59.15"
-    duration: 28.64
+    speed: 1.25
     move: push_in
     ease: sine_in_out
     focus: [0.670, 0.536]
@@ -187,7 +187,7 @@ shots:
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "01:00.40"
     out: "01:41.00"
-    duration: 32.88
+    speed: 1.25
     move: pull_out
     ease: sine_in_out
     focus: [0.499, 0.483]
@@ -250,7 +250,7 @@ shots:
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "01:45.65"
     out: "02:16.60"
-    duration: 25.16
+    speed: 1.25
     move: drift_right
     ease: sine_in_out
     focus: [0.472, 0.357]
@@ -303,7 +303,7 @@ shots:
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "02:19.35"
     out: "02:48.75"
-    duration: 23.92
+    speed: 1.25
     move: push_in
     ease: sine_in_out
     focus: [0.498, 0.299]

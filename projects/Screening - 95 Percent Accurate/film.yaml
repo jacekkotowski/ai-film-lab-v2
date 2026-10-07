@@ -72,6 +72,7 @@ shots:
 
   - id: s03
     src: media/01_scr-accuracy.png
+    clip: clips/01_scr-accuracy.mp4
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "00:02.15"
     out: "00:21.95"
@@ -109,6 +110,7 @@ shots:
 
   - id: s04
     src: media/02_scr-outcomes.png
+    clip: clips/02_scr-outcomes.mp4
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "00:23.85"
     out: "00:59.15"
@@ -181,6 +183,7 @@ shots:
 
   - id: s05
     src: media/03_scr-meaning.png
+    clip: clips/03_scr-meaning.mp4
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "01:00.40"
     out: "01:41.00"
@@ -243,6 +246,7 @@ shots:
 
   - id: s06
     src: media/04_scr-rarity.png
+    clip: clips/04_scr-rarity.mp4
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "01:45.65"
     out: "02:16.60"
@@ -295,6 +299,7 @@ shots:
 
   - id: s07
     src: media/05_scr-cost.png
+    clip: clips/05_scr-cost.mp4
     voice: analysis/tight/voiceover_20261007-110422__tight_c70f8e16.wav
     in: "02:19.35"
     out: "02:48.75"

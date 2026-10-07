@@ -50,6 +50,7 @@ in time with a video.
 | `deliver`        | the clip is approved → say exactly what to copy where           |
 | `shooting-optics` | a script or slide about sights, reticles, zeroing, MOA, mil, ranging: the checked numbers |
 | `binary-diagnostics` | a script or slide about a yes/no outcome: a test, false positives, base rates, a classifier or logistic regression at a cutoff (confusion matrix, sensitivity, PPV, LR) |
+| `r-charts`       | a ggplot (R) chart on a slide with Manim callouts on the data: settings, template `r/`, `aimanim/rchart.py` |
 
 ## Commands
 
@@ -142,3 +143,4 @@ number) was probably met before. First `python -m aimanim.patterns find
 | reusable maths for a yes/no test | `aimanim/diagnostic.py` (stdlib, tested) |
 | every fix and slide recipe, generalised (pseudocode, near-ready code) | `docs/patterns/` (issues.md, tasks.md) |
 | plain geometry: rows, columns, dot pitch, scales | `aimanim/layout.py` (stdlib, tested) |
+| R charts: the ggplot template and where its data lands | `r/` (R scripts), `aimanim/rchart.py` (stdlib, tested) |

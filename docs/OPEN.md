@@ -24,6 +24,13 @@ section with the commit id -- do not delete it.
   inside a PNG are invisible to the check). Leaflet not tried. Jacek
   asked for a skill (ggplot, maybe leaflet) with snippets/templates:
   not decided, not built.
+  2026-10-08 later: BUILT on his "build it": skill `r-charts`,
+  slides/r/slide_chart.R + ppv_curve.R (the template), aimanim/rchart.py
+  (stdlib, 6 tests; suite 91 OK, 3 skipped), scene scenes/r-ppv-curve (in
+  no film). Both faults fixed on the full still: x labels "1k"/"10k" no
+  longer touch; "1 in 29" moved off the 20 % line. Rings measured on the
+  still against the grid (within 1 px). Not seen by Jacek; clip not
+  rendered; leaflet still untried.
 - 2026-10-08 [all] Deeper integration, Jacek's 1-2-3: (1) ONE OPEN.md, this
   file (343 of 343 entry lines kept, counted); (2) the `status` skill covers
   slides (published / rehearsal PROBLEMs / clips vs narration) and the

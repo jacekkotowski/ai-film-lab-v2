@@ -19,6 +19,7 @@ description: Turn a problem Jacek describes in words (a bearing, a formula, a ge
    there (the Aurora: `docs/aurora/`, `kit.reticle`, `kit.chain`). A test,
    a classifier, false positives: `binary-diagnostics` (the numbers from
    `aimanim/diagnostic.py`, the population pictures from `kit.dots`).
+   A chart from R (ggplot): `r-charts` (template `scenes/r-ppv-curve`).
 
 1c. **His words are his.** When he gives a finished narration, use it word
    for word. Any change you think is needed (a number, a claim, a length)

@@ -15,12 +15,7 @@ def toolkit_root() -> Path:
 
 
 def projects_root(toolkit: Path | None = None) -> Path:
-    """Where the films are. ai-film-lab-v2's one projects/ folder once it
-    exists (film/docs/plans/2026-10-07/UNIFY.md), known by the repo's
-    FILM.bat beside film/; until then, and in a toolkit unpacked on its
-    own, film/projects."""
-    toolkit = toolkit or toolkit_root()
-    repo = toolkit.parent
-    if (repo / "FILM.bat").is_file() and (repo / "projects").is_dir():
-        return repo / "projects"
-    return toolkit / "projects"
+    """Where the films are: ai-film-lab-v2's one projects/ folder, beside
+    film/ (film/docs/plans/2026-10-07/UNIFY.md). No second place: a copy
+    made by `film pack` has the same shape."""
+    return (toolkit or toolkit_root()).parent / "projects"

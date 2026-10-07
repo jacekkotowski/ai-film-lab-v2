@@ -48,12 +48,8 @@ library/READ ME.txt
 models/*
 !models/README.md
 
-# A project's products stay off git: scripts, narrations, .vertical.
-# Only film.yaml is tracked -- every render commits it, and `film undo`
-# reads it back (history.py). test_story's script is read by the tests.
-projects/*/*
-!projects/*/film.yaml
-!projects/test_story/script.txt
+# The films are in the repo's one projects/ folder; its rules (what of a
+# film is tracked) are in the root .gitignore (UNIFY.md, phase 3).
 # Clips a slide shows instead of its picture (spec.Shot.clip). Made by
 # ai-manim from its own scenes; rebuilt from there, so not tracked here.
 clips/

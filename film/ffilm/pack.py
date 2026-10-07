@@ -44,13 +44,19 @@ TOOLKIT = [
     # How Claude works on this toolkit: the rulebooks, the skills, the
     # hooks. Without them a copy's Claude edits the machine instead of
     # the film. settings.local.json is NOT listed -- it is one person's.
-    "docs", "projects/CLAUDE.md",
+    "docs",
     # Not the model files -- they are other people's, and each machine
     # fetches its own, checked by SHA-256 (see ffilm/models.py). The
     # README is what says so to whoever unpacks this.
     "models/README.md",
     ".claude/settings.json", ".claude/skills", ".claude/hooks",
 ]
+
+# Beside the toolkit, from the repo (ai-film-lab-v2, UNIFY.md): the copy
+# has the repo's shape -- film/ beside projects/, FILM.bat on top -- so it
+# finds its films where this one does. projects/CLAUDE.md is the editor's
+# rulebook; without it a copy's Claude edits the machine instead of the film.
+REPO = ["FILM.bat", ".gitignore", ".gitattributes", "projects/CLAUDE.md"]
 
 # Of a project, the parts that cannot be made again.
 PROJECT_KEEP = ["media", "music", "cover", "film.yaml", "script.txt",
@@ -90,14 +96,18 @@ def _walk(base: Path, root: Path) -> list[Path]:
 def contents(root: Path, projects: list[str] | None = None,
              films: Path | None = None) -> list[tuple[Path, str]]:
     """Every file that goes in, as (real path, name inside the zip).
-    `films` is where the projects are (paths.projects_root); in the zip
-    they are always under projects/, where an unpacked toolkit looks."""
+    `root` is the toolkit (film/); in the zip it is film/, beside
+    projects/, as in the repo. `films` is where the projects are
+    (paths.projects_root)."""
     found: list[tuple[Path, str]] = []
     for name in TOOLKIT:
         for p in _walk(root / name, root):
-            found.append((p, p.relative_to(root).as_posix()))
+            found.append((p, "film/" + p.relative_to(root).as_posix()))
+    for name in REPO:
+        for p in _walk(root.parent / name, root.parent):
+            found.append((p, name))
 
-    films = films or root / "projects"
+    films = films or root.parent / "projects"
     for proj in projects or []:
         base = films / proj
         if not base.is_dir():
@@ -142,7 +152,7 @@ if errorlevel 1 (
 )
 
 echo Fetching the four packages the film needs ...
-uv sync
+uv sync --directory film
 if errorlevel 1 goto failed
 
 REM A git repository here is what gives you an undo: every render

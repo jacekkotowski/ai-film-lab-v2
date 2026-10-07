@@ -16,9 +16,12 @@ from ffilm import pack
 from ffilm.pack import build, contents, default_name, wanted
 
 
-def toolkit(root: Path) -> Path:
-    """A miniature of the real folder, junk included."""
+def toolkit(base: Path) -> Path:
+    """A miniature of the real repo, junk included: film/ (the toolkit,
+    returned), projects/ beside it, FILM.bat on top (UNIFY.md)."""
+    root = base / "film"
     root.mkdir(parents=True, exist_ok=True)
+    (base / "FILM.bat").write_text("x", encoding="utf-8")
     (root / "ffilm").mkdir()
     (root / "ffilm" / "render.py").write_text("x", encoding="utf-8")
     (root / "ffilm" / "__pycache__").mkdir()
@@ -32,7 +35,9 @@ def toolkit(root: Path) -> Path:
     (root / ".venv").mkdir()
     (root / ".venv" / "pyvenv.cfg").write_text("x", encoding="utf-8")
 
-    p = root / "projects" / "morning"
+    (base / "projects").mkdir()
+    (base / "projects" / "CLAUDE.md").write_text("x", encoding="utf-8")
+    p = base / "projects" / "morning"
     (p / "media").mkdir(parents=True)
     (p / "media" / "take.mp4").write_bytes(b"x" * 100)
     (p / "music").mkdir()
@@ -92,11 +97,25 @@ def test_the_code_and_the_lockfile_go():
 def test_the_lockfile_is_in_the_zip(tmp_path):
     """Without it the other computer resolves its own versions, and gets
     a different toolkit. This is exactly how face detection died."""
-    assert "uv.lock" in names(toolkit(tmp_path))
+    assert "film/uv.lock" in names(toolkit(tmp_path))
 
 
 def test_the_toolkit_alone_carries_no_films(tmp_path):
-    assert not any(n.startswith("projects/") for n in names(toolkit(tmp_path)))
+    got = {n for n in names(toolkit(tmp_path)) if n.startswith("projects/")}
+    assert got == {"projects/CLAUDE.md"}
+
+
+def test_the_copy_has_the_shape_of_the_repo(tmp_path):
+    """film/ beside projects/, FILM.bat on top: the copy finds its films
+    where this one does, with no second place to look (UNIFY.md phase 3).
+    The editor's rulebook goes along: without it Claude edits the code."""
+    got = names(toolkit(tmp_path))
+    assert {"FILM.bat", "film/ffilm/render.py", "film/FILM.bat",
+            "projects/CLAUDE.md"} <= got
+
+
+def test_setup_installs_the_films_packages_from_inside_the_copy():
+    assert "uv sync --directory film" in pack.SETUP_BAT
 
 
 def test_the_shared_library_travels_with_the_toolkit(tmp_path):
@@ -109,8 +128,8 @@ def test_the_shared_library_travels_with_the_toolkit(tmp_path):
     (root / "library" / "cover").mkdir(parents=True)
     (root / "library" / "cover" / "wide.jpg").write_bytes(b"x" * 100)
     got = names(root)
-    assert "library/music/quiet.mp3" in got
-    assert "library/cover/wide.jpg" in got
+    assert "film/library/music/quiet.mp3" in got
+    assert "film/library/cover/wide.jpg" in got
 
 
 def test_a_packed_project_brings_its_originals_and_its_edit(tmp_path):
@@ -133,7 +152,7 @@ def test_asking_for_a_film_that_is_not_there_says_so(tmp_path):
 def test_a_missing_optional_part_is_not_an_error(tmp_path):
     """A listed part that is not on disk is skipped, not fatal."""
     root = toolkit(tmp_path)
-    assert "pyproject.toml" in names(root)      # got here without raising
+    assert "film/pyproject.toml" in names(root)      # got here without raising
 
 
 # --------------------------------------------------------------------------

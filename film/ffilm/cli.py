@@ -94,7 +94,6 @@ def find_project(arg: str | None) -> Path:
     p = Path(arg)
     candidates = [p]
     if not p.is_absolute():
-        candidates.append(toolkit_root() / p)
         candidates.append(projects_root() / p.name)
 
     if not p.is_absolute() and projects_root().is_dir():
@@ -1386,8 +1385,9 @@ def cmd_pack(args) -> None:
 
     name = pk.default_name(projects)
     # Beside the folder, never inside it -- a zip written into the tree
-    # it is zipping is a zip that tries to contain itself.
-    out = Path(args.out) if args.out else root.parent / name
+    # it is zipping is a zip that tries to contain itself. The tree is
+    # the repo now (film/ and projects/), so beside the repo.
+    out = Path(args.out) if args.out else root.parent.parent / name
 
     files = pk.contents(root, projects, films)
     raw = sum(p.stat().st_size for p, _ in files)

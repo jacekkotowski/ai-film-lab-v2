@@ -6,6 +6,17 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [all] Deeper integration, Jacek's 1-2-3: (1) ONE OPEN.md, this
+  file (343 of 343 entry lines kept, counted); (2) the `status` skill covers
+  slides (published / rehearsal PROBLEMs / clips vs narration) and the
+  flight (video_sha256 of fly/stops.json vs out/final.timeline.json).
+  Measured on the 17 flights: 12 current, 5 cannot tell (4 made before the
+  fingerprint, plus the demo with no film). Screening's re-rendered final has
+  the same fingerprint (same film.yaml → same video), so its flight is
+  current; (3) was already there: .githooks/pre-commit runs the film suite
+  when film/ffilm or film/tests is staged (output to /dev/null; Claude
+  had said otherwise without reading it). Status not yet run as a whole
+  on a film by Jacek.
 - 2026-10-08 [all] Unify phase 3 DONE on main: no fallbacks in any stage; one
   place per film, projects/<Title>/. Suites 1044 / 85 / 11; 25 of 26 film
   checks as before (test_story: path only). Fault found and repaired: the

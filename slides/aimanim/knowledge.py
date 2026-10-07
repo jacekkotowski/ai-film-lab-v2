@@ -1,13 +1,14 @@
 """knowledge.py -- this repo's knowledge, searchable on this machine (qmd).
 
-Two qmd collections (Workbench item 1; how qmd was set up for film-lab:
-../ai-film-lab/docs/tech/qmd.md):
-  manim          this repo's markdown: CLAUDE.md, PLAN.md, skills, docs/,
-                 specs, film scripts
-  manim-history  one file per commit (a single file for the whole log
-                 gave one hit per search in film-lab), outside the repo
+Three qmd collections over ai-film-lab-v2 (how qmd was set up:
+film/docs/tech/qmd.md):
+  v2           the repo's markdown: CLAUDE.md files, skills, docs, specs, scripts
+  v2-code      film/ffilm and slides/aimanim
+  v2-history   one file per commit (a single file for the whole log
+               gave one hit per search in film-lab), outside the repo
 
-    python -m aimanim.knowledge setup     once per machine: add both collections
+    python -m aimanim.knowledge setup [--drop-old]   once per machine (--drop-old:
+                                          remove the collections of the old folders)
     python -m aimanim.knowledge refresh   new commit files, `qmd update`, `qmd embed`
     python -m aimanim.knowledge status    what is indexed
 
@@ -22,16 +23,25 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-HISTORY = Path.home() / ".cache" / "qmd" / "manim-history"
-MASK = ("CLAUDE.md,PLAN.md,.claude/skills/**/*.md,docs/**/*.md,"
-        "scenes/*/spec.md,films/*.script.txt")
+# ai-film-lab-v2 (2026-10-07): one repo, three stages; the collections cover
+# all of it. Before: `manim`/`manim-history` here and film-lab's own
+# `docs`/`code`/`history`, all pointing at the old, now frozen folders.
+ROOT = Path(__file__).resolve().parents[2]
+HISTORY = Path.home() / ".cache" / "qmd" / "v2-history"
+MASK = ("CLAUDE.md,.claude/skills/**/*.md,"
+        "slides/CLAUDE.md,slides/PLAN.md,slides/docs/**/*.md,slides/scenes/*/spec.md,"
+        "slides/films/*.script.txt,"
+        "film/CLAUDE.md,film/ffilm/CLAUDE.md,film/*.md,film/docs/**/*.md,"
+        "fly/*.md,fly/recipes/**/*.md")
+CODE_MASK = "film/ffilm/**/*.py,film/tests/**/*.py,slides/aimanim/*.py,slides/tests/*.py"
 CONTEXT = {
-    "manim": "ai-manim: Manim slides for Jacek's narrated films. Skills (how to "
-             "work), docs/patterns (issues and slide recipes), docs/tech (measured "
-             "facts), specs (each slide's numbers and sources), film scripts.",
-    "manim-history": "ai-manim git history, one file per commit: what changed and why.",
+    "v2": "ai-film-lab-v2: Jacek's narrated films in three stages: slides (Manim), "
+          "film (narration, cut, captions), fly (3D). Agreements in CLAUDE.md, "
+          "skills, decisions, docs/patterns (issues and recipes), measured facts.",
+    "v2-code": "ai-film-lab-v2 code: film/ffilm (the film compiler) and slides/aimanim.",
+    "v2-history": "ai-film-lab-v2 git history (all three stages), one file per commit.",
 }
+OLD = ("manim", "manim-history", "docs", "code", "history")
 
 
 def commit_file_name(date: str, short: str) -> str:
@@ -76,12 +86,19 @@ def _qmd(*args: str, check: bool = False) -> subprocess.CompletedProcess:
                           encoding="utf-8", errors="replace", check=check)
 
 
-def setup() -> list[str]:
+def setup(drop_old: bool = False) -> list[str]:
     write_commits()
     have = _qmd("collection", "list").stdout
     out = []
-    for name, path, mask in (("manim", str(ROOT), MASK),
-                             ("manim-history", str(HISTORY), "**/*.md")):
+    if drop_old:
+        for name in OLD:
+            if f"{name} (qmd://{name}/)" in have:
+                r = _qmd("collection", "remove", name)
+                out.append(f"{name}: removed (old folder)" if r.returncode == 0
+                           else f"PROBLEM removing {name}: {r.stderr[-300:]}")
+    for name, path, mask in (("v2", str(ROOT), MASK),
+                             ("v2-code", str(ROOT), CODE_MASK),
+                             ("v2-history", str(HISTORY), "**/*.md")):
         if f"{name} (qmd://{name}/)" in have:
             out.append(f"{name}: already there")
             continue
@@ -104,7 +121,7 @@ def refresh(embed: bool = True) -> list[str]:
 
 def main(argv: list[str]) -> int:
     if argv[:1] == ["setup"]:
-        print("\n".join(setup()))
+        print("\n".join(setup(drop_old="--drop-old" in argv)))
     elif argv[:1] == ["refresh"]:
         print("\n".join(refresh(embed="--no-embed" not in argv)))
     elif argv[:1] == ["status"]:

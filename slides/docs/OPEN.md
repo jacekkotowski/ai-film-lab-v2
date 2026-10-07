@@ -2,6 +2,15 @@
 
 Newest first. An entry stays until it is measured or fixed AND Jacek has seen it.
 
+- 2026-10-07 ai-film-lab-v2 is the one project (slides/, film/, fly/; root
+  SLIDES/FILM/FLY.bat; one CLAUDE.md with the agreements; all 18 skills in
+  .claude/skills; film-lab's hooks wired with repo-relative paths; memory of
+  the three projects merged, 32 notes; qmd `v2`, `v2-code`, `v2-history`).
+  The old repos are frozen; their projects, models and renders were MOVED here.
+  Not yet done: the stages' docs still name the old repos in prose (paths
+  in code are fixed); the slides skills show commands as run inside slides/.
+  Screening: draft with speed 1.25 + clips played fine (Jacek); `film final` next.
+
 - 2026-10-07 screening is narrated in film-lab (his message); `clips` not
   run yet — waiting for "narrated" / his go. films/screening.script.txt
   was changed outside this session (intro and outro drafts marked "by

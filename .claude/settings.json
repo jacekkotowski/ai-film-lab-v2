@@ -1,10 +1,35 @@
 {
   "permissions": {
     "allow": [
-      "Bash",
-      "PowerShell",
+      "Bash(python:*)",
+      "Bash(uv:*)",
+      "Bash(qmd:*)",
+      "Bash(ffprobe:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(grep:*)",
+      "Bash(sed:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "Bash(stat:*)",
+      "Bash(md5sum:*)",
+      "Bash(echo:*)",
+      "Bash(printf:*)",
+      "Bash(cp:*)",
+      "Bash(mkdir:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
       "Edit",
       "Write",
+      "Bash",
+      "PowerShell",
       "Bash(uv run --extra dev pytest)",
       "Bash(uv run --extra dev pytest -q)",
       "Bash(uv run film check *)",
@@ -13,10 +38,8 @@
       "Bash(uv --version)",
       "Bash(./.venv/Scripts/python.exe *)",
       "Bash(.venv/Scripts/python.exe *)",
-
       "Bash(ffprobe *)",
       "Bash(ffmpeg *)",
-
       "Bash(cat *)",
       "Bash(head *)",
       "Bash(tail *)",
@@ -27,13 +50,11 @@
       "Bash(rg *)",
       "Bash(find *)",
       "Bash(for *)",
-
       "Bash(git status)",
       "Bash(git status *)",
       "Bash(git log *)",
       "Bash(git diff *)",
       "Bash(git show *)",
-
       "PowerShell(uv run --extra dev pytest*)",
       "PowerShell(uv run film check*)",
       "PowerShell(uv run film peek*)",
@@ -54,20 +75,18 @@
       "PowerShell(git log*)",
       "PowerShell(git diff*)",
       "PowerShell(git show*)",
-
-      "Read(//c/Users/jacek/code/ai-film-lab/**)",
-      "Glob(//c/Users/jacek/code/ai-film-lab/**)",
-      "Grep(//c/Users/jacek/code/ai-film-lab/**)"
+      "Bash(git subtree:*)",
+      "Bash(gh:*)",
+      "Bash(qmd:*)"
     ]
   },
-
   "hooks": {
     "Stop": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/commit_gate.py\"",
+            "command": "uv run --quiet --no-project python \"film/.claude/hooks/commit_gate.py\"",
             "timeout": 20
           }
         ]
@@ -78,7 +97,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/long_session.py\"",
+            "command": "uv run --quiet --no-project python \"film/.claude/hooks/long_session.py\"",
             "timeout": 10
           }
         ]
@@ -90,7 +109,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/guard_media.py\"",
+            "command": "uv run --quiet --no-project python \"film/.claude/hooks/guard_media.py\"",
             "timeout": 20
           }
         ]
@@ -112,7 +131,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/run_tests.py\"",
+            "command": "uv run --quiet --no-project python \"film/.claude/hooks/run_tests.py\"",
             "timeout": 120,
             "statusMessage": "tests"
           }
@@ -123,7 +142,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "uv run --quiet --no-project python \"$CLAUDE_PROJECT_DIR/.claude/hooks/check_film.py\"",
+            "command": "uv run --quiet --no-project python \"film/.claude/hooks/check_film.py\"",
             "timeout": 120,
             "statusMessage": "film check"
           }

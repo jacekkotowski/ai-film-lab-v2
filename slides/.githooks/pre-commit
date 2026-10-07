@@ -1,8 +1,0 @@
-#!/bin/sh
-# ai-manim pre-commit gate (Workbench item 4). Installed by
-#   git config core.hooksPath .githooks
-# 1. the tests (stdlib, < 1 s); 2. every film not yet narrated is rehearsed
-# (python -m aimanim.film --gate): a PROBLEM line stops the commit.
-# Skip once, knowingly: git commit --no-verify
-python -m unittest discover -q tests || { echo "pre-commit: tests failed"; exit 1; }
-python -m aimanim.film --gate || { echo "pre-commit: a film's timing has a PROBLEM (python -m aimanim.film <film> check)"; exit 1; }

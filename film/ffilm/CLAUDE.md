@@ -1,3 +1,5 @@
+> Part of **ai-film-lab-v2** (since 2026-10-07): the agreements in the root `CLAUDE.md` win over this file. Run this stage's commands from the root with `uv run --directory film …`; skills are in the root `.claude/skills/`.
+
 # The developer's rulebook
 
 You are changing the machine, not a film. This file loads when you touch

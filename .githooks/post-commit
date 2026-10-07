@@ -1,0 +1,6 @@
+#!/bin/sh
+# ai-film-lab-v2 post-commit: the new commit becomes searchable (qmd v2, v2-history).
+# In the background (embedding takes minutes); log in .local/knowledge.log.
+mkdir -p .local
+( uv run --quiet --directory slides python -m aimanim.knowledge refresh > .local/knowledge.log 2>&1 & )
+exit 0

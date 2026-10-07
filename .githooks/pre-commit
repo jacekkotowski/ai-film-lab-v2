@@ -1,0 +1,10 @@
+#!/bin/sh
+# ai-film-lab-v2 pre-commit: every stage's tests, and the slides of every
+# film not yet narrated rehearsed. Installed by: git config core.hooksPath .githooks
+# Skip once, knowingly: git commit --no-verify
+uv run --quiet --directory slides python -m unittest discover -q tests || { echo "pre-commit: slides tests failed"; exit 1; }
+uv run --quiet --directory slides python -m aimanim.film --gate || { echo "pre-commit: a film's timing has a PROBLEM"; exit 1; }
+uv run --quiet --directory fly --no-project python -m unittest discover -q tests || { echo "pre-commit: fly tests failed"; exit 1; }
+if git diff --cached --name-only | grep -q "^film/ffilm/\|^film/tests/"; then
+  uv run --quiet --directory film --extra dev pytest -q -x -p no:warnings > /dev/null || { echo "pre-commit: film tests failed (uv run --directory film --extra dev pytest)"; exit 1; }
+fi

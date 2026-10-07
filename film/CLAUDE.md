@@ -1,3 +1,5 @@
+> Part of **ai-film-lab-v2** (since 2026-10-07): the agreements in the root `CLAUDE.md` win over this file. Run this stage's commands from the root with `uv run --directory film …`; skills are in the root `.claude/skills/`.
+
 # AI FILM LAB — working agreement
 
 Photographs and clips go in, a short film comes out. The film is a text

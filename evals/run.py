@@ -1,7 +1,8 @@
 """run.py -- a skill's test cases, run through `claude -p` and graded.
 
     uv run --directory film python ../evals/run.py probe
-    uv run --directory film python ../evals/run.py routing   [--split train|test] [--cases N]
+    uv run --directory film python ../evals/run.py routing   [--split train|val|test] [--cases N]
+                                                             [--ids ID ...] [--max-turns T]
     uv run --directory film python ../evals/run.py edit-pass [--split train|test] [--cases N]
 
 Run in film's environment so the film checks can use ffilm itself
@@ -28,6 +29,9 @@ it; the repo is public).
 from __future__ import annotations
 
 import argparse
+import csv
+import datetime
+import hashlib
 import json
 import os
 import subprocess
@@ -38,6 +42,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 LOCAL = ROOT / ".local" / "evals"
 WORK = LOCAL / "work"
+RESULTS = LOCAL / "results.csv"
 MODEL = "claude-opus-5-5"           # what his sessions run (8,213 messages measured)
 TIMEOUT_S = 600
 
@@ -262,12 +267,144 @@ def probe() -> int:
     return 0 if not problems else 1
 
 
+# ---------------------------------------------------------------- routing
+
+def choice(skills: list[str]) -> str:
+    """What a routing run chose: the first skill it started, or "none". Pure."""
+    return skills[0] if skills else "none"
+
+
+def context_prompt(case: dict) -> str | None:
+    """Claude's last words before the message, for the system prompt, so the
+    message itself goes in as he typed it. None when it opened a session. Pure."""
+    if not case.get("context"):
+        return None
+    return ("This message comes in the middle of a session. Your own last "
+            "message before it ended with:\n\n" + case["context"])
+
+
+def routing_cmd(case: dict, max_turns: int, budget: float = 0.5) -> list[str]:
+    return claude_cmd(case["text"], append=context_prompt(case),
+                      max_turns=max_turns, budget=budget)
+
+
+def routing_table(rows: list[dict]) -> dict:
+    """Per skill: should start (label), did start (choice), right, missed
+    (chose none), wrong (chose another skill). Pure."""
+    names = sorted({r["label"] for r in rows} | {r["got"] for r in rows} - {"none"})
+    out = {}
+    for n in names:
+        if n == "none":
+            continue
+        mine = [r for r in rows if r["label"] == n]
+        out[n] = {"should": len(mine),
+                  "did": sum(r["got"] == n for r in rows),
+                  "right": sum(r["got"] == n for r in mine),
+                  "missed": sum(r["got"] == "none" for r in mine),
+                  "wrong": sum(r["got"] not in (n, "none") for r in mine)}
+    return out
+
+
+def confusion_pairs(rows: list[dict]) -> dict:
+    """(label, choice) -> count, for every case the run got wrong. Pure."""
+    out: dict = {}
+    for r in rows:
+        if r["label"] != r["got"]:
+            out[(r["label"], r["got"])] = out.get((r["label"], r["got"]), 0) + 1
+    return out
+
+
+def skills_hash(root: Path = ROOT) -> str:
+    """One fingerprint of all the repo's SKILL.md files: a result belongs to it."""
+    h = hashlib.sha1()
+    for p in sorted((root / ".claude" / "skills").glob("*/SKILL.md")):
+        h.update(p.name.encode() + p.parent.name.encode() + p.read_bytes())
+    return h.hexdigest()[:10]
+
+
+def append_results(rows: list[dict], path: Path = RESULTS) -> None:
+    cols = ["date", "target", "skills_hash", "case", "split", "label", "got", "pass",
+            "max_turns", "cost", "tokens_in", "tokens_out", "seconds", "box"]
+    new = not path.exists()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore")
+        if new:
+            w.writeheader()
+        w.writerows(rows)
+
+
+def routing(split: str | None, n: int | None, ids: list[str] | None,
+            max_turns: int, show: bool = False) -> int:
+    cases = json.loads((LOCAL / "cases" / "routing.json").read_text(encoding="utf-8"))
+    if split:
+        cases = [c for c in cases if c["split"] == split]
+    if ids:
+        cases = [c for c in cases if c["id"] in ids]
+    if n:
+        cases = cases[:n]
+    want = repo_skills()
+    fp = skills_hash()
+    before = snapshot()
+    rows = []
+    for i, c in enumerate(cases, 1):
+        s = run_claude(routing_cmd(c, max_turns=max_turns))
+        u = s["tokens"]
+        box = box_problems(s, want)
+        row = {"date": datetime.datetime.now().isoformat(timespec="seconds"),
+               "target": "routing", "skills_hash": fp, "case": c["id"],
+               "split": c["split"], "label": c["label"], "got": choice(s["skills"]),
+               "max_turns": max_turns, "cost": s["cost"],
+               "tokens_in": sum(u.get(k) or 0 for k in ("input_tokens",
+                                "cache_read_input_tokens", "cache_creation_input_tokens")),
+               "tokens_out": u.get("output_tokens"), "seconds": s["seconds"],
+               "box": "; ".join(box)}
+        row["pass"] = int(row["got"] == row["label"])
+        rows.append(row)
+        append_results([row])
+        print(f"{i:3}/{len(cases)} {c['id']} {c['split']:5} {c['label']:20} -> "
+              f"{row['got']:20} {'ok ' if row['pass'] else 'NO '} ${s['cost']} "
+              f"{s['seconds']} s {s['subtype']}" + (f" BOX {box}" if box else ""))
+        print("      " + " | ".join(f"{t} {Path(x).name if '/' in x or chr(92) in x else x}"[:60]
+                                    for t, x in s["tools"]))
+        if show:
+            print("      said: " + " ".join(s["text"].split())[-600:])
+    diff = changed(before, snapshot())
+
+    print(f"\n{'skill':20} should did right missed wrong")
+    for name, t in routing_table(rows).items():
+        print(f"{name:20} {t['should']:6} {t['did']:3} {t['right']:5} "
+              f"{t['missed']:6} {t['wrong']:5}")
+    nones = [r for r in rows if r["label"] == "none"]
+    print(f"{'none':20} {len(nones):6} {sum(r['got'] == 'none' for r in rows):3} "
+          f"{sum(r['got'] == 'none' for r in nones):5}")
+    pairs = confusion_pairs(rows)
+    if pairs:
+        print("\nconfusion (label -> chose):")
+        for (a, b), k in sorted(pairs.items(), key=lambda x: -x[1]):
+            print(f"  {a} -> {b}: {k}")
+    costs = [r["cost"] or 0.0 for r in rows]
+    if rows:
+        print(f"\n{sum(r['pass'] for r in rows)}/{len(rows)} right; "
+              f"${sum(costs):.2f} in all, ${min(costs):.2f}-${max(costs):.2f} per case, "
+              f"mean ${sum(costs) / len(rows):.3f}; max-turns {max_turns}; skills {fp}")
+    print("repo:", "; ".join(diff) if diff else "git status, projects/ and .lastfilm unchanged")
+    return 0 if not diff and not any(r["box"] for r in rows) else 1
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="evals/run.py")
-    ap.add_argument("what", choices=["probe"])
+    ap.add_argument("what", choices=["probe", "routing"])
+    ap.add_argument("--split", choices=["train", "val", "test"])
+    ap.add_argument("--cases", type=int, help="only the first N cases")
+    ap.add_argument("--ids", nargs="*", help="only these case ids")
+    ap.add_argument("--max-turns", type=int, default=3)
+    ap.add_argument("--show", action="store_true", help="print what each run said")
     a = ap.parse_args(argv)
     if a.what == "probe":
         return probe()
+    if a.what == "routing":
+        return routing(a.split, a.cases, a.ids, a.max_turns, a.show)
     return 2
 
 

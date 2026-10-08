@@ -6,6 +6,22 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
+  took four things from Jacek's second brief (val split 40/20/40; edit-pass
+  in a `git archive` copy; gate twice with a min gain; /rate ratings).
+  `evals/cases.py routing` froze 92 cases in .local/evals/cases/routing.json:
+  46 distinct messages that started a repo skill (change-the-machine 23),
+  46 sampled that started none; 39 train / 17 val / 36 test; each keeps
+  Claude's last words before it (12 open a session, none). `run.py routing`
+  on 6 train cases, measured: --max-turns 1 = 2/6, no run reached a skill
+  ($0.13-0.15); 3 turns = 3/6 ($0.09-0.23); 6 turns, the 3 misses again:
+  all finished with no skill. "1 i 3" (build bokeh + commit) answered
+  "commit only .gitignore... follow the film-code rules" and stopped: a
+  run with no Edit/Bash does not start an action skill, so change-the-
+  machine misses are the box's, not routing's. Also: the runs see today's
+  repo, not the repo of the message. Spent $2.57 in all. Not yet: a box
+  that shows Edit/Bash but refuses them (a repo copy outside the repo, its
+  own settings), the full run, Jacek's labels. evals/tests 35 OK.
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

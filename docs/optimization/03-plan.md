@@ -12,6 +12,14 @@ Approved 2026-10-08. Read with `01-inventory.md`. Code: `evals/`.
   0.1.4 alone resolves to 1 package for Python 3.13 (dspy would be 67, mlflow 89).
 - The cases hold his typed messages. The repo is PUBLIC on GitHub (measured),
   so the cases stay in `.local/evals/` (git ignores it). Code and format are committed.
+- 2026-10-08 later, compared with a second brief (agents, commands, router
+  skills, `.optim/`), Jacek took four things from it and nothing else:
+  (1) a val split, 40/20/40; (2) edit-pass runs in a copy of the repo
+  (`git archive`) with its own narrow settings; (3) the gate repeats each
+  case twice and needs a minimum gain; (4) `/rate` ratings in `.local/evals/`,
+  and a judge only once it agrees with them. Not taken: progress.md,
+  PRD.md, a 50-line CLAUDE.md, router skills, agents, `/fanout`, deny rules
+  on `git push` and settings (he asks for both).
 
 ## Where things go
 
@@ -21,9 +29,10 @@ Approved 2026-10-08. Read with `01-inventory.md`. Code: `evals/`.
 | `evals/checks.py` | pure check functions (Phase 2) | yes |
 | `evals/cases.py` | builds cases from the session logs and git (Phase 1) | yes |
 | `evals/tests/test_*.py` | one test per rule, named as a sentence | yes |
-| `.local/evals/cases/*.json` | the cases, `split: train/test` frozen | no |
+| `.local/evals/cases/*.json` | the cases, `split: train/val/test` frozen | no |
 | `.local/evals/results.csv` | per run: date, skill, SKILL.md hash, case, pass, failed checks, tokens, $, s | no |
-| `.local/evals/work/` | scratch copies, deleted after a run | no |
+| `.local/evals/ratings.jsonl` | `/rate` lines: date, skill, task, output, score 1-5, his critique verbatim | no |
+| `.local/evals/work/` | scratch copies of the repo (`git archive`), deleted after a run | no |
 
 Commands, from the root:
 ```
@@ -59,7 +68,10 @@ What the probe changed in this plan:
   instead of calling Skill. Both count as starting the skill (tested).
 - **The edit-pass box is not built.** The project's allow list says "Edit"
   everywhere, so "Edit only the scratch copy" needs deny rules, a `--settings`
-  file or a separate working folder. Solve it and prove it with a probe first, in Phase 2.
+  file or a separate working folder. Chosen 2026-10-08: a copy of the repo
+  (`git archive HEAD` into `.local/evals/work/`; film.yaml is in git) whose
+  own `.claude/settings.json` allows Edit inside the copy only. Prove it
+  with a probe first, in Phase 2.
 
 ## Phase 1 — routing test set, all 19 skills (next)
 
@@ -69,7 +81,10 @@ What the probe changed in this plan:
      and moves into `cases.py`);
    - about 48 that started nothing. Jacek labels only the rows where the
      run and the label disagree.
-2. Freeze the split: 40 % test, seeded, the same mix of skills on both sides.
+   Each case also keeps Claude's last words before the message: "build it",
+   "yes", "1 i 3" start a skill only because of them (seen 2026-10-08).
+2. Freeze the split: 40 % train, 20 % val, 40 % test, seeded, the same mix
+   of skills on every side.
 3. Run each case once; disagreements 3 times (noise or a real miss).
 
 Accept when there is a table per skill (should-start, did-start, missed,
@@ -85,7 +100,8 @@ wrong skill, confusion pairs) and the cost per case is measured.
 
    Count measured; target 10–20.
 2. Fixture: the film.yaml alone, loaded with `check_files=False`. The run
-   reads the real project; it edits only the copy (box first, see above).
+   works in a copy of the repo at the case's commit (`git archive`), with
+   the copy's own narrow settings (box first, see above).
 3. Checks (pure, tested):
    1. it loads;
    2. only the shots of the note changed;
@@ -95,16 +111,20 @@ wrong skill, confusion pairs) and the cost per case is measured.
    6. the same direction as Jacek's edit;
    7. the diff is no bigger than his (reported).
 4. One run = the baseline.
+5. A judge ("did it answer the note", 0-10 against a short rubric) counts
+   only once it agrees with Jacek's `/rate` scores: Spearman ≥ 0.7 on the
+   rated outputs. Until then the checks alone score.
 
 ## Phase 3 — improve, one change at a time (gepa, routing first)
 
 - **Routing:** `gepa` (film extra `eval`) proposes new descriptions. It
-  scores them with `run.py` on the train split only; the frozen test split
-  decides. A description changes only if test ≥ before and no skill loses
-  a case it had.
+  learns on train, keeps a candidate by val (`optimize_anything`'s valset);
+  the frozen test split decides. A description changes only if it passes
+  the gate.
 - **edit-pass:** the same loop on its SKILL.md text (rules, the note→edit
   table, or a sub-file read only for one kind of note).
-- **The gate, every time:** test ≥ before; no check lost on any case; cost
+- **The gate, every time:** before and after each run twice on test; the
+  mean score (0-1) gains ≥ 0.03; no case and no check lost; cost
   reported; **Jacek reads the diff**; one commit with before/after numbers.
 - **Never changed by the loop:** `## Never` sections,
   `disable-model-invocation`, `model:` pins, settings, hooks (01-inventory §7).
@@ -115,6 +135,10 @@ wrong skill, confusion pairs) and the cost per case is measured.
 ## Phase 4 — the constant loop
 
 - A correction of a film edit becomes a new edit-pass case the same day.
+- `/rate <1-5> <critique>` (a skill only Jacek can start, like ship) adds
+  one line to `.local/evals/ratings.jsonl`: the skill that made the output,
+  the request as a self-contained task, the output's paths or a ≤500-char
+  excerpt, the score, his critique word for word. Nothing else.
 - A changed SKILL.md gets its set re-run, by hand (runs cost quota).
 - Root CLAUDE.md gets the command and a "Where things are" row.
 

@@ -142,6 +142,20 @@ section with the commit id -- do not delete it.
   the script: [outro] (plan: "Chérie, you are loved..." on camera, not
   agreed) and the photo paragraphs 08, 09, 11, 12 (his text is in session
   46e9c487's transcript, 2026-10-08 17:20).
+- 2026-10-08 [film] A crashed sitting starts the slides over (Jacek,
+  "wyjebalo sesje i kaze nagrywac od poczatku"). Found by reading the code,
+  not run: per-slide takes go to media/_slides/ (cli.py:1055) so "a crash
+  costs one slide" (cli.py:1045 comment), but nothing reads them back: a
+  sitting short of all slides exits "Record again to make the narration"
+  (cli.py:1225-1229) and the next sitting starts at slide 1 with an empty
+  `takes` (cli.py:1044). So the promise in the comment is not kept.
+  Love as a Face-Threatening Act, measured: 10 takes wait in _slides/
+  (299 s), 21:31-21:53; the same lengths recur (41.8 s twice, 21.7 s
+  twice, 28.35 s in _slides and _discarded), so he likely re-read the same
+  slides after restarts (inferred). Proposed fix (needs his go; by
+  change-the-machine): the window starts at the first slide with no take
+  in _slides/ and joins the kept ones at the end. Which take is which
+  picture is not recorded beside them (no .cues/.picture json in _slides).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

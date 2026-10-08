@@ -6,6 +6,7 @@
 # 03 is a placeholder (slide 3 of Claude's list, 2026-10-08): renumber
 # when the photographs between the slides are chosen.
 project: Love as a Face-Threatening Act
+01 face-two
 03 face-ledger
 04 face-implied
 05 face-cancel

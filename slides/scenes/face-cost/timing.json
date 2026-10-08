@@ -1,0 +1,60 @@
+{
+  "lines": [
+    {
+      "text": "The insult is cheap.",
+      "start": 0.24,
+      "end": 1.38,
+      "words": [
+        0.24,
+        0.44,
+        0.92,
+        1.16
+      ]
+    },
+    {
+      "text": "The speaker risks nothing and takes face from someone else.",
+      "start": 1.86,
+      "end": 4.83,
+      "words": [
+        1.86,
+        1.97,
+        2.37,
+        2.77,
+        3.17,
+        3.46,
+        3.72,
+        4.02,
+        4.29,
+        4.56
+      ]
+    },
+    {
+      "text": "The declaration is expensive.",
+      "start": 5.36,
+      "end": 7.33,
+      "words": [
+        5.36,
+        5.59,
+        6.12,
+        6.76
+      ]
+    },
+    {
+      "text": "The speaker risks everything and gives face away.",
+      "start": 8.0,
+      "end": 11.54,
+      "words": [
+        8.0,
+        8.12,
+        8.52,
+        8.9,
+        9.61,
+        10.28,
+        10.68,
+        11.03
+      ]
+    }
+  ],
+  "total": 12.44,
+  "source": "film.yaml s14"
+}

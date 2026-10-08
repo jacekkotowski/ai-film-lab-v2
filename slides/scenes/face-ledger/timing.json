@@ -1,0 +1,72 @@
+{
+  "lines": [
+    {
+      "text": "Declaring love is a face-threatening act.",
+      "start": 0.24,
+      "end": 2.52,
+      "words": [
+        0.24,
+        0.67,
+        0.99,
+        1.3,
+        1.46,
+        1.68,
+        2.16
+      ]
+    },
+    {
+      "text": "It is a threat for all.",
+      "start": 2.96,
+      "end": 4.35,
+      "words": [
+        2.96,
+        3.23,
+        3.38,
+        3.79,
+        4.03
+      ]
+    },
+    {
+      "text": "The speaker puts his face on the table.",
+      "start": 4.92,
+      "end": 7.13,
+      "words": [
+        4.92,
+        5.1,
+        5.54,
+        5.95,
+        6.27,
+        6.51,
+        6.69,
+        6.8
+      ]
+    },
+    {
+      "text": "The hearer receives a weight.",
+      "start": 7.66,
+      "end": 9.45,
+      "words": [
+        7.66,
+        7.74,
+        8.3,
+        8.76,
+        9.15
+      ]
+    },
+    {
+      "text": "A question she did not ask for.",
+      "start": 9.84,
+      "end": 12.33,
+      "words": [
+        9.84,
+        9.95,
+        10.35,
+        10.94,
+        11.71,
+        12.06
+      ]
+    }
+  ],
+  "total": 13.52,
+  "source": "film.yaml s07"
+}

@@ -1,0 +1,99 @@
+{
+  "lines": [
+    {
+      "text": "Brown and Levinson split face again.",
+      "start": 0.25,
+      "end": 2.85,
+      "words": [
+        0.25,
+        0.55,
+        0.97,
+        1.63,
+        2.19,
+        2.49
+      ]
+    },
+    {
+      "text": "Positive face: the wish to be accepted.",
+      "start": 3.36,
+      "end": 5.79,
+      "words": [
+        3.36,
+        3.59,
+        4.64,
+        4.71,
+        4.95,
+        5.11,
+        5.32
+      ]
+    },
+    {
+      "text": "Negative face: the wish to be free,",
+      "start": 6.28,
+      "end": 8.26,
+      "words": [
+        6.28,
+        6.52,
+        7.37,
+        7.45,
+        7.69,
+        7.83,
+        7.96
+      ]
+    },
+    {
+      "text": "unimposed on.",
+      "start": 8.88,
+      "end": 9.7,
+      "words": [
+        8.88,
+        9.42
+      ]
+    },
+    {
+      "text": "Any act that touches these is a face-threatening act.",
+      "start": 10.2,
+      "end": 13.6,
+      "words": [
+        10.2,
+        10.38,
+        10.66,
+        10.86,
+        11.21,
+        11.66,
+        12.23,
+        12.49,
+        12.7,
+        13.24
+      ]
+    },
+    {
+      "text": "Its weight is distance plus power plus the",
+      "start": 14.08,
+      "end": 17.08,
+      "words": [
+        14.08,
+        14.23,
+        14.58,
+        15.1,
+        15.53,
+        15.88,
+        16.34,
+        16.7
+      ]
+    },
+    {
+      "text": "size of the imposition.",
+      "start": 17.08,
+      "end": 18.59,
+      "words": [
+        17.08,
+        17.37,
+        17.86,
+        18.01
+      ]
+    }
+  ],
+  "total": 19.44,
+  "source": "film.yaml s06"
+}

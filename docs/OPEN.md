@@ -209,6 +209,14 @@ section with the commit id -- do not delete it.
   paragraphs, his 8 byte for byte + his 4 photo paragraphs; old file kept
   as narration.before-12.txt. Measured with film-lab's own
   narration_steps: pictures 01-12 each get their own paragraph.
+  22:3x he recorded 08, 09, 11, 12 in the fixed window, `film go`, draft
+  "looks good". The resume fix worked in the real window (his report).
+  Fault (his): the FILM.bat menu gives no sign that the slides' clips are
+  next (`aimanim.film <film> clips`) -- not fixed, noted only.
+  CLIPS DONE: 8 clips 1080x1920 (ffprobe), each within 0.04 s of its slide
+  (01 29.12, 02 19.42, 03 13.50, 04 25.96, 05 17.50, 06 29.58, 07 29.46,
+  10 12.42 s); 8 `clip:` lines in film.yaml; no notes. Next for him:
+  `film draft`, watch, then final + upload.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

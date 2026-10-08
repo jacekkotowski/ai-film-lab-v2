@@ -1,0 +1,130 @@
+{
+  "lines": [
+    {
+      "text": "Every time we speak, we risk face.",
+      "start": 0.24,
+      "end": 2.25,
+      "words": [
+        0.24,
+        0.38,
+        0.62,
+        0.83,
+        1.33,
+        1.47,
+        1.79
+      ]
+    },
+    {
+      "text": "Erving Goffman called face the positive value a person claims",
+      "start": 3.6,
+      "end": 6.48,
+      "words": [
+        3.6,
+        3.94,
+        4.37,
+        4.69,
+        5.02,
+        5.5,
+        5.79,
+        6.05
+      ]
+    },
+    {
+      "text": "for herself in front of others.",
+      "start": 6.48,
+      "end": 8.71,
+      "words": [
+        6.48,
+        6.86,
+        7.96,
+        8.06,
+        8.29,
+        8.45
+      ]
+    },
+    {
+      "text": "Chinese thought splits it in two.",
+      "start": 9.32,
+      "end": 11.91,
+      "words": [
+        9.32,
+        9.55,
+        10.1,
+        10.66,
+        11.15,
+        11.5
+      ]
+    },
+    {
+      "text": "Hu Hsien Chin described both in 1944: mianzi,",
+      "start": 13.09,
+      "end": 16.13,
+      "words": [
+        13.09,
+        13.68,
+        14.1,
+        14.47,
+        15.99
+      ]
+    },
+    {
+      "text": "the face of prestige and reputation, and lian,",
+      "start": 16.85,
+      "end": 20.05,
+      "words": [
+        16.85,
+        16.93,
+        17.14,
+        17.31,
+        17.68,
+        18.11,
+        19.28,
+        19.84
+      ]
+    },
+    {
+      "text": "the face of moral character.",
+      "start": 20.72,
+      "end": 21.93,
+      "words": [
+        20.72,
+        20.8,
+        21.02,
+        21.18,
+        21.42
+      ]
+    },
+    {
+      "text": "You can lose mianzi and keep lian.",
+      "start": 22.44,
+      "end": 24.83,
+      "words": [
+        22.44,
+        22.5,
+        22.69,
+        23.1,
+        23.44,
+        23.7,
+        24.14,
+        24.43
+      ]
+    },
+    {
+      "text": "Lian is what you are when nobody claps.",
+      "start": 25.44,
+      "end": 28.39,
+      "words": [
+        25.44,
+        25.68,
+        26.11,
+        26.48,
+        26.66,
+        27.36,
+        27.54,
+        27.94
+      ]
+    }
+  ],
+  "total": 29.16,
+  "source": "film.yaml s05"
+}

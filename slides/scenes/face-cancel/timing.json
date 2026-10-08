@@ -1,0 +1,115 @@
+{
+  "lines": [
+    {
+      "text": "Grice also gave us the way out.",
+      "start": 0.24,
+      "end": 2.78,
+      "words": [
+        0.24,
+        1.16,
+        1.5,
+        1.87,
+        2.1,
+        2.26,
+        2.43
+      ]
+    },
+    {
+      "text": "Implicatures can be cancelled.",
+      "start": 3.28,
+      "end": 4.72,
+      "words": [
+        3.28,
+        3.89,
+        4.13,
+        4.3
+      ]
+    },
+    {
+      "text": "I love you.",
+      "start": 5.26,
+      "end": 6.06,
+      "words": [
+        5.26,
+        5.48,
+        5.8
+      ]
+    },
+    {
+      "text": "You owe me nothing.",
+      "start": 6.48,
+      "end": 7.55,
+      "words": [
+        6.48,
+        6.66,
+        6.94,
+        7.17
+      ]
+    },
+    {
+      "text": "No answer.",
+      "start": 8.28,
+      "end": 8.78,
+      "words": [
+        8.28,
+        8.43
+      ]
+    },
+    {
+      "text": "No return.",
+      "start": 9.01,
+      "end": 9.39,
+      "words": [
+        9.01,
+        9.11
+      ]
+    },
+    {
+      "text": "The love stays.",
+      "start": 10.0,
+      "end": 10.76,
+      "words": [
+        10.0,
+        10.11,
+        10.37
+      ]
+    },
+    {
+      "text": "The demand is gone.",
+      "start": 11.17,
+      "end": 12.17,
+      "words": [
+        11.17,
+        11.33,
+        11.65,
+        11.92
+      ]
+    },
+    {
+      "text": "The speaker pays the whole cost.",
+      "start": 12.8,
+      "end": 14.35,
+      "words": [
+        12.8,
+        12.93,
+        13.28,
+        13.6,
+        13.84,
+        14.05
+      ]
+    },
+    {
+      "text": "The hearer carries nothing.",
+      "start": 15.02,
+      "end": 16.62,
+      "words": [
+        15.02,
+        15.15,
+        15.68,
+        16.03
+      ]
+    }
+  ],
+  "total": 17.52,
+  "source": "film.yaml s09"
+}

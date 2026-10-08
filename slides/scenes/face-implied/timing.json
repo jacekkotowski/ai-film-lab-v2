@@ -1,0 +1,147 @@
+{
+  "lines": [
+    {
+      "text": "Where does the threat live?",
+      "start": 0.24,
+      "end": 1.85,
+      "words": [
+        0.24,
+        0.37,
+        0.69,
+        1.07,
+        1.42
+      ]
+    },
+    {
+      "text": "Grice showed that we mean more than we say.",
+      "start": 2.28,
+      "end": 5.1,
+      "words": [
+        2.28,
+        2.7,
+        3.2,
+        3.65,
+        3.86,
+        4.11,
+        4.43,
+        4.66,
+        4.82
+      ]
+    },
+    {
+      "text": "Words carry implicatures.",
+      "start": 5.68,
+      "end": 7.4,
+      "words": [
+        5.68,
+        6.03,
+        6.53
+      ]
+    },
+    {
+      "text": "Sperber and Wilson went further:",
+      "start": 7.98,
+      "end": 9.64,
+      "words": [
+        7.98,
+        8.36,
+        8.56,
+        8.86,
+        9.16
+      ]
+    },
+    {
+      "text": "every act of communication arrives with a promise that it is",
+      "start": 10.14,
+      "end": 13.4,
+      "words": [
+        10.14,
+        10.36,
+        10.72,
+        10.83,
+        11.4,
+        11.92,
+        12.22,
+        12.35,
+        12.67,
+        13.13,
+        13.26
+      ]
+    },
+    {
+      "text": "worth the hearer’s effort.",
+      "start": 13.41,
+      "end": 14.83,
+      "words": [
+        13.41,
+        13.63,
+        13.91,
+        14.47
+      ]
+    },
+    {
+      "text": "So “I love you” makes her search.",
+      "start": 15.33,
+      "end": 17.98,
+      "words": [
+        15.33,
+        16.28,
+        16.39,
+        16.58,
+        16.77,
+        17.11,
+        17.46
+      ]
+    },
+    {
+      "text": "What does he want?",
+      "start": 18.4,
+      "end": 19.05,
+      "words": [
+        18.4,
+        18.46,
+        18.67,
+        18.83
+      ]
+    },
+    {
+      "text": "The threat lives in that search.",
+      "start": 19.56,
+      "end": 21.18,
+      "words": [
+        19.56,
+        19.65,
+        19.95,
+        20.34,
+        20.66,
+        20.85
+      ]
+    },
+    {
+      "text": "In the implied request.",
+      "start": 21.68,
+      "end": 22.94,
+      "words": [
+        21.68,
+        21.84,
+        22.08,
+        22.45
+      ]
+    },
+    {
+      "text": "It does not live in the love.",
+      "start": 23.52,
+      "end": 25.13,
+      "words": [
+        23.52,
+        23.66,
+        24.02,
+        24.3,
+        24.59,
+        24.78
+      ]
+    }
+  ],
+  "total": 25.96,
+  "source": "film.yaml s08"
+}

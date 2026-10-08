@@ -86,6 +86,20 @@ section with the commit id -- do not delete it.
   transfers side by side on the ledger (aimanim/ledger.py, T05).
   Unchecked, his words: the Ackerman finding; "a slur says what is false"
   (many philosophers say slurs insult without asserting).
+  01, 02, 07, 10 MADE (session 5), one commit each; the rings of 01 and 07
+  in aimanim/faces.py (I14). All four full stills 1080x1920 (ffprobe),
+  0 [layout] notes; margins L/R/T/B px: 01 face-two 128/128/120/788 (the
+  crowd is gone at the end, on purpose), 02 face-weight 108/162/120/544,
+  07 face-fail 107/117/120/550, 10 face-cost 78/78/120/628. Half-size
+  drafts 13.00 / 11.50 / 11.00 / 9.00 s, steps spaced evenly (not
+  narrated). `film check` rehearsed, ok; film ~155 s at 2.5 words/s for
+  the 8 slides. Changed from session 1's plans: 02 shows "W = D + P + R"
+  and a legend D distance / P power / R imposition instead of three blocks
+  stacking (still not agreed by Jacek); 07's reasons "false" / "not now"
+  are Claude's short forms; 10's two ledgers are stacked, not side by
+  side, and titled "Who pays" ("Cheap and expensive" is too wide). Hu 1944,
+  Goffman 1967, Grice 1975 cited from memory. NOT published (narration.txt:
+  ask first). Left: none; photos 08, 09, 11, 12 are his.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

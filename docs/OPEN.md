@@ -193,6 +193,10 @@ section with the commit id -- do not delete it.
   nothing overwritten, no new take since 21:53, all 10 in _slides and 24
   in _discarded at their sizes. Copied the 10 to
   projects/<film>/backup_takes_2026-10-08/ (10 files, 55 MB).
+  22:07 he starts the window, sees it go to slide 1, not the first
+  unrecorded one, and stops at once for fear of overwriting. Measured
+  22:07:03: no file in media/ changed since 21:54. That is the resume
+  fault above; it is the first fix to make (change-the-machine).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

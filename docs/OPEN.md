@@ -113,8 +113,10 @@ section with the commit id -- do not delete it.
   line for a missing [intro] or [outro]; slides suite 103 OK. Claude then
   made his title + dedication the spoken intro, joining Chérie and "the
   ones throwing stones" in one spoken line: Jacek rejected it, REMOVED.
-  The dedication is a written line, never narration. The intro is his to
-  write; there is no [intro] and no script_intro.txt yet. Same cause, still missing from
+  The dedication is a written line, never narration. Then Jacek gave the
+  intro (his words, in slides.script.txt [intro], as typed: "I love you.
+  What does it mean? ... Why do I feel... vulnerable."). NOT re-published:
+  script_intro.txt does not exist until he says publish. Same cause, still missing from
   the script: [outro] (plan: "Chérie, you are loved..." on camera, not
   agreed) and the photo paragraphs 08, 09, 11, 12 (his text is in session
   46e9c487's transcript, 2026-10-08 17:20).

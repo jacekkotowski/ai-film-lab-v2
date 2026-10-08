@@ -98,8 +98,15 @@ section with the commit id -- do not delete it.
   stacking (still not agreed by Jacek); 07's reasons "false" / "not now"
   are Claude's short forms; 10's two ledgers are stacked, not side by
   side, and titled "Who pays" ("Cheap and expensive" is too wide). Hu 1944,
-  Goffman 1967, Grice 1975 cited from memory. NOT published (narration.txt:
-  ask first). Left: none; photos 08, 09, 11, 12 are his.
+  Goffman 1967, Grice 1975 cited from memory. Left: none; photos 08, 09,
+  11, 12 are his.
+  PUBLISHED (Jacek's yes, session 5): 8 stills in media/ (01-07, 10), all
+  1080x1920 (ffprobe); narration.txt written, 8 paragraphs, one per still
+  ([06]'s two paragraphs joined into one); no PROBLEM line, no photos
+  found. narration.txt and slides.published.json are git-ignored (nothing
+  to commit). Photos 08, 09, 11, 12 not in media/ yet: when added,
+  publish again (ask first) so each gets its paragraph. Next for Jacek:
+  narrate in film-lab, `film go`, then "narrated" -> `clips`.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

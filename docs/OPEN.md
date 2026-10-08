@@ -314,6 +314,13 @@ section with the commit id -- do not delete it.
   NOT built: the edit-pass box (the project allow list says "Edit"
   everywhere). Cases (his words) go in .local/evals/ only: the repo is
   public. evals/tests 18 OK. Not yet: any case set, any run by Jacek.
+- 2026-10-09 [fly] Love as a Face-Threatening Act flown from FLY.bat (his
+  run). He thought it stopped after the PNGs. Measured 00:18-00:19: 8977
+  frames in fly/out/flight_film_frames (= 374 s at 24 fps; final.mp4 is
+  371.0 s), blender.exe still running (1.8 GB), flight_film.mp4 growing
+  203 -> 236 MB in about a minute, no moov atom yet (still being written).
+  So it was working, but the window gives no sign of the encoding stage
+  -- not fixed, noted. Final file not yet measured.
 - 2026-10-08 [fly] A flight finds its film wherever the repo is (Jacek's
   ask). stops.json held this laptop's absolute "source"/"film" paths, so a
   packed flight pointed back here. Now film_to_stops writes them relative

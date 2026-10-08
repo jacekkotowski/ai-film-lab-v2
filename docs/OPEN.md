@@ -79,6 +79,12 @@ section with the commit id -- do not delete it.
   Bauhaus "continue open.md..."). Thin and narrow for a quality set.
   Candidates (not frozen) in .local/evals/cases/edit-pass.candidates.json.
   evals/tests 59 OK. Next: Jacek decides which count, then split + freeze.
+  FROZEN (Claude's pick, Jacek's yes): 6 cases in .local/evals/cases/
+  edit-pass.json, all `split: test` (too few to split): Happy Birthday
+  closing card 10 s + music 20 s, What Is Love foreign-name captions +
+  "slightly increase depth" (one for the depth chain), Bauhaus depth 0.5,
+  SUMIFS "cut it". Complaints and permission messages left out. A first
+  check only: no tuning (gepa) on 6; it waits for more notes from new films.
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

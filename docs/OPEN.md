@@ -72,6 +72,20 @@ section with the commit id -- do not delete it.
   9.50 s; `film check` 62 words, ~24.8 s, steps at 12.8 / 16.0 / 20.4 /
   22.8 s: the first 12.8 s show only the title (rehearsal). Culpeper 1996
   cited from memory. NOT published. Left: 01, 02, 07, 10.
+  NEXT (Jacek, 2026-10-08: "just go through all of them and we will
+  correct them if something is wrong"): make 01, 02, 07, 10 in one
+  session with new-scene, no stops between them; commit each. Their
+  paragraphs are now in slides.script.txt word for word ([01] [02] [07]
+  [10], from session 1's transcript; `film check` still clean). Plans
+  (session 1's, not yet agreed): 01 two rings, mianzi outside lit by a
+  clapping crowd, lian inside; the crowd fades, the outer ring dims, lian
+  stays ("nobody claps"). 02 W = D + P + R, each term a block on its word,
+  together the red weight of 03 (Jacek never said yes to this). 07 the
+  maxims: quality and relation struck, each with its reason; stones hit
+  the outer ring (mianzi) and stop at lian. 10 cheap vs expensive: both
+  transfers side by side on the ledger (aimanim/ledger.py, T05).
+  Unchecked, his words: the Ackerman finding; "a slur says what is false"
+  (many philosophers say slurs insult without asserting).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

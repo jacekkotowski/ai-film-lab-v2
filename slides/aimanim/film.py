@@ -140,11 +140,13 @@ def narration_text(film: Film, parts: dict[str, str], photos=()) -> str:
 
 # The pictures film-lab shows (ffilm/kinds.py STILL).
 STILL = {".jpg", ".jpeg", ".jfif", ".png", ".tif", ".tiff", ".webp", ".bmp"}
-NUMBERED = re.compile(r"^(\d+)_")
+# the number at the start places a picture, whatever follows it: "11_jesus",
+# "11 jesus", "11-jesus", "11.png" (not "2026notes": a letter right after)
+NUMBERED = re.compile(r"^(\d+)(?=[^\dA-Za-z])")
 
 
 def photos_in(media: Path, film: Film) -> list[int]:
-    """The numbers of the pictures in media/ named 'NN_...' that are not
+    """The numbers of the pictures in media/ named 'NN...' that are not
     one of this film's slides: his photos, at the place their number says."""
     slides = {s.picture for s in film.slides}
     found = set()

@@ -115,6 +115,16 @@ class APhotoBetweenSlidesGetsItsParagraph(unittest.TestCase):
                 (Path(d) / name).write_bytes(b"")
             self.assertEqual(film.photos_in(Path(d), f), [2, 5])
 
+    def test_a_photo_is_found_by_its_number_whatever_follows_it(self):
+        # "11 jesus.png" was not found: the number, not the "_", places a
+        # photo (Jacek, 2026-10-08)
+        f = film.parse("01 a\n")
+        with tempfile.TemporaryDirectory() as d:
+            for name in ("11 jesus.png", "12_morse code.png", "07-sea.jpg",
+                         "08.png", "2026notes.png", "rec_20261008.mp4"):
+                (Path(d) / name).write_bytes(b"")
+            self.assertEqual(film.photos_in(Path(d), f), [7, 8, 11, 12])
+
     def test_a_photo_paragraph_without_its_photo_is_named(self):
         f = film.parse("01 a\n03 b\n")
         self.assertEqual(film.photos_missing(f, film.script_parts(PHOTO_SCRIPT), []), [2])

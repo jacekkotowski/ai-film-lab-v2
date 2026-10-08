@@ -33,7 +33,8 @@ uv run --directory film --extra dev pytest
 - `film models`: the three model files into `film/models/`, checked by
   SHA-256 (`film/models/README.md`).
 - The speech model downloads itself at the first caption, into
-  `%USERPROFILE%\.cache\huggingface\hub` (here: small 464 MB, base 142 MB).
+  `film/models/whisper/` (here: small 464 MB, base 142 MB). From an old
+  machine, copying `film/models/` brings it along.
 - `film library` opens `film/library/`: the music (here one piece, 16 MB)
   and two cover pictures (5 MB). Not in git: copy them from the old machine.
 - Camera and microphone are found at the first recording and remembered in
@@ -97,7 +98,7 @@ Tests: `uv run --directory fly --no-project python -m unittest discover tests`
 | the films' media, takes, texts, renders | `projects/<Title>/` (git has film.yaml, slides.txt, slides.script.txt) | copying; renders come back from film.yaml |
 | music and cover pictures | `film/library/` | copying |
 | model files | `film/models/` | `film models` |
-| speech models | `%USERPROFILE%\.cache\huggingface\hub` | the first caption |
+| speech models | `film/models/whisper/` | the first caption, or copying `film/models/` |
 | camera and microphone choice | `film/.devices.json` | the first recording |
 | search index | `~/.cache/qmd/`, `~/.config/qmd/index.yml`, commit files `~/.cache/qmd/v2-history/` | `knowledge setup` + `refresh` |
 | render log, knowledge log | `slides/.local/renders.csv`, `.local/knowledge.log` | the next render / commit |

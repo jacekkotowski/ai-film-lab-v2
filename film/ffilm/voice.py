@@ -30,7 +30,7 @@ import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from . import ingest, kinds
+from . import ingest, kinds, models
 
 AUDIO_EXT = kinds.AUDIO
 VIDEO_EXT = kinds.VIDEO
@@ -865,12 +865,18 @@ def lines_for(words: list, script: str | None) -> list[Line]:
     return aligned
 
 
+def speech_models_dir() -> Path:
+    """Where the speech model is kept: models/whisper/, beside the other
+    model files. Left to itself, faster-whisper puts it in the user folder
+    (.cache/huggingface), where nobody looks and no copy of this toolkit
+    reaches -- 606 MB of it there on 2026-10-08."""
+    return models.models_dir() / "whisper"
+
+
 def _model_cached(model_size: str) -> bool:
     """Has this model already been downloaded? Only used to decide whether
     to warn about a long wait -- being wrong costs nothing."""
-    home = os.environ.get("HF_HOME")
-    root = Path(home) / "hub" if home else Path.home() / ".cache" / "huggingface" / "hub"
-    repo = root / f"models--Systran--faster-whisper-{model_size}"
+    repo = speech_models_dir() / f"models--Systran--faster-whisper-{model_size}"
     # The folder appears the moment a download starts, so its existence
     # proves nothing. The weights file is the thing.
     return any(repo.glob("snapshots/*/model.bin"))
@@ -925,7 +931,8 @@ def transcribe(audio: Path, model_size: str = "small",
         print(f"  it is a few hundred MB, and it can take several minutes on")
         print(f"  a slow connection. Nothing is wrong -- let it finish.")
     try:
-        model = WhisperModel(model_size, device="cpu", compute_type="int8")
+        model = WhisperModel(model_size, device="cpu", compute_type="int8",
+                             download_root=str(speech_models_dir()))
     except Exception as e:
         # Almost always the download, and almost always the network. The
         # cache resumes, so running it again really is the right advice.

@@ -6,6 +6,15 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [film] The speech model is kept in models/ (Jacek's ask):
+  faster-whisper got `download_root=models/whisper` (voice.speech_models_dir);
+  it was in %USERPROFILE%\.cache\huggingface\hub. The two models there
+  (small 464 MB, base 142 MB) were MOVED into film/models/whisper/ (same
+  disk, nothing downloaded again; git ignores it like models/*). Measured:
+  `local_files_only=True` loads small from there in 8.6 s; the real
+  `voice.transcribe` on an 8.00 s slice of Screening's narration said
+  "loading the small speech model" and gave 1 line; the user cache stayed
+  empty. Film suite 1048 passed (4 new). Not yet seen by Jacek in a film.
 - 2026-10-08 [all] Setup in one place: docs/SETUP.md (was slides/docs/SETUP.md,
   git mv) lists all three stages and Claude's tools, with this laptop's
   versions measured today (uv 0.12.8, ffmpeg 9.0.1, git 2.50.1, Node 24.19.0,

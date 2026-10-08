@@ -25,6 +25,12 @@ checks that this table agrees with it.
 | `sh.rnnn` | 297646 | `70bb6685eb0c2a1d18e2918dca3fbfbd39317010b1802eb1b6ea73a92f3fdec0` | https://raw.githubusercontent.com/GregorR/rnnoise-models/master/somnolent-hogwash-2018-09-01/sh.rnnn | voice: takes the room out from under your words (docs/decisions/0008) | The collection's README: the models are not creative work and not subject to copyright |
 | `depth_anything_v2_small.onnx` | 99060839 | `afb6a5c28f3b6bf1618c6e43f02073ef9dfdc70e937502d51603e57b0a1df10c` | https://huggingface.co/onnx-community/depth-anything-v2-small/resolve/main/onnx/model.onnx | depth: how near each part of a photo is, for parallax; needs `uv sync --extra depth` (docs/decisions/0013) | Apache-2.0 (Depth Anything V2 Small; Base and Large are CC-BY-NC) |
 
+**The speech model** (captions; needs `uv sync --extra voice`) is here too,
+in `whisper/`, since 2026-10-08 (it was in the user folder,
+`.cache\huggingface`). It is not in the table: faster-whisper fetches it
+itself at the first caption, a folder of four files per size (`small`
+464 MB, `base` 142 MB), and `film models` does not fetch it.
+
 ## Measured, not used
 
 These were downloaded to compare, and nothing in `ffilm/` uses them. They

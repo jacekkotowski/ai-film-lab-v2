@@ -15,6 +15,7 @@ Then edit the titles in stops.json if you like, and render:
 """
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -23,7 +24,17 @@ from pathlib import Path
 HUB_ROLES = {"title", "intro", "closing"}
 
 
-def to_stops(timeline: dict, timeline_path: Path) -> dict:
+def seen_from(project, path: Path) -> str:
+    """`path` as stops.json writes it: relative to the flight's folder
+    (../out/final.mp4), so a copied or packed repo still finds its film.
+    Absolute paths named this laptop's folders until 2026-10-08. Without a
+    project (old callers), the absolute path as before."""
+    if project is None:
+        return path.resolve().as_posix()
+    return Path(os.path.relpath(path.resolve(), Path(project).resolve())).as_posix()
+
+
+def to_stops(timeline: dict, timeline_path: Path, project=None) -> dict:
     stops, card_of_src, visits = [{"title": timeline["title"], "hub": True}], {}, []
 
     for s in timeline["shots"]:
@@ -46,8 +57,8 @@ def to_stops(timeline: dict, timeline_path: Path) -> dict:
         # fly.py compares it with the timeline to see a re-rendered film.
         "slug": timeline.get("slug"),
         "video_sha256": timeline.get("video_sha256"),
-        "source": timeline_path.resolve().as_posix(),
-        "film": (timeline_path.parent / timeline["video"]).resolve().as_posix(),
+        "source": seen_from(project, timeline_path),
+        "film": seen_from(project, timeline_path.parent / timeline["video"]),
         "fps": timeline["fps"],
         "resolution": [timeline["width"], timeline["height"]],
         "frames": timeline["frames"],
@@ -71,7 +82,7 @@ def main():
         sys.exit(f"{out} already exists and may hold your edits. "
                  f"Add --force to write it again.")
     project.mkdir(parents=True, exist_ok=True)
-    spec = to_stops(timeline, timeline_path)
+    spec = to_stops(timeline, timeline_path, project)
     out.write_text(json.dumps(spec, indent=2, ensure_ascii=False), encoding="utf-8")
 
     fps = spec["fps"]

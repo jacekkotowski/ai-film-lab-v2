@@ -95,13 +95,13 @@ def existing(slug):
 
 def project_for(timeline):
     """The project already made from this timeline, or a new one beside the
-    film, in its own fly/. A film outside the projects folder gets none."""
-    source = timeline.as_posix()
-    for stops in all_stops():
-        if f'"source": "{source}"' in stops.read_text(encoding="utf-8"):
-            return stops.parent, False
+    film, in its own fly/. A film outside the projects folder gets none.
+    Found by where it sits, beside the film, not by the path written in its
+    stops.json: that path was this laptop's own until 2026-10-08, so a
+    packed flight was not known on another machine."""
     if timeline.parent.name == "out" and timeline.parents[2] == PROJECTS:
-        return timeline.parents[1] / "fly", True
+        project = timeline.parents[1] / "fly"
+        return project, not (project / "stops.json").exists()
     sys.exit(f"{timeline}\nis not a film in {PROJECTS}.\n"
              f"A flight sits beside its film: projects/<Title>/fly/. "
              f"Drag the film's out\\ folder from there.")
@@ -116,10 +116,24 @@ def film_changed(stops, timeline):
     return made != now
 
 
+def where(project, written):
+    """A path from stops.json, as a file on this machine. Relative paths
+    (since 2026-10-08) are read from the flight's folder. An absolute one
+    that is not here -- written on another machine, or before the repo
+    moved -- is looked for under the same name in the film's out/, beside
+    the flight. flight.py, which runs inside Blender, keeps a copy."""
+    p = Path(written)
+    if not p.is_absolute():
+        return project / p
+    if p.exists():
+        return p
+    return project.parent / "out" / p.name
+
+
 def warn_if_film_changed(project):
     stops = json.loads((project / "stops.json").read_text(encoding="utf-8"))
-    source = Path(stops.get("source", ""))
-    if not source.is_file():
+    source = where(project, stops.get("source", ""))
+    if not stops.get("source") or not source.is_file():
         return
     if film_changed(stops, json.loads(source.read_text(encoding="utf-8"))):
         print(f"\nWARNING: the film was rendered again after this flight was made.\n"

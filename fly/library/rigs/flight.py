@@ -704,6 +704,13 @@ def main():
     project = stops_path.parent
 
     film = spec.get("film")
+    if film:
+        # The same rule as fly.where (this runs inside Blender, which does
+        # not see fly.py): relative to the flight's folder since 2026-10-08;
+        # an absolute path from another machine is looked for in out/.
+        p = Path(film)
+        p = project / p if not p.is_absolute() else (p if p.exists() else project.parent / "out" / p.name)
+        film = str(p.resolve())
     visits = spec.get("visits") or []
     fps = spec.get("fps", FPS)
     res = tuple(spec.get("resolution", (RES_X, RES_Y)))

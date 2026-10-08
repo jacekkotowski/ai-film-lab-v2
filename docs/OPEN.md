@@ -6,6 +6,16 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [fly] A flight finds its film wherever the repo is (Jacek's
+  ask). stops.json held this laptop's absolute "source"/"film" paths, so a
+  packed flight pointed back here. Now film_to_stops writes them relative
+  to the flight (../out/...); fly.where and flight.py read both kinds (an
+  absolute path that is not there is looked for in the film's out/); fly.py
+  finds an existing flight by its place beside the film, not by that path.
+  The 17 existing stops.json were left as they are (their paths exist here).
+  Measured: a copy of Screening in the scratchpad with its paths set to
+  D:/elsewhere/...: Blender --stills made 15 stills, "video would be
+  175.8s" as before. Fly suite 16 OK (5 new).
 - 2026-10-08 [film] A pack carries the whole repo (Jacek's ask). `film pack`
   listed film/.claude/settings.json and film/.claude/skills (moved to the
   root on 2026-10-07), so a copy's Claude had no skills and no hooks wired,

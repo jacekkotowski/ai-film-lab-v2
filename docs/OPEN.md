@@ -183,6 +183,12 @@ section with the commit id -- do not delete it.
   (photo paragraphs, ~80 words). Camera intro rec_20261008-212920.mp4
   23.0 s present. Plan (needs his go): he records only 08, 09, 11, 12;
   Claude joins the 12 in picture order with record.join_takes/write_cues.
+  22:1x: Jacek overwhelmed ("ja już nie wiem co mam zrobić"). Claude's
+  recommendation, given: stop tonight; next session, Claude prepares
+  everything (narration.txt with 12 paragraphs on his "zapisz", the exact
+  command), he records only 08, 09, 11, 12 (~1 min), Claude joins the 12
+  and checks. His choice still open: 1 = 8 slides only (cuts his 4
+  photo paragraphs) or 2 = record the 4.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

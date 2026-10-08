@@ -131,7 +131,14 @@ section with the commit id -- do not delete it.
   media/_discarded/ 3 camera takes + 24 voice-overs, ~541 s, kept, not
   deleted. Not known: which take belongs to which picture (narration.txt
   had 8 paragraphs for 12 pictures), and whether the window shows them.
-  His wish: the recording must not feel fragile -- open, not designed. Same cause, still missing from
+  His wish: the recording must not feel fragile -- open, not designed.
+  FIXED (2ef93a0, his rule): a picture is placed by its number prefix,
+  whatever follows ("11 jesus.png" counts). On his real media/ photos_in
+  now finds 8, 9, 11, 12 (measured). Slides suite OK. film-lab's own
+  reading of names not checked. He is exhausted and angry at how many
+  small traps cost him the evening (2026-10-08): next session, first
+  make his narration.txt match the 12 pictures (his "write it"), then
+  check which kept take is which picture -- no new design. Same cause, still missing from
   the script: [outro] (plan: "Chérie, you are loved..." on camera, not
   agreed) and the photo paragraphs 08, 09, 11, 12 (his text is in session
   46e9c487's transcript, 2026-10-08 17:20).

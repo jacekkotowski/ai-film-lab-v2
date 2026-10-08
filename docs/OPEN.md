@@ -169,6 +169,10 @@ section with the commit id -- do not delete it.
   wants). The only name-picky code was slides' publish ("NN_"), fixed
   2ef93a0. The chaos in the window: 12 pictures, 8 paragraphs in
   narration.txt (picture 08 got the insult's words, 09-12 none).
+  FIRST next session, before asking him to record anything: transcribe
+  the 10 takes in media/_slides/ and match each to its paragraph, so he
+  re-records only what is missing. Never again say "nothing is lost" to
+  him about recordings: his time was lost (his words, 2026-10-08).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

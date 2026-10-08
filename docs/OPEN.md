@@ -6,6 +6,20 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
+  (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
+  decisions: edit-pass is the first skill to get a quality set; Phase 3
+  uses `gepa` standalone (0.1.4, 1 package) as a film extra `eval`,
+  routing first. `evals/run.py probe`, measured: a test run (`claude -p`)
+  had only Glob/Grep/Read/Skill, saw 19/19 repo skills, could not write a
+  probe file; git status, projects/ file times and .lastfilm unchanged.
+  Routing 3 of 3 right (status, new-scene, edit-pass). $0.12-0.39 per
+  case at list price, so ~$30 for 96 routing cases (reasoned). Found:
+  `--setting-sources user` drops the repo's skills; `--tools` keeps the
+  claude.ai connectors (Gmail, Calendar) unless `--strict-mcp-config`.
+  NOT built: the edit-pass box (the project allow list says "Edit"
+  everywhere). Cases (his words) go in .local/evals/ only: the repo is
+  public. evals/tests 18 OK. Not yet: any case set, any run by Jacek.
 - 2026-10-08 [fly] A flight finds its film wherever the repo is (Jacek's
   ask). stops.json held this laptop's absolute "source"/"film" paths, so a
   packed flight pointed back here. Now film_to_stops writes them relative

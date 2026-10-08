@@ -205,6 +205,10 @@ section with the commit id -- do not delete it.
   kept_slides on his project = indices 0-6, 9, so the window should open
   on picture 08 and ask only 08, 09, 11, 12. Needs first: narration.txt
   with 12 paragraphs (his yes to overwrite his file).
+  DONE 22:1x (he: "I need to send it soon"): narration.txt now 12
+  paragraphs, his 8 byte for byte + his 4 photo paragraphs; old file kept
+  as narration.before-12.txt. Measured with film-lab's own
+  narration_steps: pictures 01-12 each get their own paragraph.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

@@ -17,27 +17,16 @@ from manim import DOWN, FadeIn, Line, Rectangle, Scene, Transform, VGroup, Write
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
 from aimanim import frame, kit  # noqa: E402
+# the people, table and bars are shared with slides 04 and 05 (I14)
+from aimanim.ledger import (ASK_SIZE, BAR_H, BAR_IN, BAR_L, BAR_Y, FACES,  # noqa: E402
+                            FEET, FIG_H, HEAD_Y, LEG_X, NAME_Y, PERSON_X,
+                            SAID_Y, TABLE_HALF, TABLE_TOP, WEIGHT_H,
+                            WEIGHT_SHARE, WHO, side)
 
 # ---- content (from spec.md) ---------------------------------------------
 TITLE = "Declaring love"
 SAID = "I love you"
-WHO = ("speaker", "hearer")
-FACES = ("accepted", "free")     # positive face, negative face
 ASKED = "?"
-WEIGHT_SHARE = 0.4               # of her "free" bar: a picture, not a measure
-
-# ---- layout --------------------------------------------------------------
-PERSON_X = 2.4                   # speaker at -2.4, hearer at +2.4
-FIG_H, FEET = 2.6, 2.6
-SAID_Y = 4.9                     # baseline, between the heads
-TABLE_TOP, TABLE_HALF, LEG_X = 3.6, 1.8, 1.5   # legs reach the feet
-NAME_Y = 1.85                    # "speaker" / "hearer"
-# a row's name 0.3 above its bars, 0.9 below the row before it: at 0.31
-# both ways "free" read as belonging to the "accepted" bars (first still)
-HEAD_Y = {"accepted": 0.4, "free": -1.96}      # row names (baselines)
-BAR_Y = {"accepted": -0.27, "free": -2.46}     # bar centres
-BAR_IN, BAR_L, BAR_H = 0.9, 3.0, 0.4           # bars from ±0.9 to ±3.9
-WEIGHT_H, ASK_SIZE = 1.1, 72
 COLORS = (frame.ACCENT, frame.SECOND)
 
 # ---- timing --------------------------------------------------------------
@@ -50,11 +39,6 @@ def bar(left, right, y, color):
     return (Rectangle(width=right - left, height=BAR_H)
             .move_to(((left + right) / 2, y, 0))
             .set_fill(color, 1).set_stroke(width=0))
-
-
-def side(i):
-    """-1 for the speaker (left), +1 for the hearer (right)."""
-    return (-1, 1)[i]
 
 
 class Slide(Scene):

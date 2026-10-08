@@ -16,6 +16,8 @@ from manim import Arrow, Create, FadeIn, Line, Rectangle, Scene, VGroup
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parents[1]))
 from aimanim import frame, kit  # noqa: E402
+# speaker, hearer and "I love you" where face-ledger has them (I14)
+from aimanim.ledger import FEET, FIG_H, PERSON_X, SAID_Y  # noqa: E402
 
 # ---- content (from spec.md) ---------------------------------------------
 TITLE = "Said and meant"
@@ -25,9 +27,6 @@ ASKED = "?"
 REQUEST = "implied request"
 
 # ---- layout --------------------------------------------------------------
-PERSON_X = 2.4                   # as face-ledger: speaker -2.4, hearer +2.4
-FIG_H, FEET = 2.6, 2.6
-SAID_Y = 4.9                     # baseline, between the heads (face-ledger)
 SPLIT_Y = 1.4                    # the line between said and meant
 LAYER_Y = {"said": 1.6, "meant": 0.6}          # baselines, left on SIDE
 WEIGHT_W, WEIGHT_H = 1.6, 1.4

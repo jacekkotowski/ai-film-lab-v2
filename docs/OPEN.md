@@ -42,6 +42,15 @@ section with the commit id -- do not delete it.
   copied from the transcript of session 1 (the whole text is nowhere else
   in the repo). Grice 1975 and Sperber & Wilson 1986 cited from memory.
   NOT published. Left: 01, 02, 05, 06, 07, 10.
+  Slide 05 STARTED, not drawn: the ledger's geometry (people, table, bars,
+  weight) moved to aimanim/ledger.py (issue I14, 03-05 share it);
+  face-ledger and face-implied import it. Full stills re-rendered:
+  sha256 identical to before (26edace9..., fe997d00...). Plan for 05
+  unchanged: "?" struck on "cancelled", the weight lifts off her "free"
+  on "gone" (her bar full again), lands on his "free" on "pays". Jacek
+  showed Google-AI slide ideas; Claude's verdict (not yet his):
+  take W = D + P + R building the red weight for 02; keep the bars (not
+  ring + box) in 03-05; maxims / strategy axis match the plans for 06-07.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

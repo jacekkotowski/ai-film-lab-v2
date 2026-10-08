@@ -320,7 +320,10 @@ section with the commit id -- do not delete it.
   371.0 s), blender.exe still running (1.8 GB), flight_film.mp4 growing
   203 -> 236 MB in about a minute, no moov atom yet (still being written).
   So it was working, but the window gives no sign of the encoding stage
-  -- not fixed, noted. Final file not yet measured.
+  -- not fixed, noted. Finished 00:24: flight_film.mp4 1080x1920,
+  374.0 s, 602 MB (ffprobe). Jacek published it ("it looks good"). The
+  film is done in all three stages. Still open from it: the menu gives no
+  sign that `clips` follows narration, nor that fly is encoding.
 - 2026-10-08 [fly] A flight finds its film wherever the repo is (Jacek's
   ask). stops.json held this laptop's absolute "source"/"film" paths, so a
   packed flight pointed back here. Now film_to_stops writes them relative

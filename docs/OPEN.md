@@ -107,6 +107,17 @@ section with the commit id -- do not delete it.
   to commit). Photos 08, 09, 11, 12 not in media/ yet: when added,
   publish again (ask first) so each gets its paragraph. Next for Jacek:
   narrate in film-lab, `film go`, then "narrated" -> `clips`.
+  NO INTRO in the recording window (Jacek, session 5). Cause: the script
+  had no [intro] section, and publish writes script_intro.txt only from
+  one, silently. Fixed for the future (9bb6825): publish prints a PROBLEM
+  line for a missing [intro] or [outro]; slides suite 103 OK. [intro] now
+  in slides.script.txt: his first two lines, word for word ("Love as a
+  Face-Threatening Act. To Chérie, and to the ones throwing stones."),
+  my pick of what the intro is, not his. NOT re-published (ask first),
+  so script_intro.txt does not exist yet. Same cause, still missing from
+  the script: [outro] (plan: "Chérie, you are loved..." on camera, not
+  agreed) and the photo paragraphs 08, 09, 11, 12 (his text is in session
+  46e9c487's transcript, 2026-10-08 17:20).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

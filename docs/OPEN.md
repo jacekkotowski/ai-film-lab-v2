@@ -35,6 +35,15 @@ section with the commit id -- do not delete it.
   inside it. 22 routing runs + 3 probes ≈ $5.8 today. Not yet: the full
   92 (≈ $21, ≈ 75 min, reasoned from the mean), Jacek's labels.
   evals/tests 41 OK.
+  Full run DONE (his "go"): 61/92 right, $21.15, repo unchanged; 30 of 31
+  misses are "chose none" (change-the-machine 15, edit-pass 3, ship 3,
+  investigate 3). Repeats of the 31: INVALID from case 15 of repeat 1 on
+  -- the usage limit was reached, runs ended in ~3 s at $0 and were
+  recorded as "none" (17 of repeat 1, all 31 of repeat 2). Only the
+  first 14 of repeat 1 are real. Next: re-run the repeats after the limit
+  resets; then .local/evals/label-routing.md (draft sheet, made by a
+  scratchpad script; its 3rd column is invalid) for Jacek's labels.
+  To do: run.py must treat a $0 / 3 s run as failed, not as "none".
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

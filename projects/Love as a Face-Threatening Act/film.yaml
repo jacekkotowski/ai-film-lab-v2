@@ -143,6 +143,7 @@ shots:
 
   - id: s05
     src: media/01_face-two.png
+    clip: clips/01_face-two.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "00:01.80"
     out: "00:37.75"
@@ -199,6 +200,7 @@ shots:
 
   - id: s06
     src: media/02_face-weight.png
+    clip: clips/02_face-weight.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "00:40.75"
     out: "01:04.55"
@@ -245,6 +247,7 @@ shots:
 
   - id: s07
     src: media/03_face-ledger.png
+    clip: clips/03_face-ledger.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "01:09.80"
     out: "01:26.20"
@@ -281,6 +284,7 @@ shots:
 
   - id: s08
     src: media/04_face-implied.png
+    clip: clips/04_face-implied.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "01:31.50"
     out: "02:03.45"
@@ -347,6 +351,7 @@ shots:
 
   - id: s09
     src: media/05_face-cancel.png
+    clip: clips/05_face-cancel.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "02:08.15"
     out: "02:29.55"
@@ -408,6 +413,7 @@ shots:
 
   - id: s10
     src: media/06_face-impolite.png
+    clip: clips/06_face-impolite.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "02:30.10"
     out: "03:06.60"
@@ -474,6 +480,7 @@ shots:
 
   - id: s11
     src: media/07_face-fail.png
+    clip: clips/07_face-fail.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "03:10.35"
     out: "03:46.70"
@@ -628,6 +635,7 @@ shots:
 
   - id: s14
     src: media/10_face-cost.png
+    clip: clips/10_face-cost.mp4
     voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
     in: "04:36.30"
     out: "04:51.35"

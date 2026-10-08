@@ -128,7 +128,7 @@ def summarize(lines: list[str]) -> dict:
     cost, tokens, turns, subtype: from the closing `result` event;
     denied: the tool calls the permission mode refused.
     """
-    out = {"tools": [], "skills": [], "cost": None, "tokens": {},
+    out = {"tools": [], "skills": [], "cost": None, "tokens": {}, "is_error": None,
            "turns": None, "subtype": None, "denied": [], "text": "",
            "init_skills": [], "init_tools": []}
     for line in lines:
@@ -159,6 +159,7 @@ def summarize(lines: list[str]) -> dict:
             out["cost"] = ev.get("total_cost_usd")
             out["turns"] = ev.get("num_turns")
             out["subtype"] = ev.get("subtype")
+            out["is_error"] = ev.get("is_error")
             out["tokens"] = ev.get("usage", {}) or {}
             for d in ev.get("permission_denials", []) or []:
                 out["denied"].append((d.get("tool_name", ""),
@@ -274,6 +275,12 @@ def probe() -> int:
 
 # ---------------------------------------------------------------- routing
 
+def failed(s: dict) -> bool:
+    """A run that never really ran: no result, an error result, or $0 (at
+    the usage limit 48 runs ended in ~3 s at $0, measured 2026-10-08). Pure."""
+    return s["subtype"] is None or bool(s["is_error"]) or not s["cost"]
+
+
 def choice(skills: list[str]) -> str:
     """What a routing run chose: the first skill it started, or "none". Pure."""
     return skills[0] if skills else "none"
@@ -300,9 +307,9 @@ def routing_table(rows: list[dict]) -> dict:
     names = sorted({r["label"] for r in rows} | {r["got"] for r in rows} - {"none"})
     out = {}
     for n in names:
-        if n == "none":
+        if n in ("none", "failed"):
             continue
-        mine = [r for r in rows if r["label"] == n]
+        mine = [r for r in rows if r["label"] == n and r["got"] != "failed"]
         out[n] = {"should": len(mine),
                   "did": sum(r["got"] == n for r in rows),
                   "right": sum(r["got"] == n for r in mine),
@@ -315,7 +322,7 @@ def confusion_pairs(rows: list[dict]) -> dict:
     """(label, choice) -> count, for every case the run got wrong. Pure."""
     out: dict = {}
     for r in rows:
-        if r["label"] != r["got"]:
+        if r["got"] != "failed" and r["label"] != r["got"]:
             out[(r["label"], r["got"])] = out.get((r["label"], r["got"]), 0) + 1
     return out
 
@@ -451,7 +458,8 @@ def routing(split: str | None, n: int | None, ids: list[str] | None,
         box = box_problems(s, want, ACT_TOOLS)
         row = {"date": datetime.datetime.now().isoformat(timespec="seconds"),
                "target": "routing", "skills_hash": fp, "case": c["id"],
-               "split": c["split"], "label": c["label"], "got": choice(s["skills"]),
+               "split": c["split"], "label": c["label"],
+               "got": "failed" if failed(s) else choice(s["skills"]),
                "max_turns": max_turns, "cost": s["cost"],
                "tokens_in": sum(u.get(k) or 0 for k in ("input_tokens",
                                 "cache_read_input_tokens", "cache_creation_input_tokens")),
@@ -473,6 +481,8 @@ def routing(split: str | None, n: int | None, ids: list[str] | None,
     for name, t in routing_table(rows).items():
         print(f"{name:20} {t['should']:6} {t['did']:3} {t['right']:5} "
               f"{t['missed']:6} {t['wrong']:5}")
+    lost = [r for r in rows if r["got"] == "failed"]
+    rows = [r for r in rows if r["got"] != "failed"]
     nones = [r for r in rows if r["label"] == "none"]
     print(f"{'none':20} {len(nones):6} {sum(r['got'] == 'none' for r in rows):3} "
           f"{sum(r['got'] == 'none' for r in nones):5}")
@@ -486,8 +496,11 @@ def routing(split: str | None, n: int | None, ids: list[str] | None,
         print(f"\n{sum(r['pass'] for r in rows)}/{len(rows)} right; "
               f"${sum(costs):.2f} in all, ${min(costs):.2f}-${max(costs):.2f} per case, "
               f"mean ${sum(costs) / len(rows):.3f}; max-turns {max_turns}; skills {fp}")
+    if lost:
+        print(f"FAILED (never ran, not graded): {len(lost)} -- "
+              + " ".join(r["case"] for r in lost))
     print("repo:", "; ".join(diff) if diff else "git status, projects/ and .lastfilm unchanged")
-    return 0 if not diff and not any(r["box"] for r in rows) else 1
+    return 0 if not diff and not lost and not any(r["box"] for r in rows) else 1
 
 
 def main(argv: list[str] | None = None) -> int:

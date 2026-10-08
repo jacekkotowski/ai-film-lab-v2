@@ -22,6 +22,36 @@ class WhatTheRunChose(unittest.TestCase):
         self.assertEqual(run.choice([]), "none")
 
 
+class ARunThatNeverRan(unittest.TestCase):
+    """2026-10-08, measured: at the usage limit 48 runs ended in ~3 s at $0
+    and were graded "chose none"."""
+
+    def result(self, **kw):
+        import json
+        return json.dumps({"type": "result", "subtype": "success", **kw})
+
+    def test_a_run_that_cost_nothing_failed_and_chose_nothing(self):
+        s = run.summarize([self.result(total_cost_usd=0, num_turns=1)])
+        self.assertTrue(run.failed(s))
+
+    def test_a_run_with_an_error_result_failed(self):
+        s = run.summarize([self.result(total_cost_usd=0.1, is_error=True)])
+        self.assertTrue(run.failed(s))
+
+    def test_a_run_with_no_result_failed(self):
+        self.assertTrue(run.failed(run.summarize([])))
+
+    def test_a_run_that_cost_something_and_ended_well_did_not_fail(self):
+        s = run.summarize([self.result(total_cost_usd=0.12)])
+        self.assertFalse(run.failed(s))
+
+    def test_failed_runs_are_left_out_of_the_table(self):
+        rows = [{"label": "edit-pass", "got": "failed"},
+                {"label": "edit-pass", "got": "edit-pass"}]
+        self.assertEqual(run.routing_table(rows)["edit-pass"]["should"], 1)
+        self.assertEqual(run.confusion_pairs(rows), {})
+
+
 class TheMessageAsJacekSentIt(unittest.TestCase):
 
     def test_claudes_last_words_go_to_the_system_prompt_not_into_his_message(self):

@@ -6,6 +6,27 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [slides] New film "Love as a Face-Threatening Act" (Jacek's
+  text, 523 words, ~6 min at write-to-fit's 265 words per 3:00: reasoned).
+  Slide 03 `face-ledger` MADE: full still 1080x1920 (ffprobe), 0 [layout]
+  notes, margins 67/72/120/598 px; half-size draft 9.00 s, steps spaced
+  evenly (not narrated); `film check` 32 words, ~12.8 s. NOT published.
+  Picture plan (Claude's, given to Jacek 2026-10-08, not yet agreed):
+  slides 01-07 and 10, his photos 08 parents, 09 him today, 11 a
+  public-domain Jesus painting, 12 his radio shack; outro on camera; 06
+  carries two of his paragraphs. The weight's 0.4 of "free" is chosen, not
+  measured; Brown & Levinson cited from memory. slides.script.txt (his
+  text) NOT committed: the repo is public, his call.
+  Two faults, found by reading the code, not run: (1) `publish` writes
+  narration.txt with one paragraph per SLIDE (aimanim/film.py
+  narration_text), but film-lab cuts one paragraph per picture, so a photo
+  between slides gets no paragraph and every later one lands a picture
+  off. Fix proposed (write every numbered section of the script), not
+  built. (2) `publish` runs `film new` only when projects/<Title>/ does
+  not exist; since unify slides.txt lives there, so it never runs for a
+  new film and the project gets no `.vertical` (then 1920x1080,
+  ffilm/checks.py:217). Here `film new` was run by hand: `.vertical`
+  present. Not fixed in publish.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

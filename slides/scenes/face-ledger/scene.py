@@ -1,0 +1,102 @@
+"""face-ledger -- declaring love costs both people face: the speaker's
+"accepted" goes on the table, the hearer's "free" takes a weight.
+
+Content: spec.md. Slide 3 of love-as-a-face-threatening-act (the number is
+a placeholder). Face drawn as a ledger: one bar per face per person
+(Brown and Levinson's positive face = "accepted", negative = "free").
+The lengths are a picture, not a measurement: face has no unit.
+
+    uv run --extra render manim -s -r 540,960 --media_dir scenes/face-ledger/out scenes/face-ledger/scene.py Slide
+"""
+
+import sys
+from pathlib import Path
+
+from manim import DOWN, FadeIn, Line, Rectangle, Scene, Transform, VGroup, Write
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parents[1]))
+from aimanim import frame, kit  # noqa: E402
+
+# ---- content (from spec.md) ---------------------------------------------
+TITLE = "Declaring love"
+SAID = "I love you"
+WHO = ("speaker", "hearer")
+FACES = ("accepted", "free")     # positive face, negative face
+ASKED = "?"
+WEIGHT_SHARE = 0.4               # of her "free" bar: a picture, not a measure
+
+# ---- layout --------------------------------------------------------------
+PERSON_X = 2.4                   # speaker at -2.4, hearer at +2.4
+FIG_H, FEET = 2.6, 2.6
+SAID_Y = 4.9                     # baseline, between the heads
+TABLE_TOP, TABLE_HALF, LEG_X = 3.6, 1.8, 1.5   # legs reach the feet
+NAME_Y = 1.85                    # "speaker" / "hearer"
+# a row's name 0.3 above its bars, 0.9 below the row before it: at 0.31
+# both ways "free" read as belonging to the "accepted" bars (first still)
+HEAD_Y = {"accepted": 0.4, "free": -1.96}      # row names (baselines)
+BAR_Y = {"accepted": -0.27, "free": -2.46}     # bar centres
+BAR_IN, BAR_L, BAR_H = 0.9, 3.0, 0.4           # bars from ±0.9 to ±3.9
+WEIGHT_H, ASK_SIZE = 1.1, 72
+COLORS = (frame.ACCENT, frame.SECOND)
+
+# ---- timing --------------------------------------------------------------
+BEAT_WORDS = ["Declaring", "puts", "receives", "question"]
+BEAT_LINES = [0, 2, 3, 4]
+RUN_TIMES = [1.0, 1.5, 1.0, 0.5]
+
+
+def bar(left, right, y, color):
+    return (Rectangle(width=right - left, height=BAR_H)
+            .move_to(((left + right) / 2, y, 0))
+            .set_fill(color, 1).set_stroke(width=0))
+
+
+def side(i):
+    """-1 for the speaker (left), +1 for the hearer (right)."""
+    return (-1, 1)[i]
+
+
+class Slide(Scene):
+    def construct(self):
+        people = VGroup(*[kit.man(FIG_H, (side(i) * PERSON_X, FEET), COLORS[i])
+                          for i in range(2)])
+        names = VGroup(*[kit.text(WHO[i], side(i) * PERSON_X, NAME_Y, COLORS[i])
+                         for i in range(2)])
+        table = VGroup(Line((-TABLE_HALF, TABLE_TOP, 0), (TABLE_HALF, TABLE_TOP, 0)),
+                       *[Line((x, TABLE_TOP, 0), (x, FEET, 0)) for x in (-LEG_X, LEG_X)]
+                       ).set_stroke(frame.DIM, 6)
+        rows = VGroup(*[kit.text(f, 0, HEAD_Y[f]) for f in FACES])
+        self.bars = {(i, f): bar(*sorted((side(i) * BAR_IN, side(i) * (BAR_IN + BAR_L))),
+                                 BAR_Y[f], COLORS[i])
+                     for i in range(2) for f in FACES}
+        background = [kit.title(TITLE), people, names, table, rows, *self.bars.values()]
+        steps = [self.step_said, self.step_stake, self.step_weight, self.step_question]
+        kit.run(self, HERE, steps, BEAT_LINES, RUN_TIMES, background,
+                beat_words=BEAT_WORDS)
+
+    def step_said(self):
+        return [Write(kit.text(SAID, 0, SAID_Y, frame.ACCENT))]
+
+    def step_stake(self):
+        b = self.bars[(0, "accepted")]
+        y = BAR_Y["accepted"]
+        left, right = -(BAR_IN + BAR_L), -BAR_IN
+        slot = kit.box(left, y - BAR_H / 2, right, y + BAR_H / 2, frame.ACCENT, 3)
+        return [b.animate.move_to((0, TABLE_TOP + BAR_H / 2 + 0.03, 0)), FadeIn(slot)]
+
+    def step_weight(self):
+        y = BAR_Y["free"]
+        cut = BAR_IN + BAR_L * (1 - WEIGHT_SHARE)          # 2.7
+        self.weight = (Rectangle(width=BAR_L * WEIGHT_SHARE, height=WEIGHT_H)
+                       .move_to(((cut + BAR_IN + BAR_L) / 2, y, 0))
+                       .set_fill(frame.SICK, 1).set_stroke(width=0))
+        return [FadeIn(self.weight, shift=0.8 * DOWN),
+                Transform(self.bars[(1, "free")], bar(BAR_IN, cut, y, COLORS[1]))]
+
+    def step_question(self):
+        w = self.weight
+        ask = kit.text(ASKED, w.get_center()[0], 0, frame.BACKGROUND, ASK_SIZE)
+        ask.shift((0, w.get_center()[1] - ask.get_center()[1], 0))
+        w.strikes = ask          # meant to lie under this one text (I11)
+        return [FadeIn(ask)]

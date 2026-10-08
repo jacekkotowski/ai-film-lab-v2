@@ -1,0 +1,9 @@
+# love-as-a-face-threatening-act -- declaring love is a face-threatening
+# act; face given and taken, drawn as a ledger.
+# project: this folder (optional; it must name this folder). The film is typed by its slug.
+# Then one line per slide: its number among the pictures you narrate
+# over, and the scene. `python -m aimanim.film love-as-a-face-threatening-act publish` / `clips`.
+# 03 is a placeholder (slide 3 of Claude's list, 2026-10-08): renumber
+# when the photographs between the slides are chosen.
+project: Love as a Face-Threatening Act
+03 face-ledger

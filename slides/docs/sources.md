@@ -27,6 +27,7 @@ Status, strongest first:
 | Deeks JJ, Altman DG 2004, BMJ 329:168, "Diagnostic tests 4: likelihood ratios" | post-test odds = pre-test odds × LR; LR > 10 strong | his notes | screening, `binary-diagnostics` |
 | Salomon LJ et al. 2019, UOG, PubMed 31124209 | amniocentesis procedure-related loss 0.30 % (95 % CI 0.11–0.49 %); CVS 0.20 % (CI crosses 0) | abstract (2026-10-06) | screening |
 | Amniocentesis timing: offered weeks 15–20, results in ~10 days to 2 weeks | weeks 15 → 17 | his notes | screening |
+| Brown P., Levinson S. C. (1987), *Politeness: Some Universals in Language Usage*, CUP | positive face (to be accepted), negative face (to be free, unimposed on), the face-threatening act, W = D + P + R | memory (2026-10-08) | love-as-a-face-threatening-act (face-ledger) |
 | Manim Community v0.21.0 on this machine | sizes, render times, `-r` behaviour | measured (docs/tech/manim.md) | all |
 | ai-film-lab film.yaml / captions | 1080×1920, 24 fps, caption zone | measured (2026-10-05/06) | all |
 

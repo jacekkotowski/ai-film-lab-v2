@@ -28,6 +28,8 @@ Status, strongest first:
 | Salomon LJ et al. 2019, UOG, PubMed 31124209 | amniocentesis procedure-related loss 0.30 % (95 % CI 0.11–0.49 %); CVS 0.20 % (CI crosses 0) | abstract (2026-10-06) | screening |
 | Amniocentesis timing: offered weeks 15–20, results in ~10 days to 2 weeks | weeks 15 → 17 | his notes | screening |
 | Brown P., Levinson S. C. (1987), *Politeness: Some Universals in Language Usage*, CUP | positive face (to be accepted), negative face (to be free, unimposed on), the face-threatening act, W = D + P + R | memory (2026-10-08) | love-as-a-face-threatening-act (face-ledger) |
+| Grice H. P. (1975), "Logic and Conversation", in Cole P., Morgan J. (eds.), *Syntax and Semantics 3: Speech Acts* | we mean more than we say: implicature; implicatures can be cancelled | memory (2026-10-08) | love-as-a-face-threatening-act (face-implied) |
+| Sperber D., Wilson D. (1986), *Relevance: Communication and Cognition*, Blackwell | every act of ostensive communication carries a presumption of its own optimal relevance (worth the hearer's effort) | memory (2026-10-08) | love-as-a-face-threatening-act (face-implied) |
 | Manim Community v0.21.0 on this machine | sizes, render times, `-r` behaviour | measured (docs/tech/manim.md) | all |
 | ai-film-lab film.yaml / captions | 1080×1920, 24 fps, caption zone | measured (2026-10-05/06) | all |
 

@@ -32,6 +32,16 @@ section with the commit id -- do not delete it.
   new film and the project gets no `.vertical` (then 1920x1080,
   ffilm/checks.py:217). Here `film new` was run by hand: `.vertical`
   present. Not fixed in publish.
+  Slide 04 `face-implied` MADE (session 2, "do next slide"): said/meant
+  split by a line, the hearer's arrow down to the "?" weight, "implied
+  request". Full still 1080x1920 (ffprobe), 0 [layout] notes, margins
+  60/60/120/652 px; half-size draft 8.50 s, steps spaced evenly (not
+  narrated); `film check` 65 words, ~26.0 s, steps at 2.0 / 17.2 / 18.8 /
+  22.4 s: nothing moves for ~15 s between "Grice" and "search" (rehearsal,
+  not his voice). Paragraph [04] added to slides.script.txt word for word,
+  copied from the transcript of session 1 (the whole text is nowhere else
+  in the repo). Grice 1975 and Sperber & Wilson 1986 cited from memory.
+  NOT published. Left: 01, 02, 05, 06, 07, 10.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

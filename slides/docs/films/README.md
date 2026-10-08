@@ -36,10 +36,11 @@ slide changes:
 | 04 | scr-rarity | same 99.7 % test, rarer condition: 7 real + 40 false = 85 % wrong; LR+ 18 |
 | 05 | scr-cost | 499 mothers, weeks 12 → 15 → 17, 499 × 0.3 % ≈ 1.5 lost per 10,000 |
 
-## love-as-a-face-threatening-act — Love as a Face-Threatening Act (1 slide so far, 2026-10-08) — no sheet yet
+## love-as-a-face-threatening-act — Love as a Face-Threatening Act (2 slides so far, 2026-10-08) — no sheet yet
 | # | scene | the one idea |
 |---|---|---|
 | 03 | face-ledger | the ledger: "I love you" puts the speaker's "accepted" on the table and a "?" weight on the hearer's "free" (number 03 is a placeholder) |
+| 04 | face-implied | said / meant split by a line: the hearer searches under "I love you" and finds the "?" weight, the implied request; the love stays above the line |
 
 Not yet made, and asked about or natural next: holds on the MIL grid (drop
 and wind together), leads with a measured time of flight, MOA vs mil.

@@ -1,8 +1,9 @@
 """
 pack.py  --  a zip you can carry to another computer.
 
-Almost nothing here is clever, and that is the point. The toolkit is
-about 1.4 MB of text; everything heavy is either regenerable or is your
+Almost nothing here is clever, and that is the point. The repo's three
+stages are about 4 MB of text, plus the shelf's music and covers (21 MB
+on 2026-10-08); everything heavy is either regenerable or is your
 own footage. So a portable copy is: the text, your originals if you ask
 for them, and a SETUP.bat that installs the two programs Windows does
 not come with.
@@ -39,30 +40,49 @@ TOOLKIT = [
     "library",
     "ffilm", "tests",
     "pyproject.toml", "uv.lock", "CLAUDE.md", "README.md",
-    "HOW_TO_USE.md", "FILM.bat", ".gitignore", ".gitattributes",
-    "_fetch.py",
-    # How Claude works on this toolkit: the rulebooks, the skills, the
-    # hooks. Without them a copy's Claude edits the machine instead of
-    # the film. settings.local.json is NOT listed -- it is one person's.
+    "HOW_TO_USE.md", "WHAT_IT_DOES.md", "LICENSE", "FILM.bat",
+    ".gitignore", ".gitattributes", "_fetch.py", "scripts",
+    # How Claude works on this toolkit: the rulebooks and the hooks.
+    # Without them a copy's Claude edits the machine instead of the film.
     "docs",
     # Not the model files -- they are other people's, and each machine
     # fetches its own, checked by SHA-256 (see ffilm/models.py). The
     # README is what says so to whoever unpacks this.
     "models/README.md",
-    ".claude/settings.json", ".claude/skills", ".claude/hooks",
+    ".claude/hooks",
 ]
 
-# Beside the toolkit, from the repo (ai-film-lab-v2, UNIFY.md): the copy
-# has the repo's shape -- film/ beside projects/, FILM.bat on top -- so it
-# finds its films where this one does. projects/CLAUDE.md is the editor's
-# rulebook; without it a copy's Claude edits the machine instead of the film.
-REPO = ["FILM.bat", ".gitignore", ".gitattributes", "projects/CLAUDE.md"]
+# Beside the toolkit, the rest of the repo (ai-film-lab-v2): the copy has
+# the repo's shape -- the three stages beside projects/, the three doors on
+# top -- so it finds its films where this one does. The skills and the
+# settings that wire the hooks live at the root since 2026-10-07 (1edbc9b);
+# until 2026-10-08 this list still named them under film/, where they no
+# longer were, so a copy's Claude came without skills and without hooks.
+# settings.local.json is NOT listed -- it is one person's. projects/CLAUDE.md
+# is the editor's rulebook; without it a copy's Claude edits the machine.
+REPO = ["FILM.bat", "SLIDES.bat", "FLY.bat", "CLAUDE.md",
+        ".gitignore", ".gitattributes", ".githooks",
+        ".claude/settings.json", ".claude/skills", "docs",
+        "projects/CLAUDE.md",
+        "slides/aimanim", "slides/tests", "slides/scenes", "slides/r",
+        "slides/docs", "slides/pyproject.toml", "slides/uv.lock",
+        "slides/manim.cfg", "slides/CLAUDE.md", "slides/README.md",
+        "slides/PLAN.md", "slides/.gitignore", "slides/.gitattributes",
+        "fly/library", "fly/recipes", "fly/tests", "fly/FLY.bat",
+        "fly/CLAUDE.md", "fly/README.md", "fly/PLAN.md",
+        "fly/.gitignore", "fly/.gitattributes"]
 
-# Of a project, the parts that cannot be made again.
+# Of a project, the parts that cannot be made again -- and the clips its
+# film.yaml shows (`clip:`), which only Manim makes again, minutes a slide.
+# Of its flight only stops.json (the titles you edited) and input/; the
+# stills and the video come back from it.
 PROJECT_KEEP = ["media", "music", "cover", "film.yaml", "script.txt",
                 "narration.txt", "script_intro.txt", "script_outro.txt",
                 "intro.txt", "closing.txt",
-                ".vertical"]
+                ".vertical",
+                "slides.txt", "slides.script.txt", "slides.published.json",
+                "clips", "fly/stops.json", "fly/input", "analysis/tight"]
+TIGHT = "tight"
 
 SKIP_DIRS = {".venv", ".git", "__pycache__", ".pytest_cache", ".Rproj.user",
              ".idea", ".vscode", "out", "analysis", "proxies", "thumbs"}
@@ -74,7 +94,13 @@ SKIP_SUFFIX = {".pyc", ".pyo", ".zip"}
 def wanted(rel: Path) -> bool:
     """Should this path, relative to the toolkit root, travel?"""
     parts = rel.parts
-    if any(p in SKIP_DIRS for p in parts):
+    # analysis/ comes back from `film ingest` -- all but analysis/tight/,
+    # the narration with its pauses cut that a film's slides play
+    # (decision 0015). Making that again means cutting again, which
+    # rewrites the edit; a packed Screening said "voice file not found".
+    tight = {i for i in range(len(parts) - 1)
+             if parts[i] == "analysis" and parts[i + 1] == TIGHT}
+    if any(p in SKIP_DIRS and i not in tight for i, p in enumerate(parts)):
         return False
     if rel.name in SKIP_NAMES:
         return False
@@ -104,8 +130,10 @@ def contents(root: Path, projects: list[str] | None = None,
         for p in _walk(root / name, root):
             found.append((p, "film/" + p.relative_to(root).as_posix()))
     for name in REPO:
+        # Each file by its own path: with whole folders in the list, `name`
+        # would give every file in the folder the folder's name in the zip.
         for p in _walk(root.parent / name, root.parent):
-            found.append((p, name))
+            found.append((p, p.relative_to(root.parent).as_posix()))
 
     films = films or root.parent / "projects"
     for proj in projects or []:
@@ -193,6 +221,8 @@ READ_ME_FIRST = """AI FILM LAB -- on a new computer
 2. Double-click FILM.bat. That is the whole thing from then on.
 
 HOW_TO_USE.md is the long version if anything goes sideways.
+SLIDES.bat (animated slides) and FLY.bat (the 3D flight) are the other
+two stages; what each of them needs is in docs/SETUP.md.
 
 What is NOT in this zip, on purpose:
 

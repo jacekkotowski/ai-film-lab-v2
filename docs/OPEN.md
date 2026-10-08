@@ -6,6 +6,23 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [film] A pack carries the whole repo (Jacek's ask). `film pack`
+  listed film/.claude/settings.json and film/.claude/skills (moved to the
+  root on 2026-10-07), so a copy's Claude had no skills and no hooks wired,
+  and it left out slides/, fly/, SLIDES.bat, FLY.bat, the root CLAUDE.md and
+  docs/. Now pack.REPO lists them; a film also brings slides.txt,
+  slides.script.txt, slides.published.json, clips/, fly/stops.json, fly/input
+  and analysis/tight/. Two more faults found on the way: (1) every file of a
+  folder in REPO got the folder's name in the zip (fixed: its own path);
+  (2) analysis/tight/ was never packed, so a packed Screening's s03-s07 had
+  "voice file not found" (since decision 0015). Measured: toolkit alone 376
+  files, 25.4 MB; with Screening 445 files, 423.8 MB zip (was 262 files);
+  unpacked in the scratchpad: `film check` OK, 8 shots, 172.7 s; `film peek`
+  in the copy 173.300 s = the original's peek (ffprobe). Film suite 1054
+  passed (6 new). Not checked: SETUP.bat on a machine without uv; a packed
+  flight's stops.json names this laptop's absolute path to the film
+  (`source`), so FLY.bat on another machine may not find its old project
+  (fly.py project_for compares that path; reasoned, not run).
 - 2026-10-08 [film] The speech model is kept in models/ (Jacek's ask):
   faster-whisper got `download_root=models/whisper` (voice.speech_models_dir);
   it was in %USERPROFILE%\.cache\huggingface\hub. The two models there

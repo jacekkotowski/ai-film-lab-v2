@@ -3,7 +3,8 @@
 The one list (2026-10-08; was four: this file in slides/docs/, film's README,
 slides' README, fly's README). Commands run from the repo root. "Here" is
 what Jacek's Windows 11 laptop has, measured 2026-10-08. A `film pack` zip
-is the film stage only and has its own guide: `film/HOW_TO_USE.md`, Part 1.
+carries all three stages and this file; its SETUP.bat installs uv and ffmpeg
+(section 1) and the film's packages, the rest is set up from here.
 
 ## 1. Every stage
 | tool | how | check | here |

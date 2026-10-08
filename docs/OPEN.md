@@ -164,6 +164,11 @@ section with the commit id -- do not delete it.
   To make it right (his yes needed, it overwrites his narration.txt):
   narration.txt with 12 paragraphs + his edits, shown as a picture ->
   paragraph table first; then the resume fix above.
+  Names, measured: film-lab's pictures_in_order on his media/ gives all
+  12 in number order, "11 jesus.png" in place 11 (by prefix, as he
+  wants). The only name-picky code was slides' publish ("NN_"), fixed
+  2ef93a0. The chaos in the window: 12 pictures, 8 paragraphs in
+  narration.txt (picture 08 got the insult's words, 09-12 none).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

@@ -124,7 +124,14 @@ section with the commit id -- do not delete it.
   Hate? ... aimed at them both"; it has 8 paragraphs, so from picture 08
   on every paragraph is one picture off until he pastes 08/09/11/12).
   media/ has "11 jesus.png" (space, not "_"): publish does not see it as
-  picture 11. A recording rec_20261008-212920.mp4 exists. Still no [outro]. Same cause, still missing from
+  picture 11. A recording rec_20261008-212920.mp4 exists. Still no [outro].
+  Jacek feared the recordings lost ("I lost an hour"). Measured 21:5x, all
+  on disk, none deleted: media/rec_20261008-212920.mp4 23.0 s (camera);
+  media/_slides/ 10 voice-over takes, 299 s (ffprobe), last 21:53:22;
+  media/_discarded/ 3 camera takes + 24 voice-overs, ~541 s, kept, not
+  deleted. Not known: which take belongs to which picture (narration.txt
+  had 8 paragraphs for 12 pictures), and whether the window shows them.
+  His wish: the recording must not feel fragile -- open, not designed. Same cause, still missing from
   the script: [outro] (plan: "Chérie, you are loved..." on camera, not
   agreed) and the photo paragraphs 08, 09, 11, 12 (his text is in session
   46e9c487's transcript, 2026-10-08 17:20).

@@ -62,6 +62,16 @@ section with the commit id -- do not delete it.
   margins 67/72/120/598 px; half-size draft 6.50 s (ffprobe), steps
   spaced evenly (not narrated); `film check` 39 words, ~15.6 s, steps at
   4.0 / 11.2 / 12.4 s. NOT published. Left: 01, 02, 06, 07, 10.
+  Slide 06 `face-impolite` MADE (session 4): Brown & Levinson's ladder
+  (bald / with redress / off record / don't do it; "with redress" merges
+  their positive and negative politeness, Claude's call) and Culpeper's
+  impoliteness below it, red arrow down on "opposite". Both his paragraphs
+  ("Now look..." and the crowds one) added to slides.script.txt [06]
+  word for word, from session 1's transcript. Full still 1080x1920
+  (ffprobe), 0 [layout] notes, margins 81/81/120/628 px; half-size draft
+  9.50 s; `film check` 62 words, ~24.8 s, steps at 12.8 / 16.0 / 20.4 /
+  22.8 s: the first 12.8 s show only the title (rehearsal). Culpeper 1996
+  cited from memory. NOT published. Left: 01, 02, 07, 10.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

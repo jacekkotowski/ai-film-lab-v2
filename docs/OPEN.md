@@ -43,9 +43,26 @@ section with the commit id -- do not delete it.
   first 14 of repeat 1 are real, and all 14 chose the same as the first
   run, so the rest of the repeats were dropped (little noise; the open
   question is the labels). run.py now grades a $0 / error run "failed",
-  left out of the table (4c9de47, evals/tests 46 OK). Waiting for Jacek:
-  `label:` on the 31 rows of .local/evals/label-routing.md (made by a
-  scratchpad script from valid runs only; Claude's words shown from the end).
+  left out of the table (4c9de47, evals/tests 46 OK).
+  Labels: Jacek could not label the 31 ("momentary dialogue events, not
+  repetitive"), so NOT his labels: .local/evals/cases/routing-relabel.json
+  drops 25 one-off moments (short replies to an offer, permissions,
+  one-video renders; 17 of the 31 + 8 that had agreed) and gives 14
+  standalone requests Claude's label, marked `by: claude` (ace9edf; the
+  frozen file untouched; run.py applies it). Recount of the full run, no
+  new runs: 54/67; all 45 "none" right; skill cases 9/22, 12 missed as
+  "none" (change-the-machine 4, status 2, investigate 2, edit-pass 2), 1
+  new-scene -> binary-diagnostics. 22 skill cases over 10 skills is thin.
+  Phase 2 STARTED, step 1 count only (scratchpad edit_cases.py, read-only):
+  21 typed messages in the logs were followed by an Edit of a projects'
+  film.yaml (What Is Love 7, Bauhaus 4, SUMIFS 3...). Judged by Claude
+  from the note and the next message, NOT checked against git: ~10 are
+  clean note -> edit pairs (Bauhaus caption notes; What Is Love depth
+  x5, all on one setting; Happy Birthday "same image at the end 10 s" and
+  "music 20 s"; Bauhaus "depth 0.5"; SUMIFS "remove the start image");
+  the rest are code, frustration or permission messages, one with
+  `film undo`. Next: cases.py edit-pass (before/after from git per pair),
+  then the copy box for edits (03-plan Phase 2).
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

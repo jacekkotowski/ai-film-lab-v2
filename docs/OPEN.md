@@ -63,6 +63,22 @@ section with the commit id -- do not delete it.
   the rest are code, frustration or permission messages, one with
   `film undo`. Next: cases.py edit-pass (before/after from git per pair),
   then the copy box for edits (03-plan Phase 2).
+  `cases.py edit-pass` BUILT: before = the film.yaml's last commit before
+  Claude's first edit, after = that before + his logged edits; "clean"
+  when every edit fits, the next commit equals it, no `film undo`.
+  Measured: 21 notes, 13 clean, 8 doubtful (3 no commit before: I am
+  not your fear, 1930s Austria x2; Screening's 10 edits reverted by the
+  next commit; SUMIFS s07 undone; SUMIFS "remove the start image" and
+  Bauhaus 09-19 captions mixed with a later `film caption`/speed change in
+  the same commit; Bauhaus "allow always everything" is the tail of the
+  note before it). The 13 clean, by kind (Claude's reading): depth 7
+  (What Is Love 6 on one line, Bauhaus 1), in/out of a take 2 (Frankfurt,
+  Bauhaus), closing card 2 (Happy Birthday), captions 1 (What Is Love),
+  cut a passage 1 (SUMIFS "cut it"). Two of them are not notes on the
+  film in his words (Frankfurt "why are these small issues reappearing",
+  Bauhaus "continue open.md..."). Thin and narrow for a quality set.
+  Candidates (not frozen) in .local/evals/cases/edit-pass.candidates.json.
+  evals/tests 59 OK. Next: Jacek decides which count, then split + freeze.
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

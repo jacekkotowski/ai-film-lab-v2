@@ -17,6 +17,9 @@ it's installed.
    walks you through everything from there — one question at a time,
    telling you the next step as it goes.
 
+Everything all three stages need (slides, film, fly, and Claude's search)
+is listed in one place: the repo's `docs/SETUP.md`.
+
 **[Read HOW_TO_USE.md](HOW_TO_USE.md)** for the full walkthrough. It
 assumes nothing, and it's the manual for everything below this point too.
 
@@ -94,11 +97,11 @@ into each one as it plays, and back to the middle for your closing.
 Parts light up as the story reaches them.
 
 **To fly a finished film** (offline, no Claude needed):
-1. Get ai-3d-studio and install what it needs once: Blender, Python and
-   ffmpeg (its README has the three `winget` lines).
-2. Drag `out\final.mp4` onto ai-3d-studio's `FLY.bat`. It picks up
+1. Install what it needs once: Blender, Python and ffmpeg (the repo's
+   `docs/SETUP.md`, section 4).
+2. Drag `out\final.mp4` onto the repo's `FLY.bat`. It picks up
    `final.timeline.json` from beside the mp4 by itself, so keep the two
    together. Dragging the `out` folder or the film's folder works too.
 3. It renders stills for you to check, then asks: `d` for a draft, `v`
-   for the full video. The result is `out\flight_film.mp4` in the
-   studio's project folder.
+   for the full video. The result is `fly\out\flight_film.mp4` in the
+   film's own folder.

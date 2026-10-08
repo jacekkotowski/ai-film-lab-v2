@@ -125,7 +125,7 @@ number) was probably met before. First `python -m aimanim.patterns find
 <word>`, then qmd (collections `v2` docs, `v2-code` code, `v2-history`
 commits, all three stages; the MCP tool or `qmd search "<words>" -c v2`).
 Say what was found. New machine:
-`docs/SETUP.md`. The whole architecture, general: `docs/AGENT-WORKBENCH.md`.
+the repo's `docs/SETUP.md`. The whole architecture, general: `docs/AGENT-WORKBENCH.md`.
 
 ## Where knowledge lives
 

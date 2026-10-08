@@ -6,6 +6,16 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [all] Setup in one place: docs/SETUP.md (was slides/docs/SETUP.md,
+  git mv) lists all three stages and Claude's tools, with this laptop's
+  versions measured today (uv 0.12.8, ffmpeg 9.0.1, git 2.50.1, Node 24.19.0,
+  qmd 2.8.3, Python 3.13.5, Blender 5.2.1, R 4.6.1, faster-whisper 1.2.1,
+  onnxruntime 1.29.0, Manim 0.21.0) and what is on each machine only (music
+  shelf, models, speech models, .devices.json, search index). film/README,
+  slides/README, fly/README point to it; film/HOW_TO_USE Part 1 stays as the
+  guide of the `film pack` zip (the zip has the film stage only and does not
+  carry docs/SETUP.md). Not tried on a second machine; the font line in it
+  (slides use the machine's default font) is reasoned.
 - 2026-10-08 [all] FIXED, measured: Claude's search pointed at collections
   that no longer exist. Five instruction lines (slides/CLAUDE.md,
   film/CLAUDE.md, slide-layout skill, slides/docs/SETUP.md) named `manim`,

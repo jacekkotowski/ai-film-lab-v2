@@ -3,18 +3,10 @@
 Ideas → 3D presentations, locally, with Blender + Claude Code.
 
 ## Setup (once)
-Three programs, no Python packages. Blender has its own Python, and the other scripts use only the standard library.
-```
-winget install BlenderFoundation.Blender
-winget install Gyan.FFmpeg
-winget install Python.Python.3.12
-```
-1. `FLY.bat` finds Blender by itself. To type `blender` commands by hand, add `C:\Program Files\Blender` to PATH (the winget install doesn't) or use the full path to `blender.exe`.
-2. Put this folder wherever you keep projects and open Claude Code in it. It reads `CLAUDE.md` automatically.
-3. The skills live in `.claude/skills/`, so they show up as `/idea-to-spec` and `/build-preview`.
+Three programs, Blender, Python and ffmpeg, and no Python packages: Blender has its own Python, and the other scripts use only the standard library. The install lines for all three stages are in one place, the repo's `docs/SETUP.md` (section 4 for this one). `FLY.bat` finds Blender by itself; to type `blender` commands by hand, add `C:\Program Files\Blender` to PATH (the winget install doesn't) or use the full path to `blender.exe`. The skills (`/idea-to-spec`, `/build-preview`) are in the repo's `.claude/skills/`.
 
 ## From a 2D film to its 3D flight (no Claude, no internet)
-[ai-film-lab](https://github.com/jacekkotowski/ai-film-lab) makes the film: your photos, clips and voice, cut, captioned and set to music. This studio flies it in 3D. Everything runs offline once the three programs above are installed.
+[ai-film-lab](https://github.com/jacekkotowski/ai-film-lab) makes the film: your photos, clips and voice, cut, captioned and set to music. This studio flies it in 3D. Everything runs offline once Blender, Python and ffmpeg are installed.
 
 **What you need**
 - The film rendered with ai-film-lab's `film final`. It writes `out/final.mp4` **and** `out/final.timeline.json` beside it, and the timeline is what says which picture plays when. An ordinary video without a timeline can't be flown.

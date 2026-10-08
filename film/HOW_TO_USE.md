@@ -5,6 +5,8 @@ with camera movement, music, and captions — like a professional editor
 made it, not a slideshow.
 
 This one document is everything you need. Nothing else to read first.
+(Part 1 is for the zip that `film pack` makes. In the whole repo,
+ai-film-lab-v2, all three stages are set up from `docs/SETUP.md`.)
 
 ---
 

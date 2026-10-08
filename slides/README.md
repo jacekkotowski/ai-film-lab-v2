@@ -15,8 +15,5 @@ Stage 0 of three: **ai-manim** makes slides → **ai-film-lab** cuts the film
 5. Copy the clip into the film (needs narration over a clip in ai-film-lab — PLAN step 3).
 
 ## Setup
-```
-uv sync --extra render        # Manim; not yet measured on this machine
-python -m unittest discover tests
-```
-Status: PLAN.md. Trial scene rendered 2026-10-05 (docs/tech/manim.md).
+All three stages, in one place: the repo's `docs/SETUP.md` (section 3 for
+this one). Status: PLAN.md. Trial scene rendered 2026-10-05 (docs/tech/manim.md).

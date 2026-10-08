@@ -80,5 +80,6 @@ stage (`python -m aimanim.look …`); from here, prefix `uv run --directory <sta
 | a film's slides: order and script | `projects/<Title>/slides.txt`, `slides.script.txt` |
 | every fix and slide recipe | `slides/docs/patterns/` |
 | skills (all stages) | `.claude/skills/` |
-| how the workbench is built | `slides/docs/AGENT-WORKBENCH.md`, `slides/docs/SETUP.md` |
+| setting up a machine (all stages) | `docs/SETUP.md` |
+| how the workbench is built | `slides/docs/AGENT-WORKBENCH.md` |
 | search | qmd collections `v2` (this repo's docs) and `v2-history` (its commits) |

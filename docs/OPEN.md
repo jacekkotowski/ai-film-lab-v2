@@ -85,6 +85,10 @@ section with the commit id -- do not delete it.
   "slightly increase depth" (one for the depth chain), Bauhaus depth 0.5,
   SUMIFS "cut it". Complaints and permission messages left out. A first
   check only: no tuning (gepa) on 6; it waits for more notes from new films.
+  STOPPED here by Jacek (2026-10-08 evening). Nothing to continue unasked:
+  not the edit copy box, not gepa (never installed), not another run.
+  Possible later, only on his ask: rewrite the descriptions of the skills
+  routing missed, then one rerun (~$21) to measure.
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

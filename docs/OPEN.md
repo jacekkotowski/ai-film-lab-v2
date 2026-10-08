@@ -156,6 +156,14 @@ section with the commit id -- do not delete it.
   change-the-machine): the window starts at the first slide with no take
   in _slides/ and joins the kept ones at the end. Which take is which
   picture is not recorded beside them (no .cues/.picture json in _slides).
+  Jacek's verdict (2026-10-08): the text was meant to be per recorded
+  picture, whole; Claude split it, published only the slides' 8
+  paragraphs and put him "on a mine": ~$50 and his evening lost. Cause on
+  Claude's side: his full text was in the transcript and was not put into
+  the script before publish. Rule saved (memory whole-text-before-publish).
+  To make it right (his yes needed, it overwrites his narration.txt):
+  narration.txt with 12 paragraphs + his edits, shown as a picture ->
+  paragraph table first; then the resume fix above.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

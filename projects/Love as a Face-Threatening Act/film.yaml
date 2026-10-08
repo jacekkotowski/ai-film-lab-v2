@@ -1,0 +1,1082 @@
+# Written by `film init`. Everything here is a starting point.
+# Change the numbers. That is what this file is for.
+#
+# Filename hints `init` understood, if you used any:
+#   00_ 01_ ...     explicit order
+#   open_ close_    which shot opens / closes the film
+#   open_close_     the SAME image opens AND closes it
+#   quote_          held longer, filename becomes a centered title
+#
+#   uv run film peek    seconds    -- is the ORDER right?
+#   uv run film draft   <1 min     -- does the MOTION feel right?
+#   uv run film final   minutes    -- ship it
+
+fps: 24
+resolution: [1080, 1920]   # vertical, for YouTube Shorts
+# Each picture carries its own piece of
+# media/voiceover_20261008-223526.wav -- see `voice:` below.
+# title: the words on the thumbnail. Left out, the film is
+#        called what its folder is called.
+# music: found on its own -- this project's music/ folder if it
+#        has one, otherwise your library/music/ folder.
+music_volume: 0.6      # the level when nobody is talking
+music_fade: 2.0        # seconds of fade in and out
+music_duck: 0.5        # how far the music drops while you talk
+                       # 0 = never drops. 1 = gets right out of the way
+
+look:
+  preset: old_film      # clean | warm | old_film | projector
+  glow: 0.25            # lifts shadows -- better lighting
+
+# Uncomment if a wide clip is losing too much to a tall frame.
+# `blur` keeps the picture whole on a blurred copy of itself
+# instead of cropping it. fill_aspect is the shape of the sharp
+# part: 1.0 square, 0.8 taller and bigger, 1.33 shorter and safer.
+# fill: blur
+# fill_aspect: 1.0
+
+# The room behind you softly blurred, you sharp -- on your own
+# recordings (rec_*) only. 0 = off, 2 = twice as soft. About +45%
+# render time. Barely shows in a vertical close-up: the crop is
+# nearly all face. Another clip can ask for it with its own `bokeh:`.
+bokeh: 1
+
+# Photographs with depth: as the camera moves, what is near
+# slides past what is far (parallax). 0 = flat. Photos only;
+# a .png .gif .svg is a chart and stays flat by itself.
+# 0.8 smears. Needs `uv sync --extra depth` once, flat without
+# it; see docs/decisions/0013.
+depth: 0.5
+
+shots:
+
+  - id: s00
+    src: analysis/title.jpg
+    duration: 2.0
+    move: static
+    note: "the opening card -- the same picture and the same words
+      as the thumbnail, so clicking the miniature lands you on the
+      frame you clicked. Made from your library; delete this whole
+      block if you would rather open on yourself talking."
+
+  - id: s01
+    src: media/rec_20261008-212920.mp4
+    in: "00:03.31"
+    out: "00:05.41"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.428, 0.299]
+    note: "part 1 of 4 -- one take with the long pauses cut out. Every word is kept"
+    captions:
+      - text: "I love you."
+        at: 0.24
+        dur: 1.06
+        pos: lower_third
+        words: [0.00, 0.25, 0.79]
+
+  - id: s02
+    src: media/rec_20261008-212920.mp4
+    in: "00:06.51"
+    out: "00:11.96"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: drift_right
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.428, 0.299]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "part 2 of 4 -- one take with the long pauses cut out. Every word is kept"
+    captions:
+      - text: "What does it mean?"
+        at: 0.24
+        dur: 0.58
+        pos: lower_third
+        words: [0.00, 0.07, 0.23, 0.36]
+      - text: "Why people suddenly throw stones."
+        at: 1.92
+        dur: 1.89
+        pos: lower_third
+        words: [0.00, 0.20, 0.60, 1.00, 1.48]
+
+  - id: s03
+    src: media/rec_20261008-212920.mp4
+    in: "00:13.06"
+    out: "00:18.01"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.428, 0.299]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "part 3 of 4 -- one take with the long pauses cut out. Every word is kept"
+    captions:
+      - text: "Why are  they afraid?"
+        at: 0.24
+        dur: 1.11
+        pos: lower_third
+        words: [0.00, 0.21, 0.46, 0.70]
+      - text: "Why are you afraid."
+        at: 2.24
+        dur: 1.29
+        pos: lower_third
+        words: [0.00, 0.27, 0.75, 0.94]
+
+  - id: s04
+    src: media/rec_20261008-212920.mp4
+    in: "00:18.96"
+    out: "00:23.02"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: drift_left
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.428, 0.299]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "part 4 of 4 -- one take with the long pauses cut out. Every word is kept"
+    captions:
+      - text: "Why do I feel..."
+        at: 0.24
+        dur: 0.95
+        pos: lower_third
+        words: [0.00, 0.21, 0.42, 0.56]
+      - text: "vulnerable."
+        at: 1.88
+        dur: 0.31
+        pos: lower_third
+        words: [0.00]
+
+  - id: s05
+    src: media/01_face-two.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "00:01.80"
+    out: "00:37.75"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.498, 0.246]
+    note: "picture 1 of 12 -- holds while these words are said"
+    captions:
+      - text: "Every time we speak, we risk face."
+        at: 0.24
+        dur: 2.01
+        pos: lower_third
+        words: [0.00, 0.14, 0.38, 0.59, 1.09, 1.23, 1.55]
+      - text: "Erving Goffman called face the positive value a person claims"
+        at: 3.60
+        dur: 2.88
+        pos: lower_third
+        words: [0.00, 0.34, 0.77, 1.09, 1.42, 1.90, 2.19, 2.45]
+      - text: "for herself in front of others."
+        at: 6.48
+        dur: 2.23
+        pos: lower_third
+        words: [0.00, 0.38, 1.48, 1.58, 1.81, 1.97]
+      - text: "Chinese thought splits it in two."
+        at: 9.32
+        dur: 2.59
+        pos: lower_third
+        words: [0.00, 0.23, 0.78, 1.34, 1.83, 2.18]
+      - text: "Hu Hsien Chin described both in 1944: mianzi,"
+        at: 13.09
+        dur: 3.04
+        pos: lower_third
+        words: [0.00, 0.59, 1.01, 1.38, 2.90]
+      - text: "the face of prestige and reputation, and lian,"
+        at: 16.85
+        dur: 3.20
+        pos: lower_third
+        words: [0.00, 0.08, 0.29, 0.46, 0.83, 1.26, 2.43, 2.99]
+      - text: "the face of moral character."
+        at: 20.72
+        dur: 1.21
+        pos: lower_third
+        words: [0.00, 0.08, 0.30, 0.46, 0.70]
+      - text: "You can lose mianzi and keep lian."
+        at: 22.44
+        dur: 2.39
+        pos: lower_third
+        words: [0.00, 0.06, 0.25, 0.66, 1.00, 1.26, 1.70, 1.99]
+      - text: "Lian is what you are when nobody claps."
+        at: 25.44
+        dur: 2.95
+        pos: lower_third
+        words: [0.00, 0.24, 0.67, 1.04, 1.22, 1.92, 2.10, 2.50]
+
+  - id: s06
+    src: media/02_face-weight.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "00:40.75"
+    out: "01:04.55"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    focus: [0.458, 0.438]
+    note: "picture 2 of 12 -- holds while these words are said"
+    captions:
+      - text: "Brown and Levinson split face again."
+        at: 0.25
+        dur: 2.60
+        pos: lower_third
+        words: [0.00, 0.30, 0.72, 1.38, 1.94, 2.24]
+      - text: "Positive face: the wish to be accepted."
+        at: 3.36
+        dur: 2.43
+        pos: lower_third
+        words: [0.00, 0.23, 1.28, 1.35, 1.59, 1.75, 1.96]
+      - text: "Negative face: the wish to be free,"
+        at: 6.28
+        dur: 1.98
+        pos: lower_third
+        words: [0.00, 0.24, 1.09, 1.17, 1.41, 1.55, 1.68]
+      - text: "unimposed on."
+        at: 8.88
+        dur: 0.82
+        pos: lower_third
+        words: [0.00, 0.54]
+      - text: "Any act that touches these is a face-threatening act."
+        at: 10.20
+        dur: 3.40
+        pos: lower_third
+        words: [0.00, 0.18, 0.46, 0.66, 1.01, 1.46, 2.03, 2.29, 2.50, 3.04]
+      - text: "Its weight is distance plus power plus the"
+        at: 14.08
+        dur: 3.00
+        pos: lower_third
+        words: [0.00, 0.15, 0.50, 1.02, 1.45, 1.80, 2.26, 2.62]
+      - text: "size of the imposition."
+        at: 17.08
+        dur: 1.51
+        pos: lower_third
+        words: [0.00, 0.29, 0.78, 0.93]
+
+  - id: s07
+    src: media/03_face-ledger.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "01:09.80"
+    out: "01:26.20"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.475, 0.310]
+    note: "picture 3 of 12 -- holds while these words are said"
+    captions:
+      - text: "Declaring love is a face-threatening act."
+        at: 0.24
+        dur: 2.28
+        pos: lower_third
+        words: [0.00, 0.43, 0.75, 1.06, 1.22, 1.44, 1.92]
+      - text: "It is a threat for all."
+        at: 2.96
+        dur: 1.39
+        pos: lower_third
+        words: [0.00, 0.27, 0.42, 0.83, 1.07]
+      - text: "The speaker puts his face on the table."
+        at: 4.92
+        dur: 2.21
+        pos: lower_third
+        words: [0.00, 0.18, 0.62, 1.03, 1.35, 1.59, 1.77, 1.88]
+      - text: "The hearer receives a weight."
+        at: 7.66
+        dur: 1.79
+        pos: lower_third
+        words: [0.00, 0.08, 0.64, 1.10, 1.49]
+      - text: "A question she did not ask for."
+        at: 9.84
+        dur: 2.49
+        pos: lower_third
+        words: [0.00, 0.11, 0.51, 1.10, 1.87, 2.22]
+
+  - id: s08
+    src: media/04_face-implied.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "01:31.50"
+    out: "02:03.45"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: pull_out
+    focus: [0.467, 0.249]
+    note: "picture 4 of 12 -- holds while these words are said"
+    captions:
+      - text: "Where does the threat live?"
+        at: 0.24
+        dur: 1.61
+        pos: lower_third
+        words: [0.00, 0.13, 0.45, 0.83, 1.18]
+      - text: "Grice showed that we mean more than we say."
+        at: 2.28
+        dur: 2.82
+        pos: lower_third
+        words: [0.00, 0.42, 0.92, 1.37, 1.58, 1.83, 2.15, 2.38, 2.54]
+      - text: "Words carry implicatures."
+        at: 5.68
+        dur: 1.72
+        pos: lower_third
+        words: [0.00, 0.35, 0.85]
+      - text: "Sperber and Wilson went further:"
+        at: 7.98
+        dur: 1.66
+        pos: lower_third
+        words: [0.00, 0.38, 0.58, 0.88, 1.18]
+      - text: "every act of communication arrives with a promise that it is"
+        at: 10.14
+        dur: 3.26
+        pos: lower_third
+        words: [0.00, 0.22, 0.58, 0.69, 1.26, 1.78, 2.08, 2.21, 2.53, 2.99, 3.12]
+      - text: "worth the hearer’s effort."
+        at: 13.41
+        dur: 1.42
+        pos: lower_third
+        words: [0.00, 0.22, 0.50, 1.06]
+      - text: "So “I love you” makes her search."
+        at: 15.33
+        dur: 2.65
+        pos: lower_third
+        words: [0.00, 0.95, 1.06, 1.25, 1.44, 1.78, 2.13]
+      - text: "What does he want?"
+        at: 18.40
+        dur: 0.65
+        pos: lower_third
+        words: [0.00, 0.06, 0.27, 0.43]
+      - text: "The threat lives in that search."
+        at: 19.56
+        dur: 1.62
+        pos: lower_third
+        words: [0.00, 0.09, 0.39, 0.78, 1.10, 1.29]
+      - text: "In the implied request."
+        at: 21.68
+        dur: 1.26
+        pos: lower_third
+        words: [0.00, 0.16, 0.40, 0.77]
+      - text: "It does not live in the love."
+        at: 23.52
+        dur: 1.61
+        pos: lower_third
+        words: [0.00, 0.14, 0.50, 0.78, 1.07, 1.26]
+
+  - id: s09
+    src: media/05_face-cancel.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "02:08.15"
+    out: "02:29.55"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    focus: [0.471, 0.329]
+    note: "picture 5 of 12 -- holds while these words are said"
+    captions:
+      - text: "Grice also gave us the way out."
+        at: 0.24
+        dur: 2.54
+        pos: lower_third
+        words: [0.00, 0.92, 1.26, 1.63, 1.86, 2.02, 2.19]
+      - text: "Implicatures can be cancelled."
+        at: 3.28
+        dur: 1.44
+        pos: lower_third
+        words: [0.00, 0.61, 0.85, 1.02]
+      - text: "I love you."
+        at: 5.26
+        dur: 0.80
+        pos: lower_third
+        words: [0.00, 0.22, 0.54]
+      - text: "You owe me nothing."
+        at: 6.48
+        dur: 1.07
+        pos: lower_third
+        words: [0.00, 0.18, 0.46, 0.69]
+      - text: "No answer."
+        at: 8.28
+        dur: 0.50
+        pos: lower_third
+        words: [0.00, 0.15]
+      - text: "No return."
+        at: 9.01
+        dur: 0.38
+        pos: lower_third
+        words: [0.00, 0.10]
+      - text: "The love stays."
+        at: 10.00
+        dur: 0.76
+        pos: lower_third
+        words: [0.00, 0.11, 0.37]
+      - text: "The demand is gone."
+        at: 11.17
+        dur: 1.00
+        pos: lower_third
+        words: [0.00, 0.16, 0.48, 0.75]
+      - text: "The speaker pays the whole cost."
+        at: 12.80
+        dur: 1.55
+        pos: lower_third
+        words: [0.00, 0.13, 0.48, 0.80, 1.04, 1.25]
+      - text: "The hearer carries nothing."
+        at: 15.02
+        dur: 1.60
+        pos: lower_third
+        words: [0.00, 0.13, 0.66, 1.01]
+
+  - id: s10
+    src: media/06_face-impolite.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "02:30.10"
+    out: "03:06.60"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.498, 0.312]
+    note: "picture 6 of 12 -- holds while these words are said"
+    captions:
+      - text: "Doxing?"
+        at: 0.60
+        dur: 0.51
+        pos: lower_third
+        words: [0.00]
+      - text: "Hate?"
+        at: 1.44
+        dur: 0.23
+        pos: lower_third
+        words: [0.00]
+      - text: "Now look at the other speech acts aimed at them both."
+        at: 2.20
+        dur: 3.55
+        pos: lower_third
+        words: [0.00, 0.80, 0.94, 1.14, 1.28, 1.49, 1.89, 2.34, 2.83, 3.10, 3.31]
+      - text: "The crowds pass around their old stories."
+        at: 6.32
+        dur: 1.91
+        pos: lower_third
+        words: [0.00, 0.10, 0.44, 0.73, 1.13, 1.32, 1.53]
+      - text: "They call them names I will not repeat."
+        at: 8.76
+        dur: 2.11
+        pos: lower_third
+        words: [0.00, 0.14, 0.45, 0.70, 1.07, 1.46, 1.58, 1.74]
+      - text: "Jonathan Culpeper studied this and called it impoliteness:"
+        at: 11.40
+        dur: 3.59
+        pos: lower_third
+        words: [0.00, 0.21, 0.91, 1.33, 1.68, 1.90, 2.21, 2.56]
+      - text: "speech built to attack face on purpose."
+        at: 15.38
+        dur: 2.76
+        pos: lower_third
+        words: [0.00, 0.24, 0.82, 1.20, 1.57, 2.03, 2.37]
+      - text: "Bald, on record, no redress."
+        at: 19.44
+        dur: 1.70
+        pos: lower_third
+        words: [0.00, 0.14, 1.12, 1.29]
+      - text: "Brown and Levinson mapped how people soften threats."
+        at: 21.64
+        dur: 2.78
+        pos: lower_third
+        words: [0.00, 0.18, 0.38, 0.74, 1.06, 1.31, 1.60, 2.10]
+      - text: "These people do the opposite."
+        at: 25.02
+        dur: 1.47
+        pos: lower_third
+        words: [0.00, 0.24, 0.62, 0.90, 1.10]
+      - text: "They maximise the damage."
+        at: 27.00
+        dur: 1.71
+        pos: lower_third
+        words: [0.00, 0.27, 0.91, 1.38]
+
+  - id: s11
+    src: media/07_face-fail.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "03:10.35"
+    out: "03:46.70"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_left
+    focus: [0.430, 0.402]
+    note: "picture 7 of 12 -- holds while these words are said"
+    captions:
+      - text: "By Grice’s own measure, they fail."
+        at: 0.24
+        dur: 3.01
+        pos: lower_third
+        words: [0.00, 0.36, 1.05, 1.26, 2.16, 2.41]
+      - text: "A slur breaks the maxim of quality:"
+        at: 3.76
+        dur: 2.08
+        pos: lower_third
+        words: [0.00, 0.20, 0.54, 0.97, 1.19, 1.42, 1.66]
+      - text: "it says what is false."
+        at: 6.36
+        dur: 1.20
+        pos: lower_third
+        words: [0.00, 0.13, 0.42, 0.75, 0.93]
+      - text: "An old picture breaks the maxim of relation:"
+        at: 8.17
+        dur: 2.24
+        pos: lower_third
+        words: [0.00, 0.14, 0.40, 0.75, 1.12, 1.34, 1.58, 1.84]
+      - text: "it has nothing to do with who I am now,"
+        at: 11.00
+        dur: 2.60
+        pos: lower_third
+        words: [0.00, 0.11, 0.38, 0.93, 1.15, 1.33, 1.55, 1.78, 2.08, 2.35]
+      - text: "whatever my guilt is,"
+        at: 14.08
+        dur: 1.27
+        pos: lower_third
+        words: [0.00, 0.26, 0.58, 0.89]
+      - text: "or who she is now, whatever was."
+        at: 15.64
+        dur: 2.81
+        pos: lower_third
+        words: [0.00, 0.76, 0.91, 1.15, 1.41, 2.14, 2.32]
+      - text: "They aim at mianzi, the reputation of their victim."
+        at: 19.04
+        dur: 3.11
+        pos: lower_third
+        words: [0.00, 0.20, 0.54, 0.71, 0.98, 1.60, 1.77, 2.10, 2.57, 2.76]
+      - text: "They cannot reach lian."
+        at: 22.72
+        dur: 1.40
+        pos: lower_third
+        words: [0.00, 0.14, 0.41, 1.13]
+      - text: "Lian is the one that chooses goodness."
+        at: 24.60
+        dur: 2.35
+        pos: lower_third
+        words: [0.00, 0.34, 0.67, 0.96, 1.30, 1.54, 1.90]
+      - text: "Here and now."
+        at: 26.95
+        dur: 1.80
+        pos: lower_third
+        words: [0.00, 0.82, 1.42]
+
+  - id: s12
+    src: media/08_parents.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "03:51.10"
+    out: "04:08.70"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: tilt_up
+    from: {cx: 0.438, cy: 0.500, scale: 1.00}
+    to:   {cx: 0.562, cy: 0.500, scale: 1.00}
+    ease: linear
+    focus: [0.600, 0.637]
+    note: "picture 8 of 12 -- holds while these words are said. This picture is 1024x1536; the frame shows about 0.88 of its width at a time, so it is swept across instead of cropped."
+    captions:
+      - text: "My parents did not say love."
+        at: 0.24
+        dur: 1.61
+        pos: lower_third
+        words: [0.00, 0.22, 0.70, 1.17, 1.31]
+      - text: "I do not think anyone ever told me I am loved."
+        at: 2.36
+        dur: 2.87
+        pos: lower_third
+        words: [0.00, 0.25, 0.44, 0.55, 0.78, 1.13, 1.35, 1.64, 1.93, 2.28, 2.44]
+      - text: "It was the word people are ashamed to say."
+        at: 5.80
+        dur: 2.27
+        pos: lower_third
+        words: [0.00, 0.10, 0.26, 0.42, 0.60, 0.90, 1.26, 1.69, 1.99]
+      - text: "It is like touching a caterpillar or a tarantula."
+        at: 8.40
+        dur: 2.62
+        pos: lower_third
+        words: [0.00, 0.13, 0.37, 0.83, 1.04, 1.26, 1.60, 1.97, 2.13]
+      - text: "It will not bite."
+        at: 11.48
+        dur: 0.59
+        pos: lower_third
+        words: [0.00, 0.10, 0.20, 0.34]
+      - text: "It is harmless."
+        at: 12.52
+        dur: 0.48
+        pos: lower_third
+        words: [0.00, 0.20]
+      - text: "Yet."
+        at: 13.01
+        dur: 0.60
+        pos: lower_third
+        words: [0.00]
+
+  - id: s13
+    src: media/09_now.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "04:13.60"
+    out: "04:31.50"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    from: {cx: 0.438, cy: 0.500, scale: 1.00}
+    to:   {cx: 0.562, cy: 0.500, scale: 1.00}
+    ease: linear
+    focus: [0.668, 0.565]
+    note: "picture 9 of 12 -- holds while these words are said. This picture is 1024x1536; the frame shows about 0.88 of its width at a time, so it is swept across instead of cropped."
+    captions:
+      - text: "Ackerman and colleagues found that how a declaration lands"
+        at: 0.24
+        dur: 3.52
+        pos: lower_third
+        words: [0.00, 0.42, 0.90, 1.34, 1.89, 2.22, 2.43, 2.54, 2.82]
+      - text: "depends on what the hearer thinks it asks for."
+        at: 3.76
+        dur: 3.29
+        pos: lower_third
+        words: [0.00, 0.34, 0.64, 0.83, 1.09, 1.54, 1.95, 2.45, 2.91]
+      - text: "Mine asks for you to be always."
+        at: 7.44
+        dur: 1.84
+        pos: lower_third
+        words: [0.00, 0.22, 0.75, 1.06, 1.20, 1.33, 1.50]
+      - text: "To be happy."
+        at: 9.78
+        dur: 0.59
+        pos: lower_third
+        words: [0.00, 0.06, 0.24]
+      - text: "And for me, to be there for you, unconditionally."
+        at: 10.76
+        dur: 3.19
+        pos: lower_third
+        words: [0.00, 0.18, 0.41, 1.08, 1.16, 1.34, 1.58, 1.82, 2.52]
+
+  - id: s14
+    src: media/10_face-cost.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "04:36.30"
+    out: "04:51.35"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: tilt_up
+    focus: [0.462, 0.432]
+    note: "picture 10 of 12 -- holds while these words are said"
+    captions:
+      - text: "The insult is cheap."
+        at: 0.24
+        dur: 1.14
+        pos: lower_third
+        words: [0.00, 0.20, 0.68, 0.92]
+      - text: "The speaker risks nothing and takes face from someone else."
+        at: 1.86
+        dur: 2.97
+        pos: lower_third
+        words: [0.00, 0.11, 0.51, 0.91, 1.31, 1.60, 1.86, 2.16, 2.43, 2.70]
+      - text: "The declaration is expensive."
+        at: 5.36
+        dur: 1.97
+        pos: lower_third
+        words: [0.00, 0.23, 0.76, 1.40]
+      - text: "The speaker risks everything and gives face away."
+        at: 8.00
+        dur: 3.54
+        pos: lower_third
+        words: [0.00, 0.12, 0.52, 0.90, 1.61, 2.28, 2.68, 3.03]
+
+  - id: s15
+    src: media/11 jesus.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "04:56.30"
+    out: "05:08.20"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: pan_right
+    from: {cx: 0.438, cy: 0.500, scale: 1.00}
+    to:   {cx: 0.562, cy: 0.500, scale: 1.00}
+    ease: linear
+    focus: [0.373, 0.560]
+    note: "picture 11 of 12 -- holds while these words are said. This picture is 1024x1536; the frame shows about 0.88 of its width at a time, so it is swept across instead of cropped."
+    captions:
+      - text: "That is why love is a dangerous word."
+        at: 0.24
+        dur: 2.69
+        pos: lower_third
+        words: [0.00, 0.23, 0.50, 0.90, 1.30, 1.69, 1.90, 2.25]
+      - text: "A revolutionary one."
+        at: 3.30
+        dur: 1.18
+        pos: lower_third
+        words: [0.00, 0.16, 0.74]
+      - text: "Jesus said we should love one another,"
+        at: 4.92
+        dur: 2.35
+        pos: lower_third
+        words: [0.00, 0.26, 0.72, 0.99, 1.31, 1.76, 1.97]
+      - text: "and they killed him for that."
+        at: 7.76
+        dur: 1.43
+        pos: lower_third
+        words: [0.00, 0.12, 0.39, 0.78, 1.00, 1.19]
+
+  - id: s16
+    src: media/12_morse code.png
+    voice: analysis/tight/voiceover_20261008-223526__tight_844db7b1.wav
+    in: "05:13.55"
+    out: "05:29.50"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: pull_out
+    from: {cx: 0.438, cy: 0.500, scale: 1.00}
+    to:   {cx: 0.562, cy: 0.500, scale: 1.00}
+    ease: linear
+    focus: [0.606, 0.303]
+    note: "picture 12 of 12 -- holds while these words are said. This picture is 1024x1536; the frame shows about 0.88 of its width at a time, so it is swept across instead of cropped."
+    captions:
+      - text: "I said it plain."
+        at: 0.24
+        dur: 1.02
+        pos: lower_third
+        words: [0.00, 0.27, 0.62, 0.77]
+      - text: "I set up my radio shack and sent it in Morse"
+        at: 1.78
+        dur: 2.96
+        pos: lower_third
+        words: [0.00, 0.24, 0.61, 0.75, 0.90, 1.28, 1.52, 1.94, 2.34, 2.50, 2.64]
+      - text: "code late at night."
+        at: 4.74
+        dur: 1.11
+        pos: lower_third
+        words: [0.00, 0.27, 0.70, 0.86]
+      - text: "The shortwave penetrated the sky,"
+        at: 6.32
+        dur: 1.80
+        pos: lower_third
+        words: [0.00, 0.16, 0.72, 1.33, 1.52]
+      - text: "and it is flying through space."
+        at: 8.64
+        dur: 1.42
+        pos: lower_third
+        words: [0.00, 0.30, 0.45, 0.54, 0.80, 1.07]
+      - text: "Like the light of the stars."
+        at: 10.52
+        dur: 1.78
+        pos: lower_third
+        words: [0.00, 0.60, 0.70, 1.02, 1.30, 1.48]
+
+  - id: s17
+    src: media/close_rec_20261008-224650.mp4
+    in: "00:02.46"
+    out: "00:41.36"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.426, 0.376]
+    note: "closer"
+    captions:
+      - text: "This is my love letter to Chérie Lorraine"
+        at: 0.24
+        dur: 2.75
+        pos: lower_third
+        words: [0.00, 0.27, 0.48, 0.74, 1.18, 1.49, 1.81, 2.32]
+      - text: "I hope you are safe."
+        at: 3.96
+        dur: 1.44
+        pos: lower_third
+        words: [0.00, 0.22, 0.52, 1.00, 1.13]
+      - text: "I pray because this is all I can do."
+        at: 6.00
+        dur: 2.41
+        pos: lower_third
+        words: [0.00, 0.24, 0.80, 1.12, 1.54, 1.66, 1.86, 1.98, 2.14]
+      - text: "Be for you."
+        at: 9.28
+        dur: 0.65
+        pos: lower_third
+        words: [0.00, 0.16, 0.42]
+      - text: "I think about you, about your silence and your awakening."
+        at: 11.04
+        dur: 3.13
+        pos: lower_third
+        words: [0.00, 0.10, 0.30, 0.58, 1.02, 1.22, 1.44, 2.28, 2.48, 2.69]
+      - text: "All that you said."
+        at: 14.80
+        dur: 0.97
+        pos: lower_third
+        words: [0.00, 0.22, 0.48, 0.62]
+      - text: "You are and always will be a warrior."
+        at: 16.96
+        dur: 2.03
+        pos: lower_third
+        words: [0.00, 0.21, 0.54, 0.88, 1.25, 1.46, 1.65, 1.79]
+      - text: "The only one."
+        at: 19.64
+        dur: 0.91
+        pos: lower_third
+        words: [0.00, 0.22, 0.58]
+      - text: "The best."
+        at: 20.96
+        dur: 0.51
+        pos: lower_third
+        words: [0.00, 0.21]
+      - text: "You are the one that chooses goodness."
+        at: 22.68
+        dur: 2.00
+        pos: lower_third
+        words: [0.00, 0.20, 0.52, 0.70, 1.05, 1.35, 1.62]
+      - text: "And that is the true and only layer."
+        at: 25.36
+        dur: 2.25
+        pos: lower_third
+        words: [0.00, 0.22, 0.51, 0.70, 0.86, 1.23, 1.57, 1.94]
+      - text: "The real you."
+        at: 28.19
+        dur: 0.92
+        pos: lower_third
+        words: [0.00, 0.14, 0.62]
+      - text: "Here and now."
+        at: 29.80
+        dur: 1.04
+        pos: lower_third
+        words: [0.00, 0.31, 0.66]
+
+  - id: s18
+    src: media/close_rec_20261008-224650.mp4
+    in: "00:42.56"
+    out: "01:25.81"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: drift_right
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.426, 0.376]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "closer"
+    captions:
+      - text: "Those that throw stones at you threw stones at me."
+        at: 0.24
+        dur: 4.19
+        pos: lower_third
+        words: [0.00, 0.24, 0.93, 1.36, 1.73, 1.98, 3.04, 3.33, 3.73, 3.97]
+      - text: "I felt it."
+        at: 4.93
+        dur: 0.83
+        pos: lower_third
+        words: [0.00, 0.26, 0.56]
+      - text: "I want one thing from you."
+        at: 6.96
+        dur: 1.39
+        pos: lower_third
+        words: [0.00, 0.22, 0.46, 0.67, 0.91, 1.14]
+      - text: "I dare ask."
+        at: 8.88
+        dur: 1.07
+        pos: lower_third
+        words: [0.00, 0.22, 0.53]
+      - text: "Believe."
+        at: 10.64
+        dur: 0.35
+        pos: lower_third
+        words: [0.00]
+      - text: "Believe in you."
+        at: 11.96
+        dur: 1.22
+        pos: lower_third
+        words: [0.00, 0.31, 0.82]
+      - text: "In your goodness."
+        at: 13.60
+        dur: 0.62
+        pos: lower_third
+        words: [0.00, 0.16, 0.29]
+      - text: "I believe in you."
+        at: 15.44
+        dur: 0.84
+        pos: lower_third
+        words: [0.00, 0.11, 0.38, 0.59]
+      - text: "I believe you are God's miracle."
+        at: 16.92
+        dur: 1.60
+        pos: lower_third
+        words: [0.00, 0.17, 0.47, 0.74, 0.87, 1.30]
+      - text: "I believe you are sent here so that God looks at"
+        at: 19.48
+        dur: 2.79
+        pos: lower_third
+        words: [0.00, 0.18, 0.49, 0.76, 0.89, 1.14, 1.54, 1.85, 2.07, 2.31, 2.58]
+      - text: "me through your eyes."
+        at: 22.27
+        dur: 1.34
+        pos: lower_third
+        words: [0.00, 0.77, 0.94, 1.10]
+      - text: "I finally understood why I cried when your hands extended in"
+        at: 24.76
+        dur: 4.11
+        pos: lower_third
+        words: [0.00, 0.25, 0.62, 1.26, 1.67, 1.88, 2.26, 2.66, 2.82, 3.10, 3.72]
+      - text: "the void in front of you."
+        at: 28.88
+        dur: 1.55
+        pos: lower_third
+        words: [0.00, 0.42, 0.67, 0.90, 1.06, 1.31]
+      - text: "And I felt the warm light on my temples."
+        at: 31.36
+        dur: 2.80
+        pos: lower_third
+        words: [0.00, 0.27, 0.69, 0.93, 1.12, 1.39, 2.16, 2.26, 2.42]
+
+  - id: s19
+    src: media/close_rec_20261008-224650.mp4
+    in: "01:26.81"
+    out: "02:06.71"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.426, 0.376]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "closer"
+    captions:
+      - text: "You have been going through hard tests."
+        at: 0.24
+        dur: 2.15
+        pos: lower_third
+        words: [0.00, 0.17, 0.38, 0.55, 0.81, 1.26, 1.77]
+      - text: "You fought the daemons, the traumas."
+        at: 2.88
+        dur: 2.13
+        pos: lower_third
+        words: [0.00, 0.15, 0.41, 0.65, 1.43, 1.48]
+      - text: "But look."
+        at: 5.88
+        dur: 0.36
+        pos: lower_third
+        words: [0.00, 0.18]
+      - text: "You are here."
+        at: 6.58
+        dur: 0.81
+        pos: lower_third
+        words: [0.00, 0.24, 0.48]
+      - text: "Not many passed the test."
+        at: 7.84
+        dur: 1.49
+        pos: lower_third
+        words: [0.00, 0.20, 0.50, 0.81, 1.13]
+      - text: "They gave up."
+        at: 9.76
+        dur: 0.60
+        pos: lower_third
+        words: [0.00, 0.10, 0.33]
+      - text: "They got corrupted, or indifferent,"
+        at: 10.64
+        dur: 1.78
+        pos: lower_third
+        words: [0.00, 0.10, 0.33, 1.12, 1.27]
+      - text: "or greedy or cynical."
+        at: 12.42
+        dur: 2.67
+        pos: lower_third
+        words: [0.00, 1.23, 1.58, 2.19]
+      - text: "I want you to believe."
+        at: 16.48
+        dur: 1.86
+        pos: lower_third
+        words: [0.00, 0.30, 0.55, 0.95, 1.29]
+      - text: "In you being the goodness."
+        at: 19.04
+        dur: 1.35
+        pos: lower_third
+        words: [0.00, 0.14, 0.46, 0.79, 1.00]
+      - text: "Yes I dare and I cross the line."
+        at: 21.32
+        dur: 2.01
+        pos: lower_third
+        words: [0.00, 0.40, 0.58, 0.91, 1.23, 1.36, 1.54, 1.73]
+      - text: "No, I do not think I deserve."
+        at: 23.88
+        dur: 1.40
+        pos: lower_third
+        words: [0.00, 0.37, 0.51, 0.74, 0.93, 1.07]
+      - text: "I received a lot from you."
+        at: 26.12
+        dur: 1.34
+        pos: lower_third
+        words: [0.00, 0.16, 0.59, 0.82, 0.94, 1.15]
+      - text: "I should pay back."
+        at: 27.80
+        dur: 1.16
+        pos: lower_third
+        words: [0.00, 0.27, 0.54, 0.77]
+      - text: "Sacrifice."
+        at: 29.40
+        dur: 0.52
+        pos: lower_third
+        words: [0.00]
+      - text: "For your cause."
+        at: 30.84
+        dur: 0.63
+        pos: lower_third
+        words: [0.00, 0.16, 0.29]
+
+  - id: s20
+    src: media/close_rec_20261008-224650.mp4
+    in: "02:07.71"
+    out: "02:16.61"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: drift_left
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.426, 0.376]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "closer"
+    captions:
+      - text: "My heart was supposed to be a stone."
+        at: 0.24
+        dur: 2.00
+        pos: lower_third
+        words: [0.00, 0.14, 0.55, 0.90, 1.27, 1.48, 1.66, 1.75]
+      - text: "The survival mode."
+        at: 2.84
+        dur: 0.99
+        pos: lower_third
+        words: [0.00, 0.19, 0.64]
+      - text: "You melted it like an expert goldsmith."
+        at: 4.56
+        dur: 2.12
+        pos: lower_third
+        words: [0.00, 0.17, 0.70, 0.94, 1.13, 1.29, 1.59]
+
+  - id: s21
+    src: media/close_rec_20261008-224650.mp4
+    in: "02:17.96"
+    out: "02:44.96"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.426, 0.376]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "closer"
+    captions:
+      - text: "I miss your voice."
+        at: 0.24
+        dur: 0.86
+        pos: lower_third
+        words: [0.00, 0.18, 0.35, 0.51]
+      - text: "I miss your smile."
+        at: 1.74
+        dur: 0.84
+        pos: lower_third
+        words: [0.00, 0.16, 0.35, 0.53]
+      - text: "I see the sadness in your eyes and I wish you were happy."
+        at: 3.28
+        dur: 3.31
+        pos: lower_third
+        words: [0.00, 0.18, 0.54, 0.94, 1.28, 1.54, 1.65, 2.02, 2.34, 2.48, 2.67, 2.83, 2.96]
+      - text: "You make this world beautiful and worth living."
+        at: 7.72
+        dur: 2.47
+        pos: lower_third
+        words: [0.00, 0.09, 0.30, 0.50, 0.73, 1.24, 1.80, 2.09]
+      - text: "I love you."
+        at: 11.48
+        dur: 1.09
+        pos: lower_third
+        words: [0.00, 0.31, 0.78]
+      - text: "It feels so good to say."
+        at: 13.24
+        dur: 1.49
+        pos: lower_third
+        words: [0.00, 0.14, 0.44, 0.74, 1.00, 1.19]
+      - text: "My day had a sense,"
+        at: 15.56
+        dur: 1.28
+        pos: lower_third
+        words: [0.00, 0.22, 0.52, 0.76, 0.89]
+      - text: "even if I was not successful."
+        at: 17.24
+        dur: 1.79
+        pos: lower_third
+        words: [0.00, 0.25, 0.65, 0.97, 1.13, 1.29]
+      - text: "I love you, Chérie"
+        at: 20.16
+        dur: 0.63
+        pos: lower_third
+        words: [0.00, 0.21, 0.43]
+
+# 21 shots, about 447 seconds.
+#
+# 12 slide(s), one per picture, each holding its own piece of
+# the 352s narration. Each `in:`/`out:` is that picture's words, on
+# the narration's own clock. Move a shot and its words move with it;
+# swap `src:` to put a different picture under the same words; hold
+# one longer with `duration:` and the words stay where they were said.
+#
+# Cut where you pressed Next while recording, each cut moved to the
+# nearest pause so no word is split. To change one, move these
+# `in:`/`out:` numbers, or record the narration again.

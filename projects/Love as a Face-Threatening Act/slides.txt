@@ -7,6 +7,7 @@
 # when the photographs between the slides are chosen.
 project: Love as a Face-Threatening Act
 01 face-two
+02 face-weight
 03 face-ledger
 04 face-implied
 05 face-cancel

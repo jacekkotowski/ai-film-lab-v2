@@ -162,6 +162,13 @@ def photos_missing(film: Film, parts: dict[str, str], photos) -> list[int]:
     return [n for n in pictures(film, parts) if n not in slides and n not in photos]
 
 
+def ends_missing(parts: dict[str, str]) -> list[str]:
+    """'intro' / 'outro' when the script has no such section: then no
+    script_intro.txt / script_outro.txt is written, and the recording
+    window opens with no text for the camera."""
+    return [k for k in ("intro", "outro") if not parts.get(k)]
+
+
 def with_clip(yaml_text: str, picture: str, clip: str) -> str:
     """film.yaml AS TEXT with `clip:` under the slide whose src is
     `picture` -- added, or corrected if it names another clip. Comments
@@ -352,7 +359,10 @@ def publish(name: str, root: Path = ROOT) -> list[str]:
     for n in photos_missing(film, parts, photos):
         report.append(f"PROBLEM: [{n:02d}] has words but no photo media/{n:02d}_... yet;"
                       f" film-lab would give them to the next picture")
-    files = {"narration.txt": narration_text(film, parts, photos)}
+    for k in ends_missing(parts):
+        report.append(f"PROBLEM: no [{k}] in slides.script.txt: script_{k}.txt not"
+                      f" written, the recording window has no {k} text")
+    files ={"narration.txt": narration_text(film, parts, photos)}
     if parts.get("intro"):
         files["script_intro.txt"] = parts["intro"] + "\n"
     if parts.get("outro"):

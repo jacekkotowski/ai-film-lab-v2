@@ -121,6 +121,20 @@ class APhotoBetweenSlidesGetsItsParagraph(unittest.TestCase):
         self.assertEqual(film.photos_missing(f, film.script_parts(PHOTO_SCRIPT), [2]), [])
 
 
+class AScriptWithNoIntroIsNamed(unittest.TestCase):
+    """publish writes script_intro.txt only from an [intro] section; a
+    script without one left the recording window with no intro text and
+    said nothing (2026-10-08, Love as a Face-Threatening Act)."""
+
+    def test_a_script_without_intro_or_outro_names_both(self):
+        self.assertEqual(film.ends_missing(film.script_parts(PHOTO_SCRIPT)),
+                         ["intro", "outro"])
+
+    def test_a_script_with_both_names_none(self):
+        parts = film.script_parts("[intro]\nHello.\n[01]\nA slide.\n[outro]\nBye.\n")
+        self.assertEqual(film.ends_missing(parts), [])
+
+
 class AClipGoesOnItsSlide(unittest.TestCase):
 
     def test_the_clip_line_goes_under_its_own_slide_and_keeps_crlf(self):

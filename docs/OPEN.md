@@ -51,6 +51,10 @@ section with the commit id -- do not delete it.
   showed Google-AI slide ideas; Claude's verdict (not yet his):
   take W = D + P + R building the red weight for 02; keep the bars (not
   ring + box) in 03-05; maxims / strategy axis match the plans for 06-07.
+  Paragraph [05] is now in slides.script.txt word for word (slide name
+  face-cancel), so the next session needs no transcript. Steps for 05:
+  "cancelled" (strike the "?"), "gone" (weight lifts, her "free" full),
+  "pays" (weight on his "free"); geometry from aimanim/ledger.py.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

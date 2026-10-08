@@ -80,6 +80,47 @@ class TheWordsGoWhereTheWindowShowsThem(unittest.TestCase):
                          "Fire four shots.\n\nDivide each distance.\n\n-\n")
 
 
+PHOTO_SCRIPT = """[01]
+A slide.
+
+[02] his photo
+A photo.
+
+[03]
+Another slide.
+"""
+
+
+class APhotoBetweenSlidesGetsItsParagraph(unittest.TestCase):
+    """film-lab gives paragraph n to picture n. A photo between two slides
+    had no paragraph, so every paragraph after it landed one picture off
+    (found 2026-10-08, Love as a Face-Threatening Act)."""
+
+    def test_a_photo_between_slides_gets_its_own_paragraph(self):
+        f = film.parse("01 a\n03 b\n")
+        self.assertEqual(film.narration_text(f, film.script_parts(PHOTO_SCRIPT)),
+                         "A slide.\n\nA photo.\n\nAnother slide.\n")
+
+    def test_a_photo_with_no_words_keeps_its_place_with_a_dash(self):
+        f = film.parse("01 a\n03 b\n")
+        parts = film.script_parts("[01]\nA slide.\n[03]\nAnother slide.\n")
+        self.assertEqual(film.narration_text(f, parts, photos=[2]),
+                         "A slide.\n\n-\n\nAnother slide.\n")
+
+    def test_the_photos_are_the_numbered_pictures_in_media_that_are_not_slides(self):
+        f = film.parse("01 a\n03 b\n")
+        with tempfile.TemporaryDirectory() as d:
+            for name in ("01_a.png", "02_parents.jpg", "05_shack.JPEG",
+                         "voiceover.wav", "notes.txt", "parents.jpg"):
+                (Path(d) / name).write_bytes(b"")
+            self.assertEqual(film.photos_in(Path(d), f), [2, 5])
+
+    def test_a_photo_paragraph_without_its_photo_is_named(self):
+        f = film.parse("01 a\n03 b\n")
+        self.assertEqual(film.photos_missing(f, film.script_parts(PHOTO_SCRIPT), []), [2])
+        self.assertEqual(film.photos_missing(f, film.script_parts(PHOTO_SCRIPT), [2]), [])
+
+
 class AClipGoesOnItsSlide(unittest.TestCase):
 
     def test_the_clip_line_goes_under_its_own_slide_and_keeps_crlf(self):

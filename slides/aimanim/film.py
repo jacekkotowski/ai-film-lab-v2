@@ -9,7 +9,9 @@ film/ and fly/: zeroing-a-rifle-sight):
 
 (a `project: <Title>` line may stay; it must name the folder),
 and its words are `slides.script.txt`, sections marked `[intro]`,
-`[01]`, `[02]`... `[outro]`. Two moments, one command each:
+`[01]`, `[02]`... `[outro]`. Photos between the slides: he puts them in
+the project's media/ as `NN_<name>.jpg`, their words go in `[NN]` like a
+slide's. Two moments, one command each:
 
   publish   before narrating. Creates the film-lab project if needed
             (film-lab's own `film new`), puts each FULL-SIZE still into
@@ -120,11 +122,44 @@ def script_parts(text: str) -> dict[str, str]:
     return {k: " ".join(" ".join(v).split()) for k, v in parts.items()}
 
 
-def narration_text(film: Film, parts: dict[str, str]) -> str:
+def pictures(film: Film, parts: dict[str, str], photos=()) -> list[int]:
+    """Every picture's number, slide or photo, in order: the slides, the
+    numbered sections of the script, and the photos found in media/."""
+    said = {int(k) for k in parts if k.isdigit()}
+    return sorted({s.picture for s in film.slides} | said | set(photos))
+
+
+def narration_text(film: Film, parts: dict[str, str], photos=()) -> str:
     """narration.txt as film-lab reads it: one paragraph per picture, in
-    picture order; a picture with no words is '-'."""
-    return "\n\n".join(parts.get(f"{s.picture:02d}", "") or "-"
-                       for s in film.slides) + "\n"
+    picture order; a picture with no words is '-'. A photo between slides
+    counts as a picture: film-lab gives paragraph n to picture n, so a
+    photo left out put every later paragraph one picture off."""
+    return "\n\n".join(parts.get(f"{n:02d}", "") or "-"
+                       for n in pictures(film, parts, photos)) + "\n"
+
+
+# The pictures film-lab shows (ffilm/kinds.py STILL).
+STILL = {".jpg", ".jpeg", ".jfif", ".png", ".tif", ".tiff", ".webp", ".bmp"}
+NUMBERED = re.compile(r"^(\d+)_")
+
+
+def photos_in(media: Path, film: Film) -> list[int]:
+    """The numbers of the pictures in media/ named 'NN_...' that are not
+    one of this film's slides: his photos, at the place their number says."""
+    slides = {s.picture for s in film.slides}
+    found = set()
+    for p in media.iterdir() if media.is_dir() else []:
+        m = NUMBERED.match(p.name)
+        if m and p.suffix.lower() in STILL and int(m.group(1)) not in slides:
+            found.add(int(m.group(1)))
+    return sorted(found)
+
+
+def photos_missing(film: Film, parts: dict[str, str], photos) -> list[int]:
+    """Numbers that have words in the script but neither a slide nor a
+    photo yet: film-lab would give those words to the next picture."""
+    slides = {s.picture for s in film.slides}
+    return [n for n in pictures(film, parts) if n not in slides and n not in photos]
 
 
 def with_clip(yaml_text: str, picture: str, clip: str) -> str:
@@ -312,7 +347,12 @@ def publish(name: str, root: Path = ROOT) -> list[str]:
     # file Jacek changed in film-lab since the last publish
     stamp = files_of(name).stamp
     last = json.loads(stamp.read_text(encoding="utf-8")) if stamp.exists() else {}
-    files = {"narration.txt": narration_text(film, parts)}
+    photos = photos_in(proj / "media", film)
+    report += [f"photo {n:02d} in media/" for n in photos]
+    for n in photos_missing(film, parts, photos):
+        report.append(f"PROBLEM: [{n:02d}] has words but no photo media/{n:02d}_... yet;"
+                      f" film-lab would give them to the next picture")
+    files = {"narration.txt": narration_text(film, parts, photos)}
     if parts.get("intro"):
         files["script_intro.txt"] = parts["intro"] + "\n"
     if parts.get("outro"):

@@ -21,8 +21,13 @@ section with the commit id -- do not delete it.
   narration.txt with one paragraph per SLIDE (aimanim/film.py
   narration_text), but film-lab cuts one paragraph per picture, so a photo
   between slides gets no paragraph and every later one lands a picture
-  off. Fix proposed (write every numbered section of the script), not
-  built. (2) `publish` runs `film new` only when projects/<Title>/ does
+  off. FIXED on Jacek's yes (commit "A photo between slides gets its
+  paragraph"): narration.txt now has a paragraph for every number --
+  slides, `[NN]` sections of the script, and `NN_*` pictures in media/
+  (a photo with no words gets "-"); publish lists the photos it found and
+  prints a PROBLEM line for `[NN]` words with no slide and no photo yet.
+  Slides suite 101 OK (4 new), 3 skipped. Not yet run on a real publish;
+  not seen by Jacek. (2) `publish` runs `film new` only when projects/<Title>/ does
   not exist; since unify slides.txt lives there, so it never runs for a
   new film and the project gets no `.vertical` (then 1920x1080,
   ffilm/checks.py:217). Here `film new` was run by hand: `.vertical`

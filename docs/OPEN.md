@@ -19,9 +19,22 @@ section with the commit id -- do not delete it.
   "commit only .gitignore... follow the film-code rules" and stopped: a
   run with no Edit/Bash does not start an action skill, so change-the-
   machine misses are the box's, not routing's. Also: the runs see today's
-  repo, not the repo of the message. Spent $2.57 in all. Not yet: a box
-  that shows Edit/Bash but refuses them (a repo copy outside the repo, its
-  own settings), the full run, Jacek's labels. evals/tests 35 OK.
+  repo, not the repo of the message. Spent $2.57 in all.
+  Later (Jacek: "all permissions granted"): routing runs now act, in a
+  `git archive` copy in %TEMP% (outside the repo: inside, git finds the
+  real .git), one fresh copy per case. The copy's own settings.json is NOT
+  applied (Edit refused, measured), so the rules go on the command line:
+  Edit/Write `./**`, Bash, `git push` refused. `run.py probe-act`: Edit in
+  the copy worked; the real repo's file, git status, projects/ unchanged;
+  push refused. Not proven: Bash on the real repo by absolute path (the run
+  tried only Read, which a user setting blocks); the repo snapshot is the
+  only guard there. The copy has no memory index and no .git. Same 6 cases,
+  6 turns, acting: 2/6 ($0.16-0.27, mean $0.23, 24-112 s). "yes do it"
+  (label none) now starts change-the-machine; "1 i 3" and "I gave up
+  today..." still start nothing; "status Turn Heat..." answers the question
+  inside it. 22 routing runs + 3 probes ≈ $5.8 today. Not yet: the full
+  92 (≈ $21, ≈ 75 min, reasoned from the mean), Jacek's labels.
+  evals/tests 41 OK.
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

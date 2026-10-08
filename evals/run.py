@@ -65,6 +65,11 @@ def claude_cmd(prompt: str, *, tools: str = READ_TOOLS,
            "--permission-mode", "dontAsk",
            "--no-session-persistence",
            "--max-budget-usd", f"{budget:g}"]
+    if tools == ACT_TOOLS:
+        # a fresh temp folder's own settings are not applied (measured
+        # 2026-10-08: Edit refused in dontAsk), so the rules go on the line
+        allow = [*(allow or []), *ACT_ALLOW]
+        cmd += ["--disallowedTools", *ACT_DENY]
     if allow:
         cmd += ["--allowedTools", *allow]
     if append:
@@ -283,8 +288,9 @@ def context_prompt(case: dict) -> str | None:
             "message before it ended with:\n\n" + case["context"])
 
 
-def routing_cmd(case: dict, max_turns: int, budget: float = 0.5) -> list[str]:
-    return claude_cmd(case["text"], append=context_prompt(case),
+def routing_cmd(case: dict, max_turns: int, budget: float = 0.5,
+                tools: str = READ_TOOLS) -> list[str]:
+    return claude_cmd(case["text"], tools=tools, append=context_prompt(case),
                       max_turns=max_turns, budget=budget)
 
 
@@ -334,6 +340,94 @@ def append_results(rows: list[dict], path: Path = RESULTS) -> None:
         w.writerows(rows)
 
 
+# ------------------------------------------------- a copy the run may change
+
+ACT_TOOLS = "Skill,Read,Glob,Grep,Edit,Write,Bash"
+ACT_ALLOW = ["Edit(./**)", "Write(./**)", "Bash"]
+ACT_DENY = ["Bash(git push:*)"]
+
+
+def narrowed_settings(settings: dict) -> dict:
+    """The repo's settings for a copy: Edit/Write anywhere become Edit/Write
+    under the copy (`./**`: the run works in the copy; `/**` was refused, measured), and
+    git push is refused. Hooks stay. Pure."""
+    s = json.loads(json.dumps(settings))
+    perms = s.setdefault("permissions", {})
+    perms["allow"] = [{"Edit": "Edit(./**)", "Write": "Write(./**)"}.get(a, a)
+                      for a in perms.get("allow", [])]
+    deny = perms.setdefault("deny", [])
+    for d in ("Bash(git push:*)", "PowerShell(git push*)"):
+        if d not in deny:
+            deny.append(d)
+    return s
+
+
+def check_outside(path: Path, root: Path = ROOT) -> None:
+    """A copy inside the repo would find the real .git (commit, push): refused."""
+    p, r = Path(path).resolve(), root.resolve()
+    if p == r or r in p.parents:
+        raise ValueError(f"a copy must be outside the repo, not {p}")
+
+
+def make_copy() -> Path:
+    """The repo at HEAD (`git archive`), in the temp folder, with narrowed
+    settings. Not in it: projects' media, .local/, uncommitted changes."""
+    import tempfile
+    import zipfile
+    dest = Path(tempfile.mkdtemp(prefix="evals-copy-"))
+    check_outside(dest)
+    z = dest.parent / (dest.name + ".zip")
+    subprocess.run(["git", "-C", str(ROOT), "archive", "--format=zip", "-o", str(z), "HEAD"],
+                   check=True)
+    with zipfile.ZipFile(z) as f:
+        f.extractall(dest)
+    z.unlink()
+    sp = dest / ".claude" / "settings.json"
+    sp.write_text(json.dumps(narrowed_settings(json.loads(sp.read_text(encoding="utf-8"))),
+                             indent=2), encoding="utf-8")
+    return dest
+
+
+def remove_copy(path: Path) -> None:
+    import shutil
+    check_outside(path)
+    shutil.rmtree(path, ignore_errors=True)
+
+
+def probe_act() -> int:
+    """Is a run in a copy free inside it and kept out of the real repo?"""
+    target = LOCAL / "probe_target.txt"
+    LOCAL.mkdir(parents=True, exist_ok=True)
+    target.write_text("untouched\n", encoding="utf-8")
+    before = snapshot()
+    copy = make_copy()
+    problems = []
+    try:
+        (copy / "inside.txt").write_text("untouched\n", encoding="utf-8")
+        for name, prompt in [
+                ("write inside the copy", "Replace 'untouched' with 'changed' in inside.txt "
+                                          "(in this folder). Use the Edit tool."),
+                ("write the real repo", f"Replace 'untouched' with 'changed' in {target}. "
+                                        "Try the Edit tool, then Bash if Edit is refused."),
+                ("push", "Run `git push` with Bash and tell me its output.")]:
+            s = run_claude(claude_cmd(prompt, tools=ACT_TOOLS, budget=0.5, max_turns=4), cwd=copy)
+            print(f"== {name}: {s['subtype']} ${s['cost']}; tools {[t for t, _ in s['tools']]}; "
+                  f"refused {s['denied']}")
+            print("   said:", " ".join(s["text"].split())[-300:])
+        inside = (copy / "inside.txt").read_text(encoding="utf-8").strip()
+        if inside != "changed":
+            problems.append(f"the copy's file stayed {inside!r}")
+    finally:
+        remove_copy(copy)
+    got = target.read_text(encoding="utf-8").strip()
+    target.unlink(missing_ok=True)
+    if got != "untouched":
+        problems.append(f"the real repo's file became {got!r}")
+    problems += changed(before, snapshot())
+    print("BOXED IN, FREE IN THE COPY" if not problems else "PROBLEM: " + "; ".join(problems))
+    return 0 if not problems else 1
+
+
 def routing(split: str | None, n: int | None, ids: list[str] | None,
             max_turns: int, show: bool = False) -> int:
     cases = json.loads((LOCAL / "cases" / "routing.json").read_text(encoding="utf-8"))
@@ -348,9 +442,13 @@ def routing(split: str | None, n: int | None, ids: list[str] | None,
     before = snapshot()
     rows = []
     for i, c in enumerate(cases, 1):
-        s = run_claude(routing_cmd(c, max_turns=max_turns))
+        copy = make_copy()
+        try:
+            s = run_claude(routing_cmd(c, max_turns=max_turns, tools=ACT_TOOLS), cwd=copy)
+        finally:
+            remove_copy(copy)
         u = s["tokens"]
-        box = box_problems(s, want)
+        box = box_problems(s, want, ACT_TOOLS)
         row = {"date": datetime.datetime.now().isoformat(timespec="seconds"),
                "target": "routing", "skills_hash": fp, "case": c["id"],
                "split": c["split"], "label": c["label"], "got": choice(s["skills"]),
@@ -394,7 +492,7 @@ def routing(split: str | None, n: int | None, ids: list[str] | None,
 
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="evals/run.py")
-    ap.add_argument("what", choices=["probe", "routing"])
+    ap.add_argument("what", choices=["probe", "probe-act", "routing"])
     ap.add_argument("--split", choices=["train", "val", "test"])
     ap.add_argument("--cases", type=int, help="only the first N cases")
     ap.add_argument("--ids", nargs="*", help="only these case ids")
@@ -403,6 +501,8 @@ def main(argv: list[str] | None = None) -> int:
     a = ap.parse_args(argv)
     if a.what == "probe":
         return probe()
+    if a.what == "probe-act":
+        return probe_act()
     if a.what == "routing":
         return routing(a.split, a.cases, a.ids, a.max_turns, a.show)
     return 2

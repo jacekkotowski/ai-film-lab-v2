@@ -173,6 +173,16 @@ section with the commit id -- do not delete it.
   the 10 takes in media/_slides/ and match each to its paragraph, so he
   re-records only what is missing. Never again say "nothing is lost" to
   him about recordings: his time was lost (his words, 2026-10-08).
+  SALVAGE MEASURED 22:00 (voice.transcribe, small model, scratchpad
+  what_was_said.py): the 10 takes in _slides/ are, in time order, full
+  readings of narration paragraphs 1-8 = pictures 01-07 and 10 (his
+  edited 06 and 07 included); each starts and ends on its paragraph's
+  first/last words. 215017 (21.7 s) and 215322 (10.85 s) have no speech
+  (0 lines). Usable: 01 213156, 02 213250, 03 213359, 04 213530, 05
+  213743, 06 214400, 07 214736, 10 214952. Missing: 08, 09, 11, 12
+  (photo paragraphs, ~80 words). Camera intro rec_20261008-212920.mp4
+  23.0 s present. Plan (needs his go): he records only 08, 09, 11, 12;
+  Claude joins the 12 in picture order with record.join_takes/write_cues.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

@@ -435,9 +435,34 @@ def probe_act() -> int:
     return 0 if not problems else 1
 
 
+def relabel(cases: list[dict], relabels: dict) -> list[dict]:
+    """The frozen cases with .local/evals/cases/routing-relabel.json applied:
+    {id: {"drop": why}} leaves a case out; {id: {"label": x, "by": who}}
+    replaces the log's label and says who gave it. The split never moves.
+    Pure; the frozen list is not changed."""
+    out = []
+    for c in cases:
+        r = relabels.get(c["id"], {})
+        if "drop" in r:
+            continue
+        c = dict(c, log_label=c["label"], label_by="log")
+        if "label" in r:
+            c.update(label=r["label"], label_by=r.get("by", "?"))
+        out.append(c)
+    return out
+
+
+def load_routing_cases() -> list[dict]:
+    d = LOCAL / "cases"
+    cases = json.loads((d / "routing.json").read_text(encoding="utf-8"))
+    rp = d / "routing-relabel.json"
+    rel = json.loads(rp.read_text(encoding="utf-8")) if rp.exists() else {}
+    return relabel(cases, rel)
+
+
 def routing(split: str | None, n: int | None, ids: list[str] | None,
             max_turns: int, show: bool = False) -> int:
-    cases = json.loads((LOCAL / "cases" / "routing.json").read_text(encoding="utf-8"))
+    cases = load_routing_cases()
     if split:
         cases = [c for c in cases if c["split"] == split]
     if ids:

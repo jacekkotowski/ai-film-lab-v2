@@ -189,6 +189,10 @@ section with the commit id -- do not delete it.
   command), he records only 08, 09, 11, 12 (~1 min), Claude joins the 12
   and checks. His choice still open: 1 = 8 slides only (cuts his 4
   photo paragraphs) or 2 = record the 4.
+  22:05 he said pressing record overwrites his takes. Measured 22:05:47:
+  nothing overwritten, no new take since 21:53, all 10 in _slides and 24
+  in _discarded at their sizes. Copied the 10 to
+  projects/<film>/backup_takes_2026-10-08/ (10 files, 55 MB).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

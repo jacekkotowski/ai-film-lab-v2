@@ -55,6 +55,13 @@ section with the commit id -- do not delete it.
   face-cancel), so the next session needs no transcript. Steps for 05:
   "cancelled" (strike the "?"), "gone" (weight lifts, her "free" full),
   "pays" (weight on his "free"); geometry from aimanim/ledger.py.
+  Slide 05 `face-cancel` MADE (bars kept, Jacek): opens on face-ledger's
+  end; "cancelled" white strike through the "?", "gone" weight to the
+  middle (0, -2.8) and her "free" full, "pays" weight on his outer 1.2,
+  his "free" 1.8. Full still 1080x1920 (ffprobe), 0 [layout] notes,
+  margins 67/72/120/598 px; half-size draft 6.50 s (ffprobe), steps
+  spaced evenly (not narrated); `film check` 39 words, ~15.6 s, steps at
+  4.0 / 11.2 / 12.4 s. NOT published. Left: 01, 02, 06, 07, 10.
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

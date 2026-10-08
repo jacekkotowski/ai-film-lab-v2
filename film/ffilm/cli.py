@@ -1045,6 +1045,15 @@ def cmd_record(args) -> None:
     # Narrating pictures in the window: one take per picture, so a fluff
     # or a crash costs one slide and not the whole narration (2026-10-02).
     per_slide = bool(windowed and args.voice and steps and not picking)
+    # Slides recorded in an earlier sitting, by picture: the window skips
+    # them and the join uses them (2026-10-08: a stop sent him back to
+    # slide 1). New takes go to the slides in `todo`, in order.
+    slides_dir = project / "media" / kinds.SLIDES_DIRNAME
+    kept = rec.kept_slides(shown, rec.slide_labels(slides_dir)) if per_slide else {}
+    todo = [i for i in range(len(shown)) if i not in kept]
+    if kept:
+        print(f"\n{len(kept)} of {len(shown)} slides already recorded; "
+              f"the window opens on slide {todo[0] + 1 if todo else len(shown)}.")
 
     def new_take():
         """One recording, started. Handed to the window as a callback so
@@ -1081,13 +1090,15 @@ def cmd_record(args) -> None:
         length, warnings = rec.verify_take(out, mode, bool(audio), take.heard)
         if per_slide:
             takes.append(out)
-            k, n = len(takes), len(shown)
+            i = todo[min(len(takes), len(todo)) - 1]
+            rec.write_slide_label(out, shown[i])
+            k, n = i + 1, len(shown)
             print(f"  Slide {k} of {n}: {_secs(length)}")
             for w in warnings:
                 print(f"    Careful: {w}")
             return ([f"Slide {k} of {n}: {_secs(length)}."] + warnings +
                     ["That was the last slide. Enter finishes; R says it "
-                     "again." if k >= n else
+                     "again." if len(takes) >= len(todo) else
                      "Enter keeps it and goes to the next slide; R says "
                      "this slide again."])
         # Stopped before the last picture: not the narration. Kept, just
@@ -1148,7 +1159,7 @@ def cmd_record(args) -> None:
         # Its cues go with it. Left behind, they would describe a take
         # that is no longer there -- and the next take's cues are written
         # under the next take's own name anyway.
-        for f in (gone, rec.cues_path(gone)):
+        for f in (gone, rec.cues_path(gone), rec.slide_label_path(gone)):
             if not f.exists():
                 continue
             try:
@@ -1179,6 +1190,7 @@ def cmd_record(args) -> None:
             start=new_take, finish=took, seconds=args.seconds,
             discard=drop_last, voice_only=args.voice,
             steps=steps, pair=pair, per_slide=per_slide,
+            recorded=frozenset(kept),
             pictures=booth.one_picture_choices(
                 menu, args.voice, picking is not None,
                 has_narration=any((project / "media").glob(
@@ -1219,15 +1231,20 @@ def cmd_record(args) -> None:
             if args.seconds or not _ask_another(len(takes)):
                 break
 
-    if not takes:
+    if not takes and not (per_slide and kept):
         raise SystemExit("\nNothing was recorded. Nothing has changed.")
     if per_slide:
-        if len(takes) < len(shown):
+        done_now = len(kept) + min(len(takes), len(todo))
+        if done_now < len(shown):
             raise SystemExit(
-                f"\n  {len(takes)} of {len(shown)} slides were recorded. "
+                f"\n  {done_now} of {len(shown)} slides are recorded. "
                 f"They wait in media\\{kinds.SLIDES_DIRNAME}\\ and the film "
-                "has not changed. Record again to make the narration.")
-        # All slides kept: one narration, cut where each slide ends.
+                "has not changed. Record again: the window opens on the "
+                "first slide still missing.")
+        # All slides kept: one narration, in picture order, cut where each
+        # slide ends -- earlier sittings' takes in their own places.
+        new = dict(zip(todo, takes))
+        takes[:] = [kept[i] if i in kept else new[i] for i in range(len(shown))]
         media = project / "media"
         joined = rec.next_take_path(media, audio_only=True)
         lengths = [rec.verify_take(t, None, False)[0] for t in takes]
@@ -1239,6 +1256,9 @@ def cmd_record(args) -> None:
         rec.write_cues(joined, rec.slide_cues(lengths), shown)
         for t in takes:
             ingest_mod.quarantine(t, media, where=kinds.DISCARDED_DIRNAME)
+            if rec.slide_label_path(t).exists():
+                ingest_mod.quarantine(rec.slide_label_path(t), media,
+                                      where=kinds.DISCARDED_DIRNAME)
         print(f"  {len(shown)} slides joined: {_secs(sum(lengths))}")
         takes[:] = [joined]
     if replacing:

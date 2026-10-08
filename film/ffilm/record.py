@@ -37,7 +37,7 @@ from datetime import datetime
 from pathlib import Path
 
 from .kinds import (REC_PREFIX, VOICEOVER_PREFIX,  # noqa: F401
-                    is_recording)  # used by scaffold, tests
+                    is_audio, is_recording)  # used by scaffold, tests
 
 # Recorded takes get this in film.yaml. Not applied to the file on disk:
 # the original stays the speed you spoke at, and `speed: 1.25` is a number
@@ -143,6 +143,48 @@ def cues_path(take: Path) -> Path:
     is derived and can be deleted and made again; these cannot -- they
     are something the person did, like the recording itself."""
     return take.with_name(take.stem + CUES_SUFFIX)
+
+
+SLIDE_SUFFIX = ".slide.json"
+
+
+def slide_label_path(take: Path) -> Path:
+    """voiceover_...wav -> voiceover_....slide.json, next to it."""
+    return take.with_name(take.stem + SLIDE_SUFFIX)
+
+
+def write_slide_label(take: Path, picture: str) -> Path:
+    """Beside a slide's take, the picture it was said over -- so a later
+    sitting knows which slides are done (2026-10-08). Beside the take,
+    like the cues: it is something the person did."""
+    out = slide_label_path(take)
+    out.write_text(json.dumps({"picture": picture}, ensure_ascii=False) + "\n",
+                   encoding="utf-8")
+    return out
+
+
+def slide_labels(folder: Path) -> dict[str, Path]:
+    """picture -> its newest take, from the labels in `folder`. A take
+    with no label is not guessed at; a label whose take is gone is
+    ignored. Newest by name: takes are named to the second."""
+    out: dict[str, Path] = {}
+    for label in sorted(folder.glob("*" + SLIDE_SUFFIX)) if folder.is_dir() else []:
+        stem = label.name[:-len(SLIDE_SUFFIX)]
+        takes = [t for t in folder.glob(stem + ".*") if is_audio(t)]
+        try:
+            picture = json.loads(label.read_text(encoding="utf-8"))["picture"]
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        if takes:
+            out[picture] = takes[0]
+    return out
+
+
+def kept_slides(shown: list[str], labels: dict) -> dict[int, object]:
+    """Which of the slides on screen already have a take: index -> take.
+    By picture, never by count, so a slide added in between does not
+    shift the takes after it. Pure."""
+    return {i: labels[p] for i, p in enumerate(shown) if p in labels}
 
 
 def press_times(presses: list[tuple[float, float]],

@@ -143,10 +143,18 @@ def step_caption(i: int, n: int) -> str:
     return f"picture {i + 1} of {n}"
 
 
-def after_slide(step: int, n: int) -> int | None:
-    """Enter on the review screen of slide `step`: the next slide, or
-    None when that was the last and the narration is finished. Pure."""
-    return step + 1 if step + 1 < n else None
+def after_slide(step: int, n: int, done=frozenset()) -> int | None:
+    """Enter on the review screen of slide `step`: the next slide not in
+    `done` (recorded in an earlier sitting), or None when there is none
+    and the narration is finished. Pure."""
+    return next((i for i in range(step + 1, n) if i not in done), None)
+
+
+def first_slide(n: int, done=frozenset()) -> int | None:
+    """The slide a sitting opens on: the first not recorded yet, so a
+    stop costs the slide it happened on, not the slides before it
+    (2026-10-08). None when every slide has a take. Pure."""
+    return next((i for i in range(n) if i not in done), None)
 
 
 def next_label(i: int, n: int, per_slide: bool = False) -> str:
@@ -557,7 +565,7 @@ def session(script: str, script_path: Path, wpm: int, title: str,
             discard=None, voice_only: bool = False,
             steps: list | None = None, pair=None,
             pictures: list[str] | None = None,
-            per_slide: bool = False) -> int | None:
+            per_slide: bool = False, recorded=frozenset()) -> int | None:
     """Open the window and stay in it until the person is finished.
 
     `start()`         begins one recording and returns the running Take.
@@ -583,7 +591,7 @@ def session(script: str, script_path: Path, wpm: int, title: str,
 
     S = {"stage": "compose", "take": None, "wpm": wpm, "y": 0.0,
          "t0": 0.0, "count": 0, "rolling": False, "script": script, "photo": None,
-         "step": 0, "pic": None}
+         "step": first_slide(len(steps or []), recorded) or 0, "pic": None}
     # One (picture, words) per step when narrating photographs. Empty
     # otherwise, and then everything below behaves exactly as it did.
     steps = list(steps or [])
@@ -1037,7 +1045,7 @@ def session(script: str, script_path: Path, wpm: int, title: str,
             return s[:1].upper() + s[1:]
 
         if per_slide:
-            last = after_slide(S["step"], len(steps)) is None
+            last = after_slide(S["step"], len(steps), recorded) is None
             again_btn.configure(text="Finish      Enter" if last
                                 else "Next slide      Enter")
         got.configure(text=lines[0] if lines else "Got it.")
@@ -1048,7 +1056,7 @@ def session(script: str, script_path: Path, wpm: int, title: str,
 
     def again(_=None):
         if per_slide and S["stage"] == "review":
-            nxt = after_slide(S["step"], len(steps))
+            nxt = after_slide(S["step"], len(steps), recorded)
             if nxt is None:
                 done()                  # the last slide is kept: finished
                 return

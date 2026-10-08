@@ -197,6 +197,14 @@ section with the commit id -- do not delete it.
   unrecorded one, and stops at once for fear of overwriting. Measured
   22:07:03: no file in media/ changed since 21:54. That is the resume
   fault above; it is the first fix to make (change-the-machine).
+  FIXED a4c17ae (his "masz naprawić"): each slide take gets
+  <take>.slide.json with its picture; the window opens on, and Enter
+  moves to, the first slide without a take; the join uses each picture's
+  take in picture order. Film suite 1060 passed. NOT run in the real
+  window yet. His 8 good takes labelled by transcription (01-07, 10):
+  kept_slides on his project = indices 0-6, 9, so the window should open
+  on picture 08 and ask only 08, 09, 11, 12. Needs first: narration.txt
+  with 12 paragraphs (his yes to overwrite his file).
 - 2026-10-08 [all] Routing cases built, the box misleads them. 03-plan.md
   took four things from Jacek's second brief (val split 40/20/40; edit-pass
   in a `git archive` copy; gate twice with a min gain; /rate ratings).

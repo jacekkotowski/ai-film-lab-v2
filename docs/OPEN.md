@@ -40,10 +40,12 @@ section with the commit id -- do not delete it.
   investigate 3). Repeats of the 31: INVALID from case 15 of repeat 1 on
   -- the usage limit was reached, runs ended in ~3 s at $0 and were
   recorded as "none" (17 of repeat 1, all 31 of repeat 2). Only the
-  first 14 of repeat 1 are real. Next: re-run the repeats after the limit
-  resets; then .local/evals/label-routing.md (draft sheet, made by a
-  scratchpad script; its 3rd column is invalid) for Jacek's labels.
-  To do: run.py must treat a $0 / 3 s run as failed, not as "none".
+  first 14 of repeat 1 are real, and all 14 chose the same as the first
+  run, so the rest of the repeats were dropped (little noise; the open
+  question is the labels). run.py now grades a $0 / error run "failed",
+  left out of the table (4c9de47, evals/tests 46 OK). Waiting for Jacek:
+  `label:` on the 31 rows of .local/evals/label-routing.md (made by a
+  scratchpad script from valid runs only; Claude's words shown from the end).
 - 2026-10-08 [all] Test sets for the skills: Phase 0 DONE, Phase 1 next
   (docs/optimization/03-plan.md; inventory in 01-inventory.md). Jacek's
   decisions: edit-pass is the first skill to get a quality set; Phase 3

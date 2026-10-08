@@ -9,7 +9,8 @@ film/docs/tech/qmd.md):
 
     python -m aimanim.knowledge setup [--drop-old]   once per machine (--drop-old:
                                           remove the collections of the old folders)
-    python -m aimanim.knowledge refresh   new commit files, `qmd update`, `qmd embed`
+    python -m aimanim.knowledge refresh   new commit files, qmd's file lists made
+                                          equal to MASK below, `qmd update`, `qmd embed`
     python -m aimanim.knowledge status    what is indexed
 
 The post-commit hook runs `refresh` in the background. Standard library;
@@ -86,31 +87,70 @@ def _qmd(*args: str, check: bool = False) -> subprocess.CompletedProcess:
                           encoding="utf-8", errors="replace", check=check)
 
 
-def setup(drop_old: bool = False) -> list[str]:
-    write_commits()
-    have = _qmd("collection", "list").stdout
+def patterns_of(listing: str) -> dict[str, str]:
+    """{collection: file list} from what `qmd collection list` prints."""
+    found, name = {}, None
+    for line in listing.splitlines():
+        line = line.rstrip()
+        if line.endswith("/)") and " (qmd://" in line:
+            name = line.split(" (qmd://")[0].strip()
+        elif name and line.strip().startswith("Pattern:"):
+            found[name] = line.split("Pattern:", 1)[1].strip()
+    return found
+
+
+def what_to_do(name: str, mask: str, have: dict[str, str]) -> str:
+    """add | keep | replace. A collection keeps the file list it was added
+    with; when the files move, the list here changes and qmd's must too."""
+    if name not in have:
+        return "add"
+    return "keep" if have[name] == mask else "replace"
+
+
+def sync_collections() -> list[str]:
+    """qmd's three collections with the file lists above: added if missing,
+    added again if their list changed (qmd cannot change a list in place)."""
+    have = patterns_of(_qmd("collection", "list").stdout)
     out = []
-    if drop_old:
-        for name in OLD:
-            if f"{name} (qmd://{name}/)" in have:
-                r = _qmd("collection", "remove", name)
-                out.append(f"{name}: removed (old folder)" if r.returncode == 0
-                           else f"PROBLEM removing {name}: {r.stderr[-300:]}")
     for name, path, mask in (("v2", str(ROOT), MASK),
                              ("v2-code", str(ROOT), CODE_MASK),
                              ("v2-history", str(HISTORY), "**/*.md")):
-        if f"{name} (qmd://{name}/)" in have:
+        todo = what_to_do(name, mask, have)
+        if todo == "keep":
             out.append(f"{name}: already there")
             continue
+        if todo == "replace":
+            r = _qmd("collection", "remove", name)
+            if r.returncode != 0:
+                out.append(f"PROBLEM removing {name}: {r.stderr[-300:]}")
+                continue
         r = _qmd("collection", "add", path, "--name", name, "--mask", mask)
-        out.append(f"{name}: added" if r.returncode == 0 else f"PROBLEM {name}: {r.stderr[-500:]}")
+        if r.returncode != 0:
+            out.append(f"PROBLEM {name}: {r.stderr[-500:]}")
+            continue
         _qmd("context", "add", f"qmd://{name}", CONTEXT[name])
+        out.append(f"{name}: added" if todo == "add"
+                   else f"{name}: file list replaced (was {have[name]})")
     return out
+
+
+def setup(drop_old: bool = False) -> list[str]:
+    write_commits()
+    out = []
+    if drop_old:
+        have = patterns_of(_qmd("collection", "list").stdout)
+        for name in OLD:
+            if name in have:
+                r = _qmd("collection", "remove", name)
+                out.append(f"{name}: removed (old folder)" if r.returncode == 0
+                           else f"PROBLEM removing {name}: {r.stderr[-300:]}")
+    return out + sync_collections()
 
 
 def refresh(embed: bool = True) -> list[str]:
     new = write_commits()
     out = [f"{len(new)} new commit files"]
+    out += [s for s in sync_collections() if not s.endswith("already there")]
     r = _qmd("update")
     out.append("qmd update: " + ("ok" if r.returncode == 0 else r.stderr[-300:]))
     if embed:

@@ -16,7 +16,7 @@ the measured numbers are in `docs/tech/`. A fresh clone needs only this.
 ## 2. In the repo (once)
 ```
 git config core.hooksPath .githooks          # pre-commit: tests + rehearsal; post-commit: knowledge refresh
-python -m aimanim.knowledge setup             # qmd collections `manim` and `manim-history`
+python -m aimanim.knowledge setup             # qmd collections `v2`, `v2-code`, `v2-history`
 python -m aimanim.knowledge refresh           # index + embed (first time: minutes; models ~2 GB)
 python -m unittest discover tests             # all green, < 1 s
 python -m aimanim.look still scr-meaning      # one real render: notes, size, margins
@@ -32,6 +32,6 @@ python -m aimanim.look still scr-meaning      # one real render: notes, size, ma
 ## 4. Kept only on this machine (by design)
 - `.local/renders.csv` (render log, `look stats`), `.local/knowledge.log`
 - qmd index and models: `~/.cache/qmd/`, config `~/.config/qmd/index.yml`,
-  commit files `~/.cache/qmd/manim-history/`
+  commit files `~/.cache/qmd/v2-history/`
 - rendered output `scenes/*/out/` (a film's own files are in the repo's `projects/<Title>/`)
 - Claude's auto-memory for this project (Jacek's standing preferences)

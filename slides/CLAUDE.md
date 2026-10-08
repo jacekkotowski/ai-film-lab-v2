@@ -122,8 +122,9 @@ same message. Unchecked parts go in the FIRST line.
 
 Anything that feels familiar (a layout problem, a timing note, a source, a
 number) was probably met before. First `python -m aimanim.patterns find
-<word>`, then qmd (collections `manim`, `manim-history`; the MCP tool or
-`qmd search "<words>" -c manim`). Say what was found. New machine:
+<word>`, then qmd (collections `v2` docs, `v2-code` code, `v2-history`
+commits, all three stages; the MCP tool or `qmd search "<words>" -c v2`).
+Say what was found. New machine:
 `docs/SETUP.md`. The whole architecture, general: `docs/AGENT-WORKBENCH.md`.
 
 ## Where knowledge lives
@@ -137,8 +138,7 @@ number) was probably met before. First `python -m aimanim.patterns find
 | measured text widths           | `docs/tech/sizes.json` (`python -m aimanim.layout sizes <text>`) |
 | a film: order and script       | `../projects/<Title>/slides.txt`, `slides.script.txt` |
 | the plan and its status        | `PLAN.md`                 |
-| this repo's docs and history, searchable | qmd `manim`, `manim-history` (refreshed on every commit) |
-| film-lab's docs, code, history | qmd `docs`, `code`, `history` (last indexed 2026-09-24) |
+| docs, code and history of all three stages, searchable | qmd `v2`, `v2-code`, `v2-history` (refreshed on every commit) |
 | every outside source and how far it was checked | `docs/sources.md` |
 | reusable maths for a yes/no test | `aimanim/diagnostic.py` (stdlib, tested) |
 | every fix and slide recipe, generalised (pseudocode, near-ready code) | `docs/patterns/` (issues.md, tasks.md) |

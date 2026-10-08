@@ -113,11 +113,11 @@ writes "proof?", show the measurement or say it was not measured.
 Grep finds a word. qmd finds the file that says it in other words
 ("hiss" → the decision about "noise"). Bench: `docs/tech/qmd-bench.md`.
 
-- **Indexed today:** `docs` (decisions, tech notes, OPEN, plans) and
-  `code` (`ffilm/`, `tests/`; stale after code changes until
-  `qmd update` and `qmd embed --chunk-strategy auto`) and `history` (one
-  file per commit; new commits are not in it until added, see
-  `docs/tech/qmd.md`). Exact words in a commit: `git log --grep`.
+- **Indexed today:** `v2` (the docs of all three stages: CLAUDE.md files,
+  skills, decisions, tech notes, OPEN, plans), `v2-code` (`ffilm/`,
+  `tests/`, `slides/aimanim/`) and `v2-history` (one file per commit).
+  The post-commit hook refreshes all three; a change not yet committed is
+  not in them. Exact words in a commit: `git log --grep`.
 - **Before proposing a fix or a design:** search for the area (sync,
   noise, captions, moves, recording). Say in 2–3 lines what was tried,
   what was rejected, and which decision covers it. A decision marked

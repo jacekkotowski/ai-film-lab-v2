@@ -10,7 +10,7 @@ description: The one craft skill for Manim slides in ai-manim -- the frame and i
 Every rule here came from a slide that went wrong. Short on purpose: the
 detail is in `docs/patterns/` (issues I01–, tasks T01–), sizes in
 `docs/tech/sizes.json`. Search before solving: `docs/patterns`, then qmd
-(`manim`, `manim-history` collections).
+(`v2`, `v2-code`, `v2-history` collections).
 
 ## 1. The loop — one command per job
 

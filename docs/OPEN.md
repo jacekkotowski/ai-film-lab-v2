@@ -6,6 +6,21 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-08 [all] FIXED, measured: Claude's search pointed at collections
+  that no longer exist. Five instruction lines (slides/CLAUDE.md,
+  film/CLAUDE.md, slide-layout skill, slides/docs/SETUP.md) named `manim`,
+  `manim-history`, `docs`, `code`, `history`, removed in the merge (a search
+  in `manim` returned [] with no error); now `v2`, `v2-code`, `v2-history`.
+  Second fault: qmd's `v2` kept the file list of 2026-10-07
+  (slides/films/*.script.txt, no docs/*.md), so docs/OPEN.md and the 3 slides
+  scripts in projects/ could not be found. Cause: `knowledge.setup` skipped a
+  collection that existed and `refresh` never compared the lists. Now
+  `refresh` (post-commit) adds a collection again when its list differs
+  (test_a_search_collection_follows_its_file_list, 6 tests; one checks every
+  entry of the lists finds a file). Measured: v2 87 -> 91 documents,
+  `get v2/docs/OPEN.md` found, "false positives screening" ranks Screening's
+  slides.script.txt first; a second refresh left the lists alone; slides
+  suite 97 OK (3 skipped). Supersedes the 2026-10-07 entry on `history`.
 - 2026-10-08 [slides] R charts on slides, a TEST (scratchpad only, no repo
   code). R 4.6.1 in C:\Program Files\R\R-4.6.1 (Rscript not on PATH);
   present: ggplot2 4.0.3, svglite, ragg, systemfonts, leaflet 2.2.3,

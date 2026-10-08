@@ -110,11 +110,11 @@ section with the commit id -- do not delete it.
   NO INTRO in the recording window (Jacek, session 5). Cause: the script
   had no [intro] section, and publish writes script_intro.txt only from
   one, silently. Fixed for the future (9bb6825): publish prints a PROBLEM
-  line for a missing [intro] or [outro]; slides suite 103 OK. [intro] now
-  in slides.script.txt: his first two lines, word for word ("Love as a
-  Face-Threatening Act. To Chérie, and to the ones throwing stones."),
-  my pick of what the intro is, not his. NOT re-published (ask first),
-  so script_intro.txt does not exist yet. Same cause, still missing from
+  line for a missing [intro] or [outro]; slides suite 103 OK. Claude then
+  made his title + dedication the spoken intro, joining Chérie and "the
+  ones throwing stones" in one spoken line: Jacek rejected it, REMOVED.
+  The dedication is a written line, never narration. The intro is his to
+  write; there is no [intro] and no script_intro.txt yet. Same cause, still missing from
   the script: [outro] (plan: "Chérie, you are loved..." on camera, not
   agreed) and the photo paragraphs 08, 09, 11, 12 (his text is in session
   46e9c487's transcript, 2026-10-08 17:20).

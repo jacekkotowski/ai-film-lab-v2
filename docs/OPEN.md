@@ -31,6 +31,23 @@ section with the commit id -- do not delete it.
   in the test) is the next thing to build. Run with
   `uv run --directory slides --extra physics ...`. Facts in
   slides/docs/tech/manim.md.
+  WRAPPER BUILT (2026-10-09, Jacek's "go"): aimanim/physics.py (no Manim,
+  no pymunk import: `track(space, bodies, seconds)` -> one (x, y, angle)
+  per body per film frame, frame 0 = start; `at(frames, t)`), and
+  `kit.replay(mobject, frames, body)` (an updater that follows the track
+  from the call, inside a step). Test first: tests/test_a_physics_track_
+  has_one_position_per_frame.py, 3 tests. Test scene scenes/physics-drop
+  (a ball drops 7 units on a floor, bounce 0.6; in no film, needs
+  `--extra render --extra physics`). Measured on its half-size draft
+  (540x960, 5.04 s, 121 frames, ffprobe): the ball's centre in the video
+  vs the track, every frame: worst 0.015 units (< 1 px at 60 px/unit); at
+  k=0 y 5.007 (track 5.000). 0 [layout] notes. Slides suite 117 OK, 3
+  skipped, with and without --extra physics (uv keeps the extra installed,
+  so the second run does not show the skips). Only steps.png's existence
+  and the numbers were checked; the clip was not watched. Only position
+  is replayed (angle is recorded, not used); no full-size render. NEXT
+  (Jacek's call): the jointed figure using layout.two_bone, one arm
+  pointing at a moving dot (the dot can be a `replay`), still + draft.
 - 2026-10-08 [slides] New film "Love as a Face-Threatening Act" (Jacek's
   text, 523 words, ~6 min at write-to-fit's 265 words per 3:00: reasoned).
   Slide 03 `face-ledger` MADE: full still 1080x1920 (ffprobe), 0 [layout]

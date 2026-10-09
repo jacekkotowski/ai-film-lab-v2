@@ -24,6 +24,7 @@ from manim import (Arrow, Circle, Dot, Group, Line, Mobject, RoundedRectangle,
 
 from aimanim import aurora as _aurora
 from aimanim import beats, frame
+from aimanim import physics as _physics
 # plain geometry (stdlib, tested): scenes call them as kit.<name>
 from aimanim.layout import (ASCENT, DESCENT, area_radius, columns,  # noqa: F401
                             fit_scale, grid_points, label_side, pitch_for,
@@ -233,6 +234,23 @@ def strike(t: Mobject, color=frame.SECOND, width: float = 6) -> Line:
     line = Line((l, y - 0.12, 0), (r, y + 0.12, 0)).set_stroke(color, width)
     line.strikes = t          # the layout check expects it on this text
     return line
+
+
+def replay(m: Mobject, frames, body: int = 0, fps: int = frame.FPS) -> Mobject:
+    """Move `m` along body number `body` of `frames` (aimanim.physics.track)
+    from the moment of this call, one recorded frame per film frame, and
+    leave it on the last one. Call it inside a step, then return an
+    animation of that step's run time (the updater runs while it plays)."""
+    clock = [0.0]
+
+    def follow(mob, dt):
+        clock[0] += dt
+        x, y, _ = _physics.at(frames, clock[0], fps)[body]
+        mob.move_to((x, y, 0))
+
+    m.move_to((*frames[0][body][:2], 0))
+    m.add_updater(follow)
+    return m
 
 
 # ---- the steps, on the words ------------------------------------------------

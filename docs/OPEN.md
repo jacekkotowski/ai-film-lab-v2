@@ -6,6 +6,22 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-09 [slides] Realistic, animatable people (research, nothing in
+  any film yet). Measured: Manim 0.21 SVGMobject keeps paths, shapes,
+  transforms, fills, opacity; drops gradients, dashes, clip-paths, `<text>`
+  (R's cairo `svg()` writes text as paths, so a ggplot keeps its labels).
+  One Open Peeps SVG (CC0 per DiceBear, licence not checked at the source;
+  models/openpeeps/peep-felix.svg, untracked) loads as 8 colour-layer
+  shapes, a white backdrop square to delete; no separate arm or head.
+  manim-physics 0.4.0 pins manim 0.18 + python <3.13 (here 0.21 / 3.13.5):
+  not installable as declared. pymunk 7.3.0 (2026-06-17) is maintained,
+  not installed. DONE: `layout.two_bone` (elbow for a hand on a target),
+  8 tests in tests/test_a_limb_reaches_its_target.py, slides suite 112 OK
+  (3 skipped); not drawn yet. NEXT (Jacek's call): a jointed figure in
+  kit.py using it, one arm pointing at a moving dot, still + draft. FABRIK
+  for longer chains only if a slide needs one. pymunk only for falling or
+  swinging things (a new dependency: agreement 11). Facts in
+  slides/docs/tech/manim.md.
 - 2026-10-08 [slides] New film "Love as a Face-Threatening Act" (Jacek's
   text, 523 words, ~6 min at write-to-fit's 265 words per 3:00: reasoned).
   Slide 03 `face-ledger` MADE: full still 1080x1920 (ffprobe), 0 [layout]

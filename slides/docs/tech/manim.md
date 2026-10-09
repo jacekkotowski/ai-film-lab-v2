@@ -44,6 +44,47 @@ Only the first two packages were shown to be needed; the rest is Manim's
 usual list, installed on Jacek's choice. Tested with one formula only
 (`\theta_{back} = \theta + 3200 \pmod{6400}`).
 
+## SVG import (`SVGMobject`, measured 2026-10-09, drawsvg 2.4.2 via `uv run --with`, not a dependency)
+
+Kept: path (curves), circle, rect, line, polygon, group transforms
+(rotate), `<use>` (3 uses = 3 shapes), fill colour, fill opacity, stroke
+width. Lost, silently: linear gradient (drawn black), stroke-dasharray
+(solid line), clip-path (the whole shape is drawn). Lost with a warning:
+`<text>` ("Unsupported element type", `text_to_mobject` is a stub in 0.21).
+R's own `svg()` device (cairo) writes text as glyph `<path>` + `<use>`, no
+`<text>`: a ggplot through it loads with every label (61 shapes, no
+warning, still checked by eye). Transparent background through `svg()`
+not tried.
+
+Open Peeps (Pablo Stanley, CC0 1.0 per DiceBear's page; not checked at
+the source): one figure fetched 2026-10-09 from
+`https://api.dicebear.com/9.x/open-peeps/svg?seed=Felix` (8994 bytes) into
+`models/openpeeps/peep-felix.svg`. Loads in Manim 0.21 with no warning, 8
+shapes, full colour, outlines intact (looked at the 540x960 still). The 8
+shapes are split by colour layer (white backdrop square from the mask, skin,
+shirt, black outline, face skin, hair, face lines, one small black), not by
+body part: no separate arm or head. The white square must be removed.
+
+## python-lottie (read, NOT installed or run; PyPI page 2026-10-09)
+
+`pip install lottie` 0.7.2 (2025-05-01), beta, **AGPLv3+**, no dependency
+for the core. Builds and converts Lottie vector animations: parenting,
+anchor-point rotation, easing, inverse-kinematics solver, trim-path
+(draw-on), SVG import and animated SVG export, text as shapes. `lottie_convert.py in.json out.png --frame N`
+renders one frame (needs cairosvg + pillow); MP4/WebM export needs
+cairosvg, numpy, OpenCV. Per-frame PNG keeps alpha; no merge-paths, no
+expressions. Idea only: frames as an image sequence in Manim.
+
+## manim-physics and fabrik_chain_3d (read 2026-10-09, NOT installed)
+
+manim-physics 0.4.0 (PyPI 2024-04-17, maintainer says no time to maintain):
+2D, electromagnetism / optics / waves / rigid mechanics (gravity Space,
+pendulum), built on pymunk + shapely. Pins `manim ~0.18.0` and `python
+>=3.9,<3.13`; this repo has Manim 0.21.0 and Python 3.13.5 (measured):
+it does not install as declared. fabrik_chain_3d (MIT, 12 stars, last
+commit 2021-04): FABRIK for 3D robot chains with joint constraints, an
+example script that plots with matplotlib; no pip release seen.
+
 ## On the phone
 `MIN_FONT` 56 is readable on Jacek's phone (back-azimuth still, 1080×1920,
 2026-10-05). Smaller sizes not tried.

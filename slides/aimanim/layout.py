@@ -114,6 +114,27 @@ def area_radius(r0: float, ratio: float) -> float:
     return r0 * math.sqrt(ratio)
 
 
+def two_bone(shoulder, target, upper: float, lower: float,
+             bend: int = 1) -> tuple[tuple[float, float], tuple[float, float]]:
+    """Inverse kinematics of one arm or leg: where the elbow (knee) goes so
+    the hand (foot) lands on `target`. Returns (elbow, hand) in frame units.
+    `bend` +1 / -1 picks the side the elbow points to (left / right of the
+    shoulder-to-target line). A target out of reach straightens the limb at
+    it; one nearer than |upper - lower| folds it, the hand stops there."""
+    sx, sy = shoulder
+    dx, dy = target[0] - sx, target[1] - sy
+    d = math.hypot(dx, dy)
+    ux, uy = (dx / d, dy / d) if d > 1e-9 else (1.0, 0.0)
+    d = min(max(d, abs(upper - lower)), upper + lower)
+    hand = (sx + ux * d, sy + uy * d)
+    if d < 1e-9:                          # equal bones, hand on the shoulder
+        return (sx - uy * upper * bend, sy + ux * upper * bend), hand
+    along = (upper ** 2 - lower ** 2 + d ** 2) / (2 * d)    # law of cosines
+    off = math.sqrt(max(upper ** 2 - along ** 2, 0.0))
+    return (sx + ux * along - uy * off * bend,
+            sy + uy * along + ux * off * bend), hand
+
+
 # ---- measured text sizes: one file, written by `kit fits` --------------------
 # Widths were copied by hand into three skills and could drift; now every
 # measurement goes here, with its date, and is read back without Manim.

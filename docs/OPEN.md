@@ -19,8 +19,17 @@ section with the commit id -- do not delete it.
   8 tests in tests/test_a_limb_reaches_its_target.py, slides suite 112 OK
   (3 skipped); not drawn yet. NEXT (Jacek's call): a jointed figure in
   kit.py using it, one arm pointing at a moving dot, still + draft. FABRIK
-  for longer chains only if a slide needs one. pymunk only for falling or
-  swinging things (a new dependency: agreement 11). Facts in
+  for longer chains only if a slide needs one. pymunk ADDED on Jacek's
+  yes (2026-10-09, the one exception to agreement 11, for falling and
+  swinging things): optional extra `physics` in slides/pyproject.toml
+  (adds cffi, pycparser, pymunk 7.3.0 to uv.lock; install measured on
+  Python 3.13.5 / Windows); tests/test_a_falling_thing_follows_gravity.py,
+  2 tests (a dropped body falls 4.905 units in 1 s within 1 %; a pendulum
+  bob keeps its rod length within 0.02), skipped when pymunk is missing;
+  slides suite 114 OK, 3 skipped. No wrapper module yet, nothing drawn:
+  how pymunk bodies drive Manim shapes (updaters, 24 fps x 10 substeps as
+  in the test) is the next thing to build. Run with
+  `uv run --directory slides --extra physics ...`. Facts in
   slides/docs/tech/manim.md.
 - 2026-10-08 [slides] New film "Love as a Face-Threatening Act" (Jacek's
   text, 523 words, ~6 min at write-to-fit's 265 words per 3:00: reasoned).

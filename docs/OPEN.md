@@ -21,7 +21,15 @@ section with the commit id -- do not delete it.
   paragraphs); s03 and s05 speak a left-column line after the right one
   ("The name follows the table", "sorted by region"). Not fixed; the
   plan in Downloads/excel_refresher_claude_code_plan.md wants a skill:
-  proposal given to Jacek, nothing built.
+  BUILT on his ask (2026-10-10): skill `excel-short` (SKILL.md +
+  knowledge-base.md copied from the plan, 108 lines), row added to
+  film/CLAUDE.md. Read the online project "Excel refresher" in Chrome
+  (00_instructions.md = the plan's rules; video01-08 scripts; project
+  instructions box empty): its video08 script has `## NN Title` headings,
+  which is how 5 of 6 Dropdowns paragraphs got their titles read aloud.
+  Words per second in the final, 5 Excel films: 2.0-2.4. Not tried on a
+  new film yet; the pan fix (per-shot crossing time) is NOT built, needs
+  his go.
 - 2026-10-09 [slides] Realistic, animatable people (research, nothing in
   any film yet). Measured: Manim 0.21 SVGMobject keeps paths, shapes,
   transforms, fills, opacity; drops gradients, dashes, clip-paths, `<text>`

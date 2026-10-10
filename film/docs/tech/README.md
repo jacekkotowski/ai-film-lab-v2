@@ -24,6 +24,8 @@ A fault not yet fixed → the repo's `docs/OPEN.md` (tag [film]), not here.
 | [[agent-memory]] | vector search vs a code-to-test map, the TDAD numbers |
 | [[qmd]] | local markdown search + MCP server: install, models, Windows traps (not installed) |
 | [[qmd-bench]] | 10 questions with known answers: grep vs qmd, scored the same way |
+| [[casio-fx-85gtx]] | (in slides/docs/tech) the calculator's keys: Degree, Pol(, Rec(; what the manual confirms and what not |
+| [[artillery-pl]] | (in slides/docs/tech) Polish sources: 1/6000 "tys" vs 1/6400 "mils" (DTU-3.2.5.6.1), T = M + Δ, E/N |
 
 ## Code
 [[code-map]] — which file and function decides what. Read 5 lines, not

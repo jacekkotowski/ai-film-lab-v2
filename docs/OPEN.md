@@ -6,10 +6,11 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
-- 2026-10-11 [slides] "Mapa i kalkulator 01 - Obserwator" (artillery observer for
-  teenagers, Polish, ONE video 2-3 min: map + Casio fx-85GT X keys). PLAN only,
-  nothing built: film/docs/plans/2026-10-11/PLAN-mapa-kalkulator.md = HIS pasted plan
-  (online project RD01 Artillery) with 4 named changes: Manim not pan boards, the map
+- 2026-10-11 [slides] "Map and Calculator 01 - Observer" (artillery observer for
+  teenagers, ENGLISH -- Polish was the online Claude's default, never his choice;
+  ONE video 2-3 min: map + Casio fx-85GT X keys). PLAN only,
+  nothing built: film/docs/plans/2026-10-11/PLAN-map-calculator.md = HIS pasted plan
+  (online project RD01 Artillery) with 5 named changes: English, Manim not pan boards, the map
   drawn on slides 02-04 (his "see the map and the buttons"), HTML-only items dropped,
   headings kept out of narration.txt. A first version (2026-10-10) re-asked what his
   plan decides and changed it unasked (235 words from his RAW pace 1.43 w/s, ignoring

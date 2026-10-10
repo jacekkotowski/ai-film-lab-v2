@@ -6,6 +6,22 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-10 [film] `columns` pans on a fixed clock, not on the words
+  (Dynamic Arrays - Dropdown Lists, made online, 6 PNGs 2160x1920,
+  final 146.4 s 1080x1920 ffprobe). The pan is 37.5 % hold / 25 % pan /
+  37.5 % hold of the shot (moves.py COLUMNS_HOLD), whatever is said. Pan
+  end vs the first sentence about the right column (film.yaml captions, by
+  Claude's reading of the boards): s02 -0.1 s, s03 -0.4, s04 -0.4, s06 0.0
+  (these four cross at 63-65 % of the shot, so they fit by chance); s05
+  +3.6 s (MATCH, 9.02) or +7.2 s (second list, 5.38); s07 +3.4 s. The pan
+  also LEAVES the left column 4-5 s before its last left sentence ends
+  (s02: pan from 7.0 s, "The source was a fixed address" runs 9.84-11.26,
+  frames at 7.2 / 9.35 / 11.9 s seen). Also: board titles are read aloud
+  ("Named range on a table column Press Ctrl+F3", narration.txt, 5 of 6
+  paragraphs); s03 and s05 speak a left-column line after the right one
+  ("The name follows the table", "sorted by region"). Not fixed; the
+  plan in Downloads/excel_refresher_claude_code_plan.md wants a skill:
+  proposal given to Jacek, nothing built.
 - 2026-10-09 [slides] Realistic, animatable people (research, nothing in
   any film yet). Measured: Manim 0.21 SVGMobject keeps paths, shapes,
   transforms, fills, opacity; drops gradients, dashes, clip-paths, `<text>`

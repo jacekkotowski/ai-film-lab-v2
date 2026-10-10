@@ -139,6 +139,13 @@ PARALLAX_TRAVEL = 0.1
 #   off the top and bottom of the slide.
 COLUMNS_HOLD = 0.375
 COLUMNS_BREATH = 0.04
+# COLUMNS_PAN -- when a shot says `cross:` (the moment its words pass from
+#   the left column to the right one), the pan takes this many seconds,
+#   centred on that moment. The fixed clock above runs 4-5 s on a 20 s
+#   slide; at that length the camera was leaving the left column while its
+#   last sentences were still being said (Dynamic Arrays - Dropdown Lists,
+#   2026-10-10). The middle half of a sine ease is half of this, a second.
+COLUMNS_PAN = 2.0
 
 MOVES = [
     "push_in", "pull_out", "pan_left", "pan_right",
@@ -276,7 +283,12 @@ def _columns_at(shot: Shot, t: float, seed: int = 0) -> Window:
     """`columns`: hold, pan mid-shot, hold -- see COLUMNS_HOLD. Always
     sine_in_out whatever `ease:` says; the pan is meant to be mild."""
     f, to = windows_for(shot, seed)
-    u = (t - COLUMNS_HOLD) / max(1.0 - 2 * COLUMNS_HOLD, 1e-6)
+    if shot.cross is None:
+        u = (t - COLUMNS_HOLD) / max(1.0 - 2 * COLUMNS_HOLD, 1e-6)
+    else:
+        # On the words, not on the clock: half the pan before the moment
+        # the words cross, half after. `cross` is in film seconds.
+        u = (t * shot.duration - (shot.cross - COLUMNS_PAN / 2)) / COLUMNS_PAN
     u = max(0.0, min(1.0, u))
     w = f.lerp(to, _sine_in_out(u))
     if 0.0 < u < 1.0:

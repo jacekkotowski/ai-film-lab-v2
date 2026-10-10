@@ -469,6 +469,10 @@ def state(project: Path) -> dict:
             "dissolve": s.dissolve,
             "fill": s.fill,
             "depth": s.depth,
+            # The moment a two-column slide's words cross to the right
+            # column (spec.Shot.cross). Carried: a Save would otherwise put
+            # the pan back on the fixed clock.
+            "cross": s.cross,
             # A slide's words: the voice file, and where in it they are.
             # The bench has no controls for these either, and losing them
             # would turn a narrated film back into a silent slideshow on
@@ -591,6 +595,8 @@ def dump(project: Path, data: dict) -> str:
             L.append(f"    fill: {s['fill']}")
         if s.get("depth") is not None:
             L.append(f"    depth: {float(s['depth'])}")
+        if s.get("cross") is not None:
+            L.append(f"    cross: {float(s['cross']):.2f}")
         for key, win in (("from", s.get("frm")), ("to", s.get("to"))):
             if win:
                 L.append(f"    {key}:")

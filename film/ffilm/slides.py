@@ -586,6 +586,10 @@ def refit_speed(text: str, film, speed: float) -> str:
             if m:
                 lines[i] = f"{m.group(1)}{speed:g}{m.group(2)}"
                 continue
+            m = re.match(r"^(\s+cross:\s*)([0-9.]+)\s*$", line)
+            if m:                         # a film time, like a caption's `at`
+                lines[i] = f"{m.group(1)}{float(m.group(2)) * k:.2f}"
+                continue
             m = re.match(r"^(\s+(?:at|dur):\s*)([0-9.]+)\s*$", line)
             if m:
                 key = "at" if "at:" in m.group(1) else "dur"

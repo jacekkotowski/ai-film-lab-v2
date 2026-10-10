@@ -246,6 +246,14 @@ class Shot:
     to: Window | None = None
     ease: str = "sine_in_out"
 
+    # `columns` only: the moment, in film seconds (the unit of a caption's
+    # `at`), when the words pass from the left column to the right one.
+    # The camera is half way between them then (moves.COLUMNS_PAN). None =
+    # the old fixed clock. Whoever reads the board against the captions
+    # sets it; nothing in the machine can know which sentence is about
+    # which column.
+    cross: float | None = None
+
     # Seconds of cross-dissolve INTO this shot from the one before it.
     # 0 is a straight cut, and a straight cut is right almost everywhere.
     # This exists for one job: softening the joins where a pause was cut
@@ -327,6 +335,7 @@ class Shot:
             frm=Window.parse(d["from"]) if "from" in d else None,
             to=Window.parse(d["to"]) if "to" in d else None,
             ease=str(d.get("ease", "sine_in_out")),
+            cross=float(d["cross"]) if d.get("cross") is not None else None,
             dissolve=max(0.0, float(d.get("dissolve", 0.0))),
             fill=str(d["fill"]).lower() if "fill" in d else None,
             bokeh=max(0.0, float(d["bokeh"])) if "bokeh" in d else None,

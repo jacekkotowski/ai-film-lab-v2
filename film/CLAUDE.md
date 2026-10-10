@@ -49,6 +49,7 @@ before you become the developer.
 | `fit-to-length` | "make it a Short", "under 3 minutes" — cut what is said twice |
 | `write-to-fit`  | before recording: notes + photos → texts inside a word budget |
 | `status`        | "where am I", "is it ready", "can I upload it" — read only |
+| `two-column-boards` | any A -> B slide as a 2160x1920 board (made offline in `slides/boards/`), the `columns` pan and `cross:` |
 | `excel-short`   | a Short that explains an Excel technique: online two-column boards (2160x1920 PNGs), narration, `columns` pan |
 | `fix-captions`  | "the caption disappeared", "the German words don't show"  |
 | `investigate`   | something sounds, looks or runs wrong and the cause is unknown |

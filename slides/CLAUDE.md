@@ -50,6 +50,7 @@ in time with a video.
 | `deliver`        | the clip is approved → say exactly what to copy where           |
 | `shooting-optics` | a script or slide about sights, reticles, zeroing, MOA, mil, ranging: the checked numbers |
 | `binary-diagnostics` | a script or slide about a yes/no outcome: a test, false positives, base rates, a classifier or logistic regression at a cutoff (confusion matrix, sensitivity, PPV, LR) |
+| `two-column-boards` | an A -> B slide (Excel, Power Query, R code, before/after) as a 2160x1920 board made offline in `boards/` (pan_kit, render_png, make_pans), panned by `columns`, the pan on the words with `cross:` |
 | `r-charts`       | a ggplot (R) chart on a slide with Manim callouts on the data: settings, template `r/`, `aimanim/rchart.py` |
 
 ## Commands

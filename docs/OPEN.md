@@ -6,7 +6,27 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
-- 2026-10-10 [film] `columns` pans on a fixed clock, not on the words
+- 2026-10-10 [slides] Two-column boards offline (Jacek: not only Excel, also
+  Power Query, R code; works with no network). BUILT: slides/boards/ pan_kit.py
+  (stdlib; `code()` card for M/R/VBA/DAX that shrinks or refuses a line that
+  would wrap), render_png.py (headless Chrome, no Playwright; every PNG checked
+  2160x1920; contact sheet by ffmpeg; `--media` copies into the film),
+  make_pans.sh (the plan's, standalone). Skill `two-column-boards`; tests/
+  test_a_two_column_board_is_two_full_columns.py, 11 tests, slides suite 128 OK
+  (3 skipped). Measured: a demo board (M left, R right) rendered 2160x1920 by
+  Chrome (looked at it), make_pans.sh made 1080x1920, 4.0 s (ffprobe). NOT done:
+  the fonts. Space Grotesk and JetBrains Mono are not installed here; offline
+  the boards fall back to Segoe UI / Consolas (looks different). They go in
+  models/fonts/ once Jacek allows the download (SpaceGrotesk-*.ttf,
+  JetBrainsMono-*.ttf, Google Fonts, OFL). Chrome found at Program Files, one
+  machine only; `CHROME` env var for another. `film pack` does not carry
+  models/fonts yet (not checked).
+- 2026-10-10 [film] FIXED 36c2e30, measured on Dynamic Arrays slide 2 only:
+  `columns` panned on a fixed clock, not on the words; now `cross: <film
+  seconds>` puts a 2 s pan on the crossing (set on the 6 slides of the film;
+  draft frames around 11.53 s on slide 2: the source bar is still on screen
+  during "The source was a fixed address", the right column at 12.2 s). The
+  old finding, kept:
   (Dynamic Arrays - Dropdown Lists, made online, 6 PNGs 2160x1920,
   final 146.4 s 1080x1920 ffprobe). The pan is 37.5 % hold / 25 % pan /
   37.5 % hold of the shot (moves.py COLUMNS_HOLD), whatever is said. Pan

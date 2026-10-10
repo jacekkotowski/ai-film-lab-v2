@@ -20,9 +20,10 @@ description: A Short that explains one Excel technique -- boards made online (cl
 - The film pans left -> right with `move: columns` (hold left 37.5 %, pan 25 %, hold right
   37.5 % of the shot; `film init` picks it for a 2:1 picture by itself). Do NOT use the
   plan's `make_pans.sh` or its 3/12/3 clock: the film does the pan, with captions and voice.
-- The boards are made ONLINE: claude.ai project "Excel refresher", skill `pan-boards-canvas`
-  (outline -> Design canvas) then `pan-boards-export` (PNG zip). Their generator is not
-  copied here (agreement 7, 11: no new tool). Boards he already has: use them.
+- The boards are made either ONLINE (claude.ai project "Excel refresher", skills
+  `pan-boards-canvas` -> `pan-boards-export`) or OFFLINE here with `slides/boards/`
+  (pan_kit.py, render_png.py, make_pans.sh): skill `two-column-boards` has the commands,
+  the pieces and the pan-on-the-words rule (`cross:`). Boards he already has: use them.
 
 ## Board rules (checked on import)
 
@@ -87,16 +88,14 @@ cut). The plan's 135 words/min (2.25/s) is inside that range: 330-340 words land
    03 ("The name follows the table") and 04 ("sorted by region") had one each.
 5. `film ingest`, `film init` (finds `columns`), `film check`, `film peek`; he narrates in
    FILM.bat, `film go`, `film draft`. `.vertical` must exist in the project.
-6. **Pan against the words** (measured fault, docs/OPEN.md 2026-10-10): the pan is a fixed
-   37.5 / 25 / 37.5 % of the shot, not tied to the sentence where B starts. From the
-   captions in film.yaml compute pan window = shot x (0.375 .. 0.625) and the time of the
-   first B sentence; report the gap per slide. Within about 0.5 s: fine. Else say it in
-   the first lines; the fix is a code change in `film/ffilm` (a per-shot crossing time),
-   which needs his go and `change-the-machine`. Do not hand-shift `from:`/`to:`.
+6. **Pan on the words**: after `film go`, set `cross:` on every `columns` shot from its
+   captions (the midpoint between the last A caption's end and the first B caption's
+   `at`), as written in `two-column-boards` ("In the film"). Fixed 2026-10-10, commit
+   36c2e30; measured on Dynamic Arrays slide 2 only (frames around 11.53 s), the other
+   five by numbers. Do not hand-shift `from:`/`to:`.
 7. `film final` only when he asks. Cover and upload text as in `ship`.
 
 ## Never
 
 - Re-publish or re-record over his takes; cut his words; add effects or polish.
-- Copy the plan's tools (pan_kit.py, render_png.py, make_pans.sh) into the repo unasked.
 - Say "works" for a pan or caption you have not measured on his file.

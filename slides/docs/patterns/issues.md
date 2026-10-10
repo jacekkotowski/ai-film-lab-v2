@@ -87,6 +87,8 @@ Format and ladder: `README.md`. Newest IDs at the end; the order is by kind.
 - **seen**: scr-meaning "9 in 10" (2026-10-06, fixed 2026-10-07)
 - **fix**: a mark meant to cross ONE text: give it `.strikes = text`;
       something meant to lie under texts (grid, axes): put it in `background`
+      a backing shape that appears in a step (card, screen, keycap, map grid):
+          `kit.under(shape)` (2026-10-11, Map and Calculator 01)
       A new kind of intended overlap: tag it and teach `kit.check` (one line)
 
 ### I12 — a mark is invisible on a phone
@@ -155,6 +157,8 @@ Format and ladder: `README.md`. Newest IDs at the end; the order is by kind.
 - **cause**: Windows console code page cp1250
 - **fix**: in a script: `sys.stdout.reconfigure(encoding="utf-8")` (kit's CLI does);
       never print a Manim object's text in a scratch scene
+      `look` crashed on notes naming "ΔN", "E · N" (2026-10-11): its Manim run now
+      gets PYTHONIOENCODING=utf-8 and its own print is utf-8
 
 ### I22 — "Allow once" asked for every command
 - **status**: rule (CLAUDE.md)

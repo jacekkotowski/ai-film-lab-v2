@@ -179,8 +179,12 @@ def _manim(scene: str, size: str, still: bool) -> list[str]:
         "-r", f"{w},{h}", "--media_dir", f"scenes/{scene}/out",
         f"scenes/{scene}/scene.py", "Slide"]
     t0 = time.monotonic()
+    # Manim's notes name texts like "ΔN = ..." and "E · N": in cp1250 they
+    # came back as Δ and U+FFFD (issue I21, Map and Calculator 01)
+    import os
     r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True,
-                       encoding="utf-8", errors="replace")
+                       encoding="utf-8", errors="replace",
+                       env=dict(os.environ, PYTHONIOENCODING="utf-8"))
     keep = [ln.strip()[ln.strip().find("["):] for ln in (r.stdout + r.stderr).splitlines()
             if "[layout]" in ln or "[beats]" in ln]
     keep = list(dict.fromkeys(keep))           # a note printed twice is one note
@@ -270,6 +274,7 @@ def main(argv: list[str]) -> int:
         print(__doc__, file=sys.stderr)
         return 2
     lines = cmds[argv[0]](*argv[1:])
+    sys.stdout.reconfigure(encoding="utf-8")          # issue I21
     print("\n".join(lines))
     return 1 if any("PROBLEM" in ln for ln in lines) else 0
 

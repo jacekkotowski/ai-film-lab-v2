@@ -21,6 +21,20 @@ section with the commit id -- do not delete it.
   (DTU-3.2.5.6.1 2023: "tys" = 1/6000, "mils" = 1/6400; T = M + Δ; a snippet "w prawo
   0-20, bliżej 100"). Not built: the helpers (his go), the Polish-letters test still.
   RD01's 4 context files and its chat "Tank fire direction simulation app" not opened.
+  STEP 1 DONE (session 2, his "YES"; not committed): measured at 56, 20 of his 45
+  screen texts are wider than the slide (8.0) and 9 of 10 sublines need 2-3 lines; the
+  busiest slide (03 A) needs ~20 units of height for 11 (sum of measured rows). Agreed:
+  each slide shows its pieces one after another on his words, his texts word for word
+  at >= 56, wrapped; only the series tag smaller (26). kit.py: wrap, paragraph, cap,
+  under, keycap/keys/lit/light, screen, card, command, compass, norths, burst_view,
+  map_grid/map_point/map_line/azimuth_arc; kit.text takes font/weight (defaults =
+  Manim's). Test scene scenes/obs-test (in no film), 8 pages, one per drawing: 0
+  [layout] notes on every page; still 1080x1920 (ffprobe), margins 60/61/120/488 px;
+  draft 540x960, 13.00 s; Δ, θ, − render in Consolas (looked at the still). Old stills
+  unchanged: face-ledger, face-weight sha256 identical after the kit change. Slides
+  suite 128 OK (3 skipped). Fixed on the way: look crashed printing notes with Δ / ·
+  (I21); Manim's add_tip bends an Arc (0.7 arc reached 0.87): azimuth_arc draws its
+  own arrowhead. NEXT: step 2, the five scenes.
 - 2026-10-10 [slides] Two-column boards offline (Jacek: not only Excel, also
   Power Query, R code; works with no network). BUILT: slides/boards/ pan_kit.py
   (stdlib; `code()` card for M/R/VBA/DAX that shrinks or refuses a line that

@@ -16,11 +16,13 @@ from __future__ import annotations
 
 import math
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
-from manim import (Arrow, Circle, Dot, Group, Line, Mobject, RoundedRectangle,
-                   Text, VGroup, VMobject)
+from manim import (BOLD, NORMAL, PI, Arc, Arrow, Circle, DashedLine, Dot, Group,
+                   Line, Mobject, Polygon, Rectangle, RoundedRectangle, Text,
+                   VGroup, VMobject)
 
 from aimanim import aurora as _aurora
 from aimanim import beats, frame
@@ -40,14 +42,16 @@ MAX_CHARS = 17       # at MIN_FONT, ~17 characters fill the safe width (8.0)
 # ---- placing text -----------------------------------------------------------
 
 def text(s: str, x: float, baseline: float, color=frame.INK,
-         size: int = frame.MIN_FONT, align: str = "center") -> Text:
+         size: int = frame.MIN_FONT, align: str = "center",
+         font: str = "", weight: str = NORMAL) -> Text:
     """Text on a BASELINE, centred on x (align="left": starting at x).
 
     Centring by middle or top puts "turret" and "reticle" (or "Triumph"
     and "SLx") at different heights; a baseline never does. An "H" is set
     after the text to find the baseline (its bottom), then taken away.
+    `font` "" and `weight` NORMAL are Manim's own defaults.
     """
-    t = Text(s + "H", font_size=size, color=color)
+    t = Text(s + "H", font_size=size, color=color, font=font, weight=weight)
     h = t[-1]
     t.shift((0, baseline - h.get_bottom()[1], 0))
     t.remove(h)
@@ -71,6 +75,43 @@ def title(s: str, color=frame.INK) -> Text:
 def fits(s: str, size: int = frame.MIN_FONT) -> float:
     """Width of a string in frame units -- measure before laying out."""
     return Text(s, font_size=size).width
+
+
+@lru_cache(maxsize=None)
+def cap(size: int = frame.MIN_FONT, font: str = "") -> float:
+    """Height of a capital H in frame units (Consolas at 56: 0.50)."""
+    return Text("H", font_size=size, font=font).height
+
+
+def wrap(s: str, width: float, size: int = frame.MIN_FONT, font: str = "",
+         weight: str = NORMAL) -> list[str]:
+    """`s` as lines no wider than `width`, broken between words; a "\\n"
+    in `s` always breaks. Measured, not counted: at 56 a line of 17
+    characters may or may not fit 8.0. A word wider than `width` stays
+    whole (the check then reports it past SIDE)."""
+    out = []
+    for part in s.split("\n"):
+        line = ""
+        for w in part.split(" "):
+            t = f"{line} {w}" if line else w
+            if line and Text(t, font_size=size, font=font, weight=weight).width > width:
+                out.append(line)
+                line = w
+            else:
+                line = t
+        out.append(line)
+    return out
+
+
+def paragraph(s: str, x: float, baseline: float, width: float = 2 * frame.SIDE,
+              color=frame.INK, size: int = frame.MIN_FONT, align: str = "center",
+              font: str = "", weight: str = NORMAL, step: float | None = None) -> VGroup:
+    """`s` wrapped to `width` (kit.wrap), the first line on `baseline`,
+    each next one layout.row_step lower; align as kit.text. His words
+    stay whole: a long sentence becomes two or three lines, never smaller."""
+    step = step or row_step(size)
+    return VGroup(*[text(line, x, baseline - i * step, color, size, align, font, weight)
+                    for i, line in enumerate(wrap(s, width, size, font, weight))])
 
 
 # ---- geometry ---------------------------------------------------------------
@@ -253,6 +294,384 @@ def replay(m: Mobject, frames, body: int = 0, fps: int = frame.FPS) -> Mobject:
     return m
 
 
+# ---- map and calculator: "Map and Calculator 01 - Observer" -----------------
+# His plan (film/docs/plans/2026-10-11/PLAN-map-calculator.md) keeps the look
+# of his pan boards: dark ground, green accent, the colours of
+# slides/boards/pan_kit.py (its names in the comments). Space Grotesk and
+# JetBrains Mono are not installed (docs/OPEN.md): Segoe UI and Consolas are
+# pan_kit's own offline fallbacks. Every text is at least MIN_FONT except the
+# series tag, SERIES_FONT: at 56 it is 17.0 wide (Jacek's yes, 2026-10-11).
+# A slide shows these one after another on his words: at 56 the busiest
+# slide of the plan needs about 20 units of height, the frame has 11.
+
+SANS, MONO = "Segoe UI", "Consolas"
+SERIES_FONT = 26
+GROUND = "#0E1416"            # BG   the slide: self.camera.background_color
+PAPER = "#F2F4F1"             # TX   text
+MUTED = "#A3AFAB"             # MU   tags, sublines, numbers of the grid
+RULE = "#2A3633"              # LN   the edge of a card
+GREEN = "#5BD394"             # GRT  right, the answer
+GREEN_DARK = "#1B7F47"        # GR   a lit key
+AMBER = "#F5B83D"             # AM   take care; angles
+ORANGE = "#FF8F57"            # OR   wrong
+CARD_FILL = "#151E1C"         # pan_kit card()
+KEY_FILL, KEY_EDGE = "#18211F", "#3E4B48"     # pan_kit key()
+LCD, LCD_INK, BEZEL = "#C7D1C1", "#1C2321", "#242C2A"
+MAP_LINE = "#35564A"          # the kilometre grid
+# A card or a screen 8.0 wide drew its edge 2 px past SIDE (look: margins
+# 58 px < 60, measured 2026-10-11): the stroke is half outside the box.
+BOX_W = 2 * frame.SIDE - 0.04
+
+
+def under(m: Mobject) -> Mobject:
+    """Mark a backing shape (a card, a screen, a keycap face) as meant to
+    lie under text: kit.check does not report text on it (issue I11)."""
+    for f in m.get_family():
+        f.under = True
+    return m
+
+
+def _beside(s: str, p, d, clear: float, color, size: int = frame.MIN_FONT,
+            font: str = SANS, pad: float = 0.15) -> Text:
+    """Text centred in direction d from point p, its box `clear` + pad
+    away from p: outside a dial's edge, a dot, an arc, or a line."""
+    w, h = Text(s, font_size=size, font=font).width, cap(size, font)
+    r = clear + w / 2 * abs(d[0]) + h / 2 * abs(d[1]) + pad
+    cx, cy = p[0] + d[0] * r, p[1] + d[1] * r
+    return text(s, cx, cy - h / 2, color, size, font=font)
+
+
+# -- the calculator: keys and screen --
+
+KEY_H = 1.0          # a keycap at 56: capitals 0.50, 0.25 above and below
+
+
+def keycap(label: str, x: float, y: float, size: int = frame.MIN_FONT) -> VGroup:
+    """One key centred on (x, y): a face on a darker lip (pan_kit's thick
+    bottom border), the label in bold mono. VGroup(lip, face, label);
+    kit.light(key) lights it on its word, kit.lit(key) at once."""
+    k = size / frame.MIN_FONT
+    t = text(label, x, y - cap(size, MONO) / 2, PAPER, size, font=MONO, weight=BOLD)
+    w = max(t.width + 0.44 * k, 0.9 * k)
+    face = RoundedRectangle(width=w, height=KEY_H * k, corner_radius=0.14 * k)
+    face.move_to((x, y, 0)).set_fill(KEY_FILL, 1).set_stroke(KEY_EDGE, 4)
+    lip = face.copy().shift((0, -0.08 * k, 0)).set_fill(KEY_EDGE, 1)
+    return VGroup(under(lip), under(face), t)
+
+
+def lit(key: VGroup, on: bool = True) -> VGroup:
+    """A key lit (green) now, or dark again with on=False."""
+    key[1].set_fill(GREEN_DARK if on else KEY_FILL, 1)
+    key[1].set_stroke(GREEN if on else KEY_EDGE, 4)
+    return key
+
+
+def light(key: VGroup):
+    """The animation of a key lighting up: one object moving."""
+    return key[1].animate.set_fill(GREEN_DARK, 1).set_stroke(GREEN, 4)
+
+
+def keys(labels, y: float, x: float = 0.0, sep: str = "→", then: str | None = None,
+         width: float = 2 * frame.SIDE, size: int = frame.MIN_FONT,
+         gap: float = 0.14, step: float = 1.3) -> VGroup:
+    """Keycaps in a row centred on (x, y), `sep` between them ("→" one
+    after another, "+" together); `then` is what they type, after "=", in
+    green ("Rec("). Wider than `width`: two rows `step` apart, split where
+    the longer row is shortest, the second starting with its `sep`
+    ("SHIFT → MENU" / "→ 2 → 1": 9.0 wide in one row at 56).
+    VGroup of the items in order; .caps = the keycaps (to light them)."""
+    caps = [keycap(s, 0, 0, size) for s in labels]
+
+    def sym(s, color=MUTED, font=SANS, weight=NORMAL):
+        return text(s, 0, -cap(size, font) / 2, color, size, font=font, weight=weight)
+
+    units = [[caps[0]]] + [[sym(sep), c] for c in caps[1:]]
+    if then:
+        units.append([sym("="), sym(then, GREEN, MONO, BOLD)])
+
+    def span(items):
+        return sum(m.width for m in items) + gap * (len(items) - 1)
+
+    flat = [m for u in units for m in u]
+    rows = [flat]
+    if span(flat) > width:
+        best = None
+        for i in range(1, len(units)):
+            a = [m for u in units[:i] for m in u]
+            b = [m for u in units[i:] for m in u]
+            worst = max(span(a), span(b))
+            if best is None or worst < best[0]:
+                best = (worst, [a, b])
+        rows = best[1]
+    for i, row in enumerate(rows):
+        cx = x - span(row) / 2
+        for m in row:
+            m.shift((cx - m.get_left()[0], y - i * step, 0))
+            cx += m.width + gap
+    g = VGroup(*flat)
+    g.caps = caps
+    return g
+
+
+def screen(expr: str = "", results=(), ind: str = "D", bad: bool = False,
+           top: float = 0.0, x: float = 0.0, width: float = BOX_W,
+           rows: int | None = None, size: int = frame.MIN_FONT) -> VGroup:
+    """The calculator's display, no logo: a dark bezel, the screen
+    (#C7D1C1), the angle unit top-left (D or R; bad=True rings it in
+    orange), the expression on the first line, the results right-aligned
+    under it; no results: a cursor bar after the expression. `rows` = how
+    many result lines to make room for (default: as many as given, at
+    least one), so the screens of one slide can share one size.
+    VGroup; .ind .ring .expr .cursor .results name the parts (None if absent)."""
+    k = size / frame.MIN_FONT
+    h, step = cap(size, MONO), row_step(size)
+    n = max(rows or len(results), 1)
+    gl, gr, gt = x - width / 2 + 0.2, x + width / 2 - 0.2, top - 0.2   # the glass
+    pad = 0.25
+    ind_b = gt - pad - h
+    expr_b = ind_b - step - 0.1
+    res_b = [expr_b - step * (i + 1) for i in range(n)]
+    gb = res_b[-1] - DESCENT * k - pad
+    bezel = RoundedRectangle(width=width, height=top - gb + 0.2, corner_radius=0.3)
+    bezel.move_to((x, (top + gb - 0.2) / 2, 0)).set_fill(BEZEL, 1).set_stroke(RULE, 3)
+    glass = RoundedRectangle(width=gr - gl, height=gt - gb, corner_radius=0.12)
+    glass.move_to((x, (gt + gb) / 2, 0)).set_fill(LCD, 1).set_stroke(width=0)
+    g = VGroup(under(bezel), under(glass))
+    g.ind = text(ind, gl + pad, ind_b, LCD_INK, size, "left", MONO, BOLD)
+    g.add(g.ind)
+    g.ring = None
+    if bad:
+        g.ring = RoundedRectangle(width=g.ind.width + 0.3, height=h + 0.3, corner_radius=0.08)
+        g.ring.move_to((g.ind.get_center()[0], ind_b + h / 2, 0))
+        g.add(under(g.ring.set_stroke(ORANGE, 6).set_fill(opacity=0)))
+    g.expr = text(expr, gl + pad, expr_b, LCD_INK, size, "left", MONO) if expr else None
+    if g.expr:
+        g.add(g.expr)
+    g.cursor, g.results = None, None
+    if results:
+        g.results = VGroup(*[text(r, gr - pad, b, LCD_INK, size, "right", MONO)
+                             for r, b in zip(results, res_b)])
+        g.add(g.results)
+    else:
+        left = g.expr.get_right()[0] + 0.1 if g.expr else gl + pad
+        g.cursor = Rectangle(width=0.07, height=h * 1.15).set_fill(LCD_INK, 1).set_stroke(width=0)
+        g.cursor.move_to((left + 0.035, expr_b + h * 0.5, 0))
+        g.add(g.cursor)
+    return g
+
+
+def card(rows, top: float, hl: int | None = None, x: float = 0.0,
+         width: float = BOX_W, size: int = frame.MIN_FONT, color=PAPER) -> VGroup:
+    """pan_kit's mono card: one row under another, left-aligned, each
+    wrapped to the card (a "\\n" breaks where it reads best: "ΔN = 20300
+    − 21800" is 18 characters, about 7.66 at 56, the card holds 7.70);
+    row `hl` in green on a light-green band. VGroup; .rows[i] = row i's lines."""
+    k = size / frame.MIN_FONT
+    h, step, pad = cap(size, MONO), row_step(size), 0.13
+    left = x - width / 2
+    b = top - pad - h
+    groups, spans = [], []
+    for i, row in enumerate(rows):
+        weight = BOLD if i == hl else NORMAL
+        lines = wrap(row, width - 2 * pad, size, MONO, weight)
+        g = VGroup(*[text(s, left + pad, b - j * step, GREEN if i == hl else color,
+                          size, "left", MONO, weight) for j, s in enumerate(lines)])
+        last = b - (len(lines) - 1) * step
+        spans.append((b + h, last - DESCENT * k))
+        groups.append(g)
+        b = last - step - 0.15
+    bottom = spans[-1][1] - pad
+    back = RoundedRectangle(width=width, height=top - bottom, corner_radius=0.18)
+    back.move_to((x, (top + bottom) / 2, 0)).set_fill(CARD_FILL, 1).set_stroke(RULE, 3)
+    parts = [under(back)]
+    if hl is not None:
+        t, bt = spans[hl][0] + 0.12, spans[hl][1] - 0.06
+        band = Rectangle(width=width - 0.12, height=t - bt).move_to((x, (t + bt) / 2, 0))
+        bar = Rectangle(width=0.04, height=t - bt).move_to((left + 0.07, (t + bt) / 2, 0))
+        band.set_fill(GREEN, 0.16).set_stroke(width=0)
+        bar.set_fill(GREEN, 1).set_stroke(width=0)
+        parts += [under(band), under(bar)]
+    out = VGroup(*parts, *groups)
+    out.rows = groups
+    return out
+
+
+def command(s: str, y: float, x: float = 0.0, size: int = 120, color=GREEN) -> VGroup:
+    """pan_kit's big command ("RIGHT 60"): bold mono in an outline,
+    centred on (x, y). "RIGHT 60" at 120 is 7.12 wide."""
+    h = cap(size, MONO)
+    t = text(s, x, y - h / 2, color, size, font=MONO, weight=BOLD)
+    box = RoundedRectangle(width=t.width + 0.6, height=h + 0.7, corner_radius=0.2)
+    box.move_to((t.get_center()[0], y, 0)).set_stroke(color, 6).set_fill(opacity=0)
+    return VGroup(under(box), t)
+
+
+# -- the compass, the two norths, the burst --
+
+def compass(center, radius: float, needle: float, label: str | None = None,
+            color=ORANGE, size: int = frame.MIN_FONT) -> VGroup:
+    """A compass dial: a tick every 10° (longer every 30°), N E S W, and a
+    needle from the centre to `needle` degrees (0 = north, clockwise) with
+    its reading outside the dial ("61°")."""
+    c = np.array([center[0], center[1], 0.0])
+    ring = Circle(radius=radius).move_to(c).set_stroke(PAPER, 4)
+    ticks = []
+    for deg in range(0, 360, 10):
+        u = np.array(toward(deg / 360))
+        ticks.append(Line(c + (radius - (0.35 if deg % 30 == 0 else 0.18)) * u, c + radius * u))
+    h = cap(size, SANS)
+    letters = []
+    for name, deg in (("N", 0), ("E", 90), ("S", 180), ("W", 270)):
+        p = c + (radius - 0.8) * np.array(toward(deg / 360))
+        letters.append(text(name, p[0], p[1] - h / 2, PAPER if name == "N" else MUTED,
+                            size, font=SANS))
+    u = np.array(toward(needle / 360))
+    arrow = Arrow(c - 0.35 * u, c + (radius - 0.45) * u, buff=0, stroke_width=8,
+                  color=color, tip_length=0.32, max_tip_length_to_length_ratio=0.2)
+    pivot = Dot(c, radius=0.09, color=PAPER)
+    reading = _beside(label or f"{needle:g}°", c, u, radius, color, size)
+    return VGroup(ring, VGroup(*ticks).set_stroke(MUTED, 3), VGroup(*letters),
+                  arrow, pivot, reading)
+
+
+def norths(origin, length: float, angle: float,
+           labels=("Grid\nnorth", "Magnetic\nnorth"), arc_label: str = "correction",
+           arc_r: float = 0.45, size: int = frame.MIN_FONT) -> VGroup:
+    """The two norths of a map's margin: grid north straight up from
+    `origin`, magnetic north `angle` degrees from it (+ = east; drawn as
+    given, the slide carries no number), the arc between them named. Each
+    name sits beside its own tip, on its own side."""
+    o = np.array([origin[0], origin[1], 0.0])
+    m = np.array(toward(angle / 360))
+    gtip, mtip = o + (0, length, 0), o + length * m
+    kw = dict(buff=0, stroke_width=6, tip_length=0.3, max_tip_length_to_length_ratio=0.1)
+    grid, mag = Arrow(o, gtip, color=PAPER, **kw), Arrow(o, mtip, color=ORANGE, **kw)
+    s = 1 if angle >= 0 else -1          # magnetic north's side
+    h = cap(size, SANS)
+    out, inn = ("left", "right") if s > 0 else ("right", "left")
+    gname = paragraph(labels[0], gtip[0] - s * 0.3, gtip[1] - h, color=PAPER, size=size,
+                      align=inn, font=SANS)
+    mname = paragraph(labels[1], mtip[0] + s * 0.3, mtip[1] - h, color=ORANGE, size=size,
+                      align=out, font=SANS)
+    arc = Arc(radius=arc_r * length, start_angle=PI / 2, angle=-math.radians(angle),
+              arc_center=o).set_stroke(AMBER, 5)
+    end = o + arc_r * length * m
+    name = text(arc_label, end[0] + s * 0.3, end[1] - h / 2, AMBER, size, out, SANS)
+    return VGroup(grid, mag, arc, gname, mname, name)
+
+
+def burst_view(center, radius: float, mils: float, scale: float, side: int = -1,
+               label: str | None = None, caption: str = "view through binoculars",
+               size: int = frame.MIN_FONT) -> VGroup:
+    """What the observer sees through binoculars: the field, the line on
+    the target, the burst `mils` to one side (side=-1: left; `scale` frame
+    units per mil), a bracket over the gap with its reading ("20 mils"),
+    the caption under the field. The vertical line stops under the bracket
+    so the reading never sits on it."""
+    c = np.array([center[0], center[1], 0.0])
+    field = Circle(radius=radius).move_to(c).set_stroke(MUTED, 4)
+    yb = c[1] + 0.95                                  # the bracket
+    cross = VGroup(Line(c + (-radius, 0, 0), c + (radius, 0, 0)),
+                   Line(c + (0, -radius, 0), (c[0], yb - 0.35, 0))).set_stroke(PAPER, 3)
+    target = Rectangle(width=0.5, height=0.32).move_to(c + (0, 0.16, 0))
+    target.set_fill(PAPER, 1).set_stroke(width=0)
+    bx = c[0] + side * mils * scale
+    puff = VGroup(*[Circle(radius=r).move_to((bx + dx, c[1] + dy, 0))
+                    for dx, dy, r in ((0, 0.3, 0.32), (-0.27, 0.18, 0.22),
+                                      (0.27, 0.2, 0.24), (0.02, 0.6, 0.22))])
+    puff.set_fill(ORANGE, 0.9).set_stroke(width=0)
+    bracket = VGroup(Line((bx, yb, 0), (c[0], yb, 0)), Line((bx, yb, 0), (bx, yb - 0.2, 0)),
+                     Line((c[0], yb, 0), (c[0], yb - 0.2, 0))).set_stroke(AMBER, 4)
+    reading = text(label or f"{mils:g} mils", (bx + c[0]) / 2, yb + 0.2, AMBER, size, font=SANS)
+    under_field = paragraph(caption, c[0], c[1] - radius - 0.3 - cap(size, SANS),
+                            color=MUTED, size=size, font=SANS)
+    return VGroup(field, cross, target, puff, bracket, reading, under_field)
+
+
+# -- the map --
+
+def map_grid(e0: int, e1: int, n0: int, n1: int, left: float, bottom: float,
+             scale: float, km: int = 1000, size: int = frame.MIN_FONT):
+    """A map sheet's kilometre grid, E e0..e1 and N n0..n1 in metres, its
+    lower-left corner at (left, bottom), `scale` frame units per metre.
+    The E numbers under the bottom edge, the N numbers left of the left
+    edge, in kilometres as a sheet prints them (34 = E 34000); "E" ends
+    the row of E numbers on the left, "N" heads the column. The lines are
+    under (names may lie on them). Returns (VGroup, at): at(E, N) -> point."""
+    def at(e, n):
+        return (left + (e - e0) * scale, bottom + (n - n0) * scale, 0.0)
+
+    lines = ([Line(at(e, n0), at(e, n1)) for e in range(e0, e1 + 1, km)]
+             + [Line(at(e0, n), at(e1, n)) for n in range(n0, n1 + 1, km)])
+    grid = under(VGroup(*lines).set_stroke(MAP_LINE, 3))
+    h = cap(size, SANS)
+    eb = bottom - 0.4 - h
+    nums = [text(f"{e // 1000}", at(e, n0)[0], eb, MUTED, size, font=SANS)
+            for e in range(e0, e1 + 1, km)]
+    nums += [text(f"{n // 1000}", left - 0.2, at(e0, n)[1] - h / 2, MUTED, size, "right", SANS)
+             for n in range(n0, n1 + 1, km)]
+    widest = max(m.width for m in nums[len(range(e0, e1 + 1, km)):])
+    nums.append(text("E", left - 0.6, eb, PAPER, size, "right", SANS, BOLD))
+    nums.append(text("N", left - 0.2 - widest / 2, at(e0, n1)[1] + h / 2 + 0.3, PAPER, size,
+                     font=SANS, weight=BOLD))
+    return VGroup(grid, VGroup(*nums)), at
+
+
+def map_point(at, e: float, n: float, name: str | None = None, color=GREEN,
+              side: str = "right", clear: float | None = None,
+              size: int = frame.MIN_FONT, r: float = 0.11) -> VGroup:
+    """A place on the map: a dot and its name on `side` (right, left, up,
+    down), `clear` from the dot's centre (default: the dot)."""
+    p = at(e, n)
+    parts = [Dot(p, radius=r, color=color)]
+    if name:
+        d = {"right": (1, 0), "left": (-1, 0), "up": (0, 1), "down": (0, -1)}[side]
+        parts.append(_beside(name, p, d, r if clear is None else clear, color, size))
+    return VGroup(*parts)
+
+
+def map_line(at, p0, p1, label: str | None = None, color=PAPER, dashed: bool = False,
+             side: int = 1, where: float = 0.5, width: float = 5,
+             size: int = frame.MIN_FONT, label_color=None) -> VGroup:
+    """A straight line between two map points (E, N): the azimuth line, a
+    north or east leg. Its label at `where` along it (0 = p0), clear of
+    the line on `side` (+1 = left of the way from p0 to p1)."""
+    a, b = np.array(at(*p0)), np.array(at(*p1))
+    line = (DashedLine if dashed else Line)(a, b).set_stroke(color, width)
+    if not label:
+        return VGroup(line)
+    u = (b - a) / np.linalg.norm(b - a)
+    m = a + (b - a) * where
+    t = _beside(label, m, (-u[1] * side, u[0] * side), 0.0, label_color or color, size)
+    return VGroup(line, t)
+
+
+def azimuth_arc(at, p, az: float, radius: float, label: str | None = None,
+                color=AMBER, north: bool = True, label_at: float | None = None,
+                size: int = frame.MIN_FONT) -> VGroup:
+    """The azimuth at map point p: from grid north (a dashed stub up)
+    clockwise to `az` degrees, an arrowhead at its end, the label outside
+    the arc at `label_at` degrees (default: its middle). The arrowhead is
+    a triangle of its own: Manim's add_tip bends an Arc to meet it (a 0.7
+    arc reached 0.87, measured 2026-10-11)."""
+    c = np.array(at(*p))
+    a = math.radians(az)
+    arc = Arc(radius=radius, start_angle=PI / 2, angle=-a, arc_center=c).set_stroke(color, 5)
+    end = c + radius * np.array([math.sin(a), math.cos(a), 0])
+    t = np.array([math.cos(a), -math.sin(a), 0])          # clockwise tangent
+    n = np.array([-t[1], t[0], 0])
+    tip = end + 0.08 * t
+    head = Polygon(tip, tip - 0.24 * t + 0.11 * n, tip - 0.24 * t - 0.11 * n)
+    head.set_fill(color, 1).set_stroke(width=0)
+    parts = [arc, head]
+    if north:
+        parts.append(DashedLine(c, c + (0, radius + 0.1, 0)).set_stroke(MUTED, 3))
+    if label:
+        d = toward((az / 2 if label_at is None else label_at) / 360)
+        parts.append(_beside(label, c, d, radius, color, size))
+    return VGroup(*parts)
+
+
 # ---- the steps, on the words ------------------------------------------------
 
 def run(scene, here: Path, steps, beat_lines, run_times, background=(),
@@ -315,7 +734,8 @@ def check(mobs, under=()) -> list[str]:
     """The frame rules, on what is on screen:
       - nothing above TOP, below BOTTOM (captions) or past SIDE;
       - no text touching other text;
-      - no text touching a drawing, unless the drawing is `under` (a grid).
+      - no text touching a drawing, unless the drawing is `under` (a grid)
+        or marked by kit.under (a card, a screen, a keycap: text sits on them).
     Boxes, not shapes: a diagonal arrow's box is big, so "touches a
     drawing" can be a false alarm -- look at the still before moving it.
     """
@@ -336,7 +756,8 @@ def check(mobs, under=()) -> list[str]:
             if _overlap(_box(a), _box(c)):
                 notes.append(f"{_name(a)} touches {_name(c)}")
         for d in leaves:
-            if isinstance(d, Text) or id(d) in skip or getattr(d, "strikes", None) is a:
+            if (isinstance(d, Text) or id(d) in skip or getattr(d, "under", False)
+                    or getattr(d, "strikes", None) is a):
                 continue
             if _overlap(_box(a), _box(d), gap=0) and _hits(_box(a), d):
                 notes.append(f"{_name(a)} touches a {_name(d)}")

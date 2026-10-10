@@ -97,6 +97,7 @@ shots:
     out: "00:27.20"
     speed: 1.25              # 1.0 is the speed you actually read at
     move: columns
+    cross: 11.53             # A ends 11.26 "a fixed address", B starts 11.81 "Type the table column"
     focus: [0.415, 0.367]
     note: "picture 1 of 6 -- holds while these words are said"
     captions:
@@ -138,6 +139,7 @@ shots:
     out: "00:56.10"
     speed: 1.25              # 1.0 is the speed you actually read at
     move: columns
+    cross: 12.13             # A ends 11.90 "rep column of the table", B starts 12.36 "Use that name"
     focus: [0.424, 0.354]
     note: "picture 2 of 6 -- holds while these words are said"
     captions:
@@ -184,6 +186,7 @@ shots:
     out: "01:25.25"
     speed: 1.25              # 1.0 is the speed you actually read at
     move: columns
+    cross: 13.35             # A ends 13.07 "OFFSET is also volatile", B starts 13.62 "INDEX builds"
     focus: [0.473, 0.334]
     note: "picture 3 of 6 -- holds while these words are said"
     captions:
@@ -235,6 +238,7 @@ shots:
     out: "01:55.65"
     speed: 1.25              # 1.0 is the speed you actually read at
     move: columns
+    cross: 5.38              # A ends 5.37 "two typed names", B starts 5.38 "The second shows only"
     focus: [0.454, 0.351]
     note: "picture 4 of 6 -- holds while these words are said"
     captions:
@@ -281,6 +285,7 @@ shots:
     out: "02:24.40"
     speed: 1.25              # 1.0 is the speed you actually read at
     move: columns
+    cross: 12.10             # A ends 11.92 "the list grows with it", B starts 12.28 "FILTER returns"
     focus: [0.385, 0.337]
     note: "picture 5 of 6 -- holds while these words are said"
     captions:
@@ -327,6 +332,7 @@ shots:
     out: "02:55.15"
     speed: 1.25              # 1.0 is the speed you actually read at
     move: columns
+    cross: 9.59              # A ends 9.33 "remove duplicates and sort", B starts 9.84 "Close and Load To"
     focus: [0.426, 0.355]
     note: "picture 6 of 6 -- holds while these words are said"
     captions:

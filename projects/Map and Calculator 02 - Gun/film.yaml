@@ -92,6 +92,7 @@ shots:
 
   - id: s02
     src: media/01_gun-triangle.png
+    clip: clips/01_gun-triangle.mp4
     voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
     in: "00:00.40"
     out: "00:27.55"
@@ -143,6 +144,7 @@ shots:
 
   - id: s03
     src: media/02_gun-pol.png
+    clip: clips/02_gun-pol.mp4
     voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
     in: "00:32.65"
     out: "01:23.00"
@@ -161,11 +163,14 @@ shots:
         dur: 3.01
         pos: lower_third
         words: [0.00, 0.34, 1.05, 2.80]
+      # numbers not heard by the transcriber: placed on the speech measured
+      # in the audio, 42.3-47.35 s of the narration; word times by the
+      # transcriber (whole take)
       - text: "22814 minus 16000,"
-        at: 9.91
-        dur: 0.96
+        at: 7.70
+        dur: 4.06
         pos: lower_third
-        words: [0.00, 0.27]
+        words: [0.00, 1.94, 2.46]
       - text: "36675 minus 33000."
         at: 12.57
         dur: 2.19
@@ -196,14 +201,17 @@ shots:
         dur: 4.50
         pos: lower_third
         words: [0.00, 0.45, 1.18, 1.97, 2.59, 3.98]
+      # was on "nothing" (80.5 s): placed on the speech measured in the audio,
+      # 79.5-82.70 s; word times by the transcriber (whole take)
       - text: "North-east: nothing to add."
-        at: 38.30
-        dur: 0.86
+        at: 37.48
+        dur: 2.56
         pos: lower_third
-        words: [0.00, 0.35, 0.58]
+        words: [0.00, 0.82, 1.17, 1.39]
 
   - id: s04
     src: media/03_gun-angle-t.png
+    clip: clips/03_gun-angle-t.mp4
     voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
     in: "01:24.50"
     out: "01:56.80"
@@ -222,21 +230,34 @@ shots:
         dur: 2.09
         pos: lower_third
         words: [0.00, 0.22, 0.54]
+      # ended before "Between" (94.28 s of the narration); it ran 4.5 s over it
       - text: "the gun's at 504."
         at: 5.52
-        dur: 4.50
+        dur: 2.20
         pos: lower_third
         words: [0.00, 0.14, 0.42, 0.78]
+      # was on "angle T 700" (105.3 s): placed on the speech measured in the
+      # audio, 94.28-96.50 s; word times by the transcriber (whole take)
       - text: "Between them: angle T."
-        at: 16.64
-        dur: 0.48
+        at: 7.82
+        dur: 1.78
         pos: lower_third
-        words: [0.00, 0.23]
+        words: [0.00, 0.34, 0.96, 1.28]
+      # missing (numbers not heard by the transcriber): placed on the speech
+      # measured in the audio, 97.0-104.9 s (quiet 96.5-96.9 and 104.9-105.2);
+      # word times after the first by the transcriber (whole take)
+      - text: "1160 minus 504 is 656 mils."
+        at: 10.00
+        dur: 6.32
+        pos: lower_third
+        words: [0.00, 1.63, 2.16, 3.89, 4.35, 5.82]
+      # was on "500" (106.7 s): placed on the speech measured in the audio,
+      # 105.3-106.25 s; word times by the transcriber (whole take)
       - text: "Angle T 700."
-        at: 17.77
-        dur: 0.36
+        at: 16.64
+        dur: 0.76
         pos: lower_third
-        words: [0.00]
+        words: [0.00, 0.30, 0.56]
       - text: "500 or more:"
         at: 18.14
         dur: 2.63
@@ -255,6 +276,7 @@ shots:
 
   - id: s05
     src: media/04_gun-rec.png
+    clip: clips/04_gun-rec.mp4
     voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
     in: "01:59.55"
     out: "02:47.75"
@@ -336,6 +358,7 @@ shots:
 
   - id: s06
     src: media/05_gun-new.png
+    clip: clips/05_gun-new.mp4
     voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
     in: "02:49.40"
     out: "03:37.65"

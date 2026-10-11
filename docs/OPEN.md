@@ -73,6 +73,13 @@ section with the commit id -- do not delete it.
   video.") taken out of film.yaml; `film check` 7 shots, 178.6 s (was 192.8), 1.4 s
   under 3:00. The recording stays in media/; `film go` would put it back at the
   end (its own warning). script_outro.txt untouched. Not rendered: the draft is his.
+  FINAL RENDERED (his "render the final ... I have no time", 20:42): final.mp4
+  1080x1920, 24 fps, 178.600 s (ffprobe), 256.7 MB. FLIGHT STARTED 20:48 with
+  `python fly/library/rigs/fly.py <final.timeline.json> --video` (new project, no
+  stills step: fly.py's approval loop commented out on his ask, 3d3d287, fly suite
+  16 OK). Frames at ~1.25 s each (measured on the first 11) -> about 4290 frames,
+  ~90 min (reasoned). At its end fly.py opens the YouTube upload page. Neither the
+  final nor the flight has been watched.
   SKILL BUILT (his "build separate infrastructure, skills ... remember what was
   used and what worked"): `fire-direction` (.claude/skills/), aimanim/firing.py
   (stdlib: rec, pol, bearing, mils, OT factor, deviation, angle T, shift,

@@ -323,6 +323,39 @@ MAP_LINE = "#35564A"          # the kilometre grid
 BOX_W = 2 * frame.SIDE - 0.04
 
 
+# The column of every slide of this film, as pan_kit.panel stacks it: the
+# series tag, the step tag ("SLIDE 1 · A"), the headline, the subline, the
+# footer (✓ green, ✗ orange, a caution amber, a plain note muted).
+SERIES_B, STEP_B, HEAD_B = 6.75, 5.85, 4.85      # baselines
+HEAD_FONT = 72
+
+
+def series_tag(s: str) -> Text:
+    """MAP AND CALCULATOR · 01 · OBSERVER, top left, at SERIES_FONT."""
+    return text(s, -frame.SIDE, SERIES_B, MUTED, SERIES_FONT, "left", MONO)
+
+
+def step_tag(s: str) -> Text:
+    """SLIDE 1 · A, under the series tag, at 56."""
+    return text(s, -frame.SIDE, STEP_B, MUTED, frame.MIN_FONT, "left", SANS)
+
+
+def headline(s: str) -> VGroup:
+    """Bold, left, wrapped: "Wrong mode, wrong answer" is two lines at 72."""
+    return paragraph(s, -frame.SIDE, HEAD_B, color=PAPER, size=HEAD_FONT, align="left",
+                     font=SANS, weight=BOLD)
+
+
+def below(m: Mobject, size: int = frame.MIN_FONT, gap: float = 0.3) -> float:
+    """The baseline of a first line `gap` under m (a headline of one or two lines)."""
+    return m.get_bottom()[1] - gap - cap(size, SANS)
+
+
+def note(s: str, baseline: float, color=MUTED) -> VGroup:
+    """A subline or a footer: left, wrapped, at 56."""
+    return paragraph(s, -frame.SIDE, baseline, color=color, align="left", font=SANS)
+
+
 def under(m: Mobject) -> Mobject:
     """Mark a backing shape (a card, a screen, a keycap face) as meant to
     lie under text: kit.check does not report text on it (issue I11)."""
@@ -675,21 +708,26 @@ def azimuth_arc(at, p, az: float, radius: float, label: str | None = None,
 # ---- the steps, on the words ------------------------------------------------
 
 def run(scene, here: Path, steps, beat_lines, run_times, background=(),
-        beat_words=None):
+        beat_words=None, check_each=False):
     """Add the background, play each step on its word (`beat_words`) or
     its sentence (`beat_lines`), hold to the end of the words, then check
     the still. `background` is what is on screen before the first word
-    (title, grid...): it may lie under other things."""
+    (title, grid...): it may lie under other things. check_each=True also
+    checks the frame at the end of every step ("[layout] step n: ..."): a
+    slide whose pieces replace each other is more than its last frame."""
     scene.add(*background)
     p = beats.for_scene(here, beat_lines, run_times, beat_words)
     # Waits in whole frames (beats.in_frames): Manim rounds each wait down,
     # and the clips came out up to 4.6 frames short. n + 0.5 frames of
     # seconds is drawn as exactly n frames.
     waits, tail = beats.in_frames(p, run_times, frame.FPS)
-    for n, step, rt in zip(waits, steps, run_times):
+    for i, (n, step, rt) in enumerate(zip(waits, steps, run_times)):
         if n:
             scene.wait((n + 0.5) / frame.FPS)
         scene.play(*step(), run_time=rt)
+        if check_each and i < len(steps) - 1:
+            for note_ in check(scene.mobjects, under=background):
+                print(f"[layout] step {i + 1}: {note_}", file=sys.stderr)
     if tail:
         scene.wait((tail + 0.5) / frame.FPS)
     for note in check(scene.mobjects, under=background):

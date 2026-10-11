@@ -34,7 +34,30 @@ section with the commit id -- do not delete it.
   unchanged: face-ledger, face-weight sha256 identical after the kit change. Slides
   suite 128 OK (3 skipped). Fixed on the way: look crashed printing notes with Δ / ·
   (I21); Manim's add_tip bends an Arc (0.7 arc reached 0.87): azimuth_arc draws its
-  own arrowhead. NEXT: step 2, the five scenes.
+  own arrowhead. NEXT: step 2, the five scenes. (Committed 1486a7f.)
+  STEP 2 DONE (same session, his "commit and do step 2"): scenes obs-mode,
+  obs-compass, obs-rec, obs-pol, obs-correction; projects/Map and Calculator 01 -
+  Observer/slides.txt (01-05; the folder is new, so `publish` will not run `film new`:
+  run it by hand for .vertical, fault (2) of 2026-10-08). Each slide shows its pieces
+  one after another (13 / 9 / 12 / 12 / 10 steps); kit.run(check_each=True) checks the
+  end of every step: 0 [layout] notes on every step of all five. `look film`: 5 stills
+  1080x1920 (ffprobe), margins L/R/T/B px 60/61/122/623, 60/61/122/860, 60/61/122/658,
+  60/61/122/652, 60/61/122/570; contact sheet docs/films/map-and-calculator-01-observer.png.
+  Half-size drafts 25.0 / 19.0 / 25.0 / 25.0 / 21.0 s, steps spaced evenly (not
+  narrated); only steps.png looked at, not the clips. 5 PROBLEM lines = "no paragraph
+  in the script": the narration is step 3. Not checked: Rec on SHIFT − (press it), his
+  two flags. NEXT: step 3, the narration (video01_map_calculator.md, ~300 words).
+  STEP 3 DRAFTED (his "develop the missing narration... review... continue"): Claude's
+  draft, NOT his words yet, in projects/Map and Calculator 01 - Observer/
+  video01_map_calculator.md (## headings) and slides.script.txt ([intro] [01]-[05]
+  [outro]; on disk, not committed: a draft until he approves). 328 words counted by
+  script_parts (intro 25, 45, 46, 65, 68, 52, outro 27): over his ~300, under his cap
+  340; ~137-164 s at his finals' 2.4-2.0 words/s. Every step has its BEAT_WORDS cue
+  (01 now 11 steps: subline with headline, keys come with SHIFT lit; 03 now 11:
+  card with subline). `film check`: 0 PROBLEM, ~131 s at 2.5 words/s; gate "rehearsed,
+  ok"; `look film`: 5 slides, 0 problem lines, stills unchanged. Next video's topic is
+  not in his plan: the outro says only "See you in the next video". NEXT: he reads
+  the draft; then step 4 (keys on a real fx-85GT X, his two flags), then publish (ask).
 - 2026-10-10 [slides] Two-column boards offline (Jacek: not only Excel, also
   Power Query, R code; works with no network). BUILT: slides/boards/ pan_kit.py
   (stdlib; `code()` card for M/R/VBA/DAX that shrinks or refuses a line that

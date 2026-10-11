@@ -130,6 +130,17 @@ named in **seen**; open it when the recipe is not enough.
       return [FadeIn(VGroup(said, kit.strike(said, frame.SICK), kit.text("doctors", -2, ROW2, frame.DIM))),
               FadeIn(VGroup(kit.text(RIGHT, 2, ROW, frame.ACCENT), kit.text("truth", 2, ROW2, frame.ACCENT)))]
 
+### T14 — more on a slide than one frame holds (a board's A and B)
+- **status**: code, helpers `kit.note`, `kit.below`, `kit.run(check_each=True)`
+- **seen**: Map and Calculator 01 (obs-mode … obs-correction, 2026-10-11): the
+  busiest slide needed ~20 units of height for 11 at 56
+- **recipe**:
+      one step per piece, in the order he says them; a piece leaves when the
+          next needs its room (subline → screen, map → card), ≤ 3 objects a step
+      what stays across A and B (the screen) sits where both layouts allow it
+      kit.run(..., check_each=True): every step's end is checked, not only the still
+      the still is the end of B: the last pieces should read as a summary
+
 ### T13 — choose the cue words (BEAT_WORDS) so steps land on the voice
 - **status**: helper `film <film> check` (rehearsal, 2.5 words/s)
 - **seen**: zeroing ("fourteen|14"), scr-cost ("result" → "two"), scr-rarity ("85|eighty-five")

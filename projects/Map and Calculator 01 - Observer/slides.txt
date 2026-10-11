@@ -1,0 +1,10 @@
+# map-and-calculator-01-observer -- an artillery observer's five moves with
+# a map and a Casio fx-85GT X. His plan: film/docs/plans/2026-10-11/PLAN-map-calculator.md
+# Intro and outro are narration only (no picture). Then one line per slide:
+# its number among the pictures he narrates over, and the scene.
+project: Map and Calculator 01 - Observer
+01 obs-mode
+02 obs-compass
+03 obs-rec
+04 obs-pol
+05 obs-correction

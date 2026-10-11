@@ -23,8 +23,7 @@ rules: `film/docs/decisions/0014`. Tests: `python -m unittest discover tests`.
 
 ## Render rules (weak PC)
 - Engine: Eevee. Never Cycles unless asked.
-- **Stills first.** Render `--stills` (50% res, 4 samples) and wait for approval before any video.
-- Then `--draft` (25% res, 1 sample) to check motion, and only then `--video`.
+- **No approval step** (Jacek, 2026-10-11): `fly.py <film>` goes straight to `--video`. `--stills` (50% res, 4 samples) and `--draft` (25% res, 1 sample) stay as options.
 - Vertical short = 1080×1920, 30 fps. Width and height at the render % must be even (H.264).
 - Emission materials, no heavy lights, no volumetrics, no particles.
 

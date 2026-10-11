@@ -4,8 +4,8 @@ REM  FLY  --  turn an ai-film-lab film into its 3D flight.
 REM
 REM    drag a film ONTO it    its final.timeline.json, final.mp4,
 REM                           out\ folder or project folder:
-REM                           makes a new project and its stills,
-REM                           then asks: draft, video or quit
+REM                           makes a new project and its video
+REM                           (no approval step since 2026-10-11)
 REM    FLY.bat what-is-love --draft    a project you have (the film's slug)
 REM    FLY.bat what-is-love --video
 REM

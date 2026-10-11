@@ -2,9 +2,9 @@
 fly.py - one command from an ai-film-lab film to its 3D flight. No internet,
 no Claude: only Python (standard library), Blender and ffmpeg.
 
-  python library/rigs/fly.py <film>              new project -> stills
+  python library/rigs/fly.py <film>              new project -> the video (no approval step)
   python library/rigs/fly.py <slug> --draft      a project you already have
-  python library/rigs/fly.py <slug> --video
+  python library/rigs/fly.py <slug> --stills
 
 <film> is any of: the film's final.timeline.json, its final.mp4 (the
 timeline must sit beside it), its out/ folder or its project folder.
@@ -187,16 +187,20 @@ def main():
     warn_if_film_changed(project)
 
     blender = find_blender()
-    step = step or "stills"
-    while True:
-        render(blender, project, step)
-        if step == "video":
-            return
-        nxt = ask("\nNext?  [d] draft   [v] full video   [s] stills again   [q] quit : ")
-        step = {"d": "draft", "v": "video", "s": "stills"}.get(nxt)
-        if not step:
-            print(f"\nLater:  FLY.bat {slug_of(project)} --draft   (or --video)")
-            return
+    # The stills -> draft -> video approval loop is switched off (Jacek,
+    # 2026-10-11: "I never needed it and it worked"): with no option the
+    # flight goes straight to the video. --stills and --draft still work.
+    step = step or "video"
+    render(blender, project, step)
+    # while True:
+    #     render(blender, project, step)
+    #     if step == "video":
+    #         return
+    #     nxt = ask("\nNext?  [d] draft   [v] full video   [s] stills again   [q] quit : ")
+    #     step = {"d": "draft", "v": "video", "s": "stills"}.get(nxt)
+    #     if not step:
+    #         print(f"\nLater:  FLY.bat {slug_of(project)} --draft   (or --video)")
+    #         return
 
 
 if __name__ == "__main__":

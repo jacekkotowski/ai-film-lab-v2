@@ -1,0 +1,459 @@
+# Written by `film init`. Everything here is a starting point.
+# Change the numbers. That is what this file is for.
+#
+# Filename hints `init` understood, if you used any:
+#   00_ 01_ ...     explicit order
+#   open_ close_    which shot opens / closes the film
+#   open_close_     the SAME image opens AND closes it
+#   quote_          held longer, filename becomes a centered title
+#
+#   uv run film peek    seconds    -- is the ORDER right?
+#   uv run film draft   <1 min     -- does the MOTION feel right?
+#   uv run film final   minutes    -- ship it
+
+fps: 24
+resolution: [1080, 1920]   # vertical, for YouTube Shorts
+# Each picture carries its own piece of
+# media/voiceover_20261011-153921.wav -- see `voice:` below.
+# title: the words on the thumbnail. Left out, the film is
+#        called what its folder is called.
+# music: found on its own -- this project's music/ folder if it
+#        has one, otherwise your library/music/ folder.
+music_volume: 0.6      # the level when nobody is talking
+music_fade: 2.0        # seconds of fade in and out
+music_duck: 0.5        # how far the music drops while you talk
+                       # 0 = never drops. 1 = gets right out of the way
+
+look:
+  preset: old_film      # clean | warm | old_film | projector
+  glow: 0.25            # lifts shadows -- better lighting
+
+# Uncomment if a wide clip is losing too much to a tall frame.
+# `blur` keeps the picture whole on a blurred copy of itself
+# instead of cropping it. fill_aspect is the shape of the sharp
+# part: 1.0 square, 0.8 taller and bigger, 1.33 shorter and safer.
+# fill: blur
+# fill_aspect: 1.0
+
+# The room behind you softly blurred, you sharp -- on your own
+# recordings (rec_*) only. 0 = off, 2 = twice as soft. About +45%
+# render time. Barely shows in a vertical close-up: the crop is
+# nearly all face. Another clip can ask for it with its own `bokeh:`.
+bokeh: 1
+
+# Photographs with depth: as the camera moves, what is near
+# slides past what is far (parallax). 0 = flat. Photos only;
+# a .png .gif .svg is a chart and stays flat by itself.
+# 0.8 smears. Needs `uv sync --extra depth` once, flat without
+# it; see docs/decisions/0013.
+depth: 0.5
+
+shots:
+
+  - id: s00
+    src: analysis/title.jpg
+    duration: 2.0
+    move: static
+    note: "the opening card -- the same picture and the same words
+      as the thumbnail, so clicking the miniature lands you on the
+      frame you clicked. Made from your library; delete this whole
+      block if you would rather open on yourself talking."
+
+  - id: s01
+    src: media/rec_20261011-152544.mp4
+    in: "00:02.42"
+    out: "00:14.42"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.545, 0.291]
+    note: "kept whole -- there is sound on this one, so none of what you said is cut. Trim in:/out: if it drags"
+    captions:
+      - text: "The observer sees the target; the gun does not,"
+        at: 0.24
+        dur: 3.05
+        pos: lower_third
+        words: [0.00, 0.16, 0.59, 1.04, 1.33, 2.02, 2.08, 2.64, 2.82]
+      - text: "it stands kilometres behind."
+        at: 3.84
+        dur: 1.36
+        pos: lower_third
+        words: [0.00, 0.10, 0.38, 0.88]
+      - text: "Today: the triangle,"
+        at: 5.92
+        dur: 1.02
+        pos: lower_third
+        words: [0.00, 0.19, 0.64]
+      - text: "and what the gun does with my call."
+        at: 6.95
+        dur: 2.24
+        pos: lower_third
+        words: [0.00, 0.48, 0.82, 0.99, 1.17, 1.52, 1.79, 1.97]
+
+  - id: s02
+    src: media/01_gun-triangle.png
+    voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
+    in: "00:00.40"
+    out: "00:27.55"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: tilt_up
+    focus: [0.514, 0.174]
+    note: "picture 1 of 5 -- holds while these words are said"
+    captions:
+      - text: "The gun can't see the target."
+        at: 0.60
+        dur: 1.62
+        pos: lower_third
+        words: [0.00, 0.14, 0.41, 0.78, 1.18, 1.32]
+      - text: "My line runs from me to the target."
+        at: 2.62
+        dur: 2.04
+        pos: lower_third
+        words: [0.00, 0.11, 0.38, 0.74, 0.99, 1.54, 1.63, 1.78]
+      - text: "The gun is far south, with its own line to it."
+        at: 5.24
+        dur: 2.91
+        pos: lower_third
+        words: [0.00, 0.10, 0.38, 0.70, 0.90, 1.60, 1.74, 1.94, 2.23, 2.50, 2.70]
+      - text: "What I send: the target's grid, and my direction,"
+        at: 8.50
+        dur: 2.64
+        pos: lower_third
+        words: [0.00, 0.11, 0.26, 1.10, 1.18, 1.62, 1.79, 2.13, 2.27]
+      - text: "65 times 17.78,"
+        at: 11.70
+        dur: 2.73
+        pos: lower_third
+        words: [0.00, 0.53, 1.17, 1.82]
+      - text: "to the nearest 10:"
+        at: 14.43
+        dur: 1.75
+        pos: lower_third
+        words: [0.00, 0.75, 1.01, 1.30]
+      - text: "1160."
+        at: 17.62
+        dur: 0.57
+        pos: lower_third
+        words: [0.00]
+      - text: "Grid for the gun, direction for my corrections."
+        at: 18.76
+        dur: 1.94
+        pos: lower_third
+        words: [0.00, 0.20, 0.38, 0.50, 0.98, 1.27, 1.77]
+
+  - id: s03
+    src: media/02_gun-pol.png
+    voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
+    in: "00:32.65"
+    out: "01:23.00"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.349, 0.174]
+    note: "picture 2 of 5 -- holds while these words are said"
+    captions:
+      - text: "Now target minus gun."
+        at: 0.24
+        dur: 1.40
+        pos: lower_third
+        words: [0.00, 0.22, 0.65, 1.05]
+      - text: "North 6814, east 3675."
+        at: 2.24
+        dur: 3.01
+        pos: lower_third
+        words: [0.00, 0.34, 1.05, 2.80]
+      - text: "22814 minus 16000,"
+        at: 9.91
+        dur: 0.96
+        pos: lower_third
+        words: [0.00, 0.27]
+      - text: "36675 minus 33000."
+        at: 12.57
+        dur: 2.19
+        pos: lower_third
+        words: [0.00, 1.86]
+      - text: "SHIFT, plus for Pol, 6814, comma, 3675."
+        at: 16.44
+        dur: 1.60
+        pos: lower_third
+        words: [0.00, 0.35, 1.33]
+      - text: "Range and direction."
+        at: 24.24
+        dur: 0.77
+        pos: lower_third
+        words: [0.00, 0.25, 0.39]
+      - text: "Equals:"
+        at: 25.02
+        dur: 0.78
+        pos: lower_third
+        words: [0.00]
+      - text: "7742 metres at 28.34 degrees."
+        at: 25.80
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 0.72, 2.53, 3.01, 4.04]
+      - text: "Times 17.78 makes 504 mils."
+        at: 32.31
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 0.45, 1.18, 1.97, 2.59, 3.98]
+      - text: "North-east: nothing to add."
+        at: 38.30
+        dur: 0.86
+        pos: lower_third
+        words: [0.00, 0.35, 0.58]
+
+  - id: s04
+    src: media/03_gun-angle-t.png
+    voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
+    in: "01:24.50"
+    out: "01:56.80"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: pull_out
+    focus: [0.390, 0.365]
+    note: "picture 3 of 5 -- holds while these words are said"
+    captions:
+      - text: "Two lines meet at the target."
+        at: 0.24
+        dur: 2.29
+        pos: lower_third
+        words: [0.00, 0.15, 1.04, 1.72, 1.91, 2.01]
+      - text: "Mine at 1160,"
+        at: 2.87
+        dur: 2.09
+        pos: lower_third
+        words: [0.00, 0.22, 0.54]
+      - text: "the gun's at 504."
+        at: 5.52
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 0.14, 0.42, 0.78]
+      - text: "Between them: angle T."
+        at: 16.64
+        dur: 0.48
+        pos: lower_third
+        words: [0.00, 0.23]
+      - text: "Angle T 700."
+        at: 17.77
+        dur: 0.36
+        pos: lower_third
+        words: [0.00]
+      - text: "500 or more:"
+        at: 18.14
+        dur: 2.63
+        pos: lower_third
+        words: [0.00, 1.58, 2.34]
+      - text: "the gun tells me, to the nearest 100."
+        at: 21.02
+        dur: 1.83
+        pos: lower_third
+        words: [0.00, 0.08, 0.29, 0.53, 0.72, 0.90, 1.09, 1.30]
+      - text: "My left and right are not the gun's."
+        at: 23.32
+        dur: 1.79
+        pos: lower_third
+        words: [0.00, 0.13, 0.34, 0.58, 0.85, 1.30, 1.58]
+
+  - id: s05
+    src: media/04_gun-rec.png
+    voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
+    in: "01:59.55"
+    out: "02:47.75"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    focus: [0.417, 0.369]
+    note: "picture 4 of 5 -- holds while these words are said"
+    captions:
+      - text: "Add along my line."
+        at: 0.60
+        dur: 1.51
+        pos: lower_third
+        words: [0.00, 0.32, 0.67, 1.12]
+      - text: "I called right 40, add 100."
+        at: 2.52
+        dur: 2.54
+        pos: lower_third
+        words: [0.00, 0.14, 0.42, 0.77, 1.72, 2.00]
+      - text: "The Casio has no mils:"
+        at: 5.56
+        dur: 1.80
+        pos: lower_third
+        words: [0.00, 0.10, 0.51, 0.90, 1.14]
+      - text: "1160 divided by 17.78 is 65.24 degrees."
+        at: 7.44
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 1.40, 1.75, 2.23, 2.66, 3.51, 4.01]
+      - text: "SHIFT, minus for Rec, 100, comma,"
+        at: 14.48
+        dur: 2.42
+        pos: lower_third
+        words: [0.00, 0.30, 0.92, 1.26, 1.93]
+      - text: "65.24."
+        at: 17.45
+        dur: 2.07
+        pos: lower_third
+        words: [0.00, 0.77]
+      - text: "Equals: 42 north, 91 east,"
+        at: 20.00
+        dur: 2.74
+        pos: lower_third
+        words: [0.00, 0.23, 1.02, 1.91, 2.31]
+      - text: "the add."
+        at: 23.12
+        dur: 0.42
+        pos: lower_third
+        words: [0.00, 0.10]
+      - text: "Right is plus 90."
+        at: 23.92
+        dur: 1.36
+        pos: lower_third
+        words: [0.00, 0.23, 0.55, 0.79]
+      - text: "Rec 40, comma,"
+        at: 25.98
+        dur: 0.52
+        pos: lower_third
+        words: [0.00]
+      - text: "155.24:"
+        at: 26.84
+        dur: 3.29
+        pos: lower_third
+        words: [0.00, 2.44]
+      - text: "36 south, 17 east, to the new point."
+        at: 30.64
+        dur: 2.96
+        pos: lower_third
+        words: [0.00, 0.44, 1.14, 1.42, 2.32, 2.41, 2.54, 2.70]
+      - text: "Add both to the target."
+        at: 34.08
+        dur: 1.32
+        pos: lower_third
+        words: [0.00, 0.28, 0.62, 0.87, 1.02]
+      - text: "Left and drop: the same with a minus."
+        at: 35.77
+        dur: 2.33
+        pos: lower_third
+        words: [0.00, 0.24, 0.54, 1.31, 1.41, 1.71, 1.97, 2.10]
+
+  - id: s06
+    src: media/05_gun-new.png
+    voice: analysis/tight/voiceover_20261011-153921__tight_74b61dbd.wav
+    in: "02:49.40"
+    out: "03:37.65"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.262, 0.238]
+    note: "picture 5 of 5 -- holds while these words are said"
+    captions:
+      - text: "Gun to the new point: Pol again."
+        at: 0.24
+        dur: 1.85
+        pos: lower_third
+        words: [0.00, 0.13, 0.29, 0.40, 0.53, 1.32, 1.54]
+      - text: "North 6820, east 3783."
+        at: 2.68
+        dur: 2.75
+        pos: lower_third
+        words: [0.00, 0.28, 0.84, 2.54]
+      - text: "SHIFT, plus, 6820, comma, 3783."
+        at: 7.88
+        dur: 0.82
+        pos: lower_third
+        words: [0.00, 0.56]
+      - text: "Equals:"
+        at: 13.64
+        dur: 0.27
+        pos: lower_third
+        words: [0.00]
+      - text: "7799 metres and 29.02 degrees:"
+        at: 13.92
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 0.53, 1.79, 2.35, 2.83, 3.41, 4.10]
+      - text: "516 mils."
+        at: 19.26
+        dur: 2.01
+        pos: lower_third
+        words: [0.00, 1.12]
+      - text: "Same burst, other words."
+        at: 21.48
+        dur: 1.35
+        pos: lower_third
+        words: [0.00, 0.18, 0.82, 0.98]
+      - text: "I said right 40, add 100."
+        at: 22.83
+        dur: 2.80
+        pos: lower_third
+        words: [0.00, 0.64, 1.33, 1.49, 2.06, 2.29]
+      - text: "The gun adds 57 metres and turns 12 mils right:"
+        at: 26.10
+        dur: 4.43
+        pos: lower_third
+        words: [0.00, 0.13, 0.38, 1.06, 1.60, 1.87, 2.29, 2.62, 3.68, 4.21]
+      - text: "7.7 times 12, about 92 metres."
+        at: 31.04
+        dur: 2.55
+        pos: lower_third
+        words: [0.00, 0.19, 0.80, 1.04, 1.80, 2.02]
+      - text: "I asked mostly add;"
+        at: 34.52
+        dur: 1.46
+        pos: lower_third
+        words: [0.00, 0.20, 0.52, 0.95]
+      - text: "the gun moves mostly right."
+        at: 36.60
+        dur: 1.54
+        pos: lower_third
+        words: [0.00, 0.10, 0.39, 0.70, 1.06]
+
+  - id: s07
+    src: media/close_rec_20261011-154043.mp4
+    in: "00:02.98"
+    out: "00:20.73"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.553, 0.321]
+    note: "closer"
+    captions:
+      - text: "Five moves: grid and direction,"
+        at: 0.24
+        dur: 2.04
+        pos: lower_third
+        words: [0.00, 0.19, 1.00, 1.20, 1.60]
+      - text: "Pol from the gun, angle T,"
+        at: 2.84
+        dur: 2.24
+        pos: lower_third
+        words: [0.00, 0.26, 0.70, 0.87, 1.68, 1.91]
+      - text: "Rec for my correction, Pol again."
+        at: 5.80
+        dur: 1.97
+        pos: lower_third
+        words: [0.00, 0.22, 0.47, 0.65, 1.45, 1.61]
+      - text: "I correct along my line;"
+        at: 8.48
+        dur: 1.44
+        pos: lower_third
+        words: [0.00, 0.10, 0.72, 0.90, 1.12]
+      - text: "the gun fires along its own."
+        at: 9.92
+        dur: 1.90
+        pos: lower_third
+        words: [0.00, 0.32, 0.53, 1.24, 1.42, 1.63]
+      - text: "See you in the next video."
+        at: 12.44
+        dur: 1.32
+        pos: lower_third
+        words: [0.00, 0.18, 0.41, 0.74, 0.86, 1.02]
+
+# 7 shots, about 255 seconds.
+#
+# 5 slide(s), one per picture, each holding its own piece of
+# the 243s narration. Each `in:`/`out:` is that picture's words, on
+# the narration's own clock. Move a shot and its words move with it;
+# swap `src:` to put a different picture under the same words; hold
+# one longer with `duration:` and the words stay where they were said.
+#
+# Cut where you pressed Next while recording, each cut moved to the
+# nearest pause so no word is split. To change one, move these
+# `in:`/`out:` numbers, or record the narration again.

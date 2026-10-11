@@ -39,9 +39,9 @@ FOOT_B = -2.8
 # ---- timing ----------------------------------------------------------------
 # One step per piece, on its word in [01] of slides.script.txt (Claude's
 # draft, 2026-10-11): the keys appear with SHIFT lit, then light one a word.
-BEAT_WORDS = ["Wrong", "means", "tan", "wrong", "Set", "SHIFT", "MENU", "two|2",
+BEAT_WORDS = ["Wrong", "means", "tan", "not", "Set", "SHIFT", "MENU", "two|2",
               "one|1", "Now", "tan"]
-BEAT_LINES = [0, 1, 1, 2, 3, 3, 3, 3, 3, 4, 4]
+BEAT_LINES = [0, 1, 1, 1, 2, 2, 2, 2, 2, 3, 3]
 RUN_TIMES = [1.0, 1.0, 1.0, 0.8, 1.0, 0.4, 0.3, 0.3, 0.3, 1.0, 1.0]
 
 

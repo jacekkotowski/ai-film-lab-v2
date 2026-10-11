@@ -58,6 +58,15 @@ section with the commit id -- do not delete it.
   ok"; `look film`: 5 slides, 0 problem lines, stills unchanged. Next video's topic is
   not in his plan: the outro says only "See you in the next video". NEXT: he reads
   the draft; then step 4 (keys on a real fx-85GT X, his two flags), then publish (ask).
+  NARRATION APPROVED (session 3, shown paragraph by paragraph beside each still and
+  steps.png): his one change, [01] "R on the screen means wrong angles." dropped, in
+  both files; the rest kept as drafted. 321 words. obs-mode's step 4 (the "✗ R on the
+  screen = wrong angles" line) now comes on "not" ("1.62, not 1"), BEAT_LINES
+  renumbered. `film check`: 0 PROBLEM, ~128 s at 2.5 words/s; obs-mode full still
+  1080x1920, 0 [layout] notes, margins 60/61/122/623 (as before). Spoken numbers
+  recomputed in Python: all match. The two script files are still NOT committed (repo
+  is public, his call). NEXT: step 4 (Rec on SHIFT − on a real fx-85GT X, his two
+  flags), then publish (ask; run `film new` by hand for .vertical).
 - 2026-10-10 [slides] Two-column boards offline (Jacek: not only Excel, also
   Power Query, R code; works with no network). BUILT: slides/boards/ pan_kit.py
   (stdlib; `code()` card for M/R/VBA/DAX that shrinks or refuses a line that

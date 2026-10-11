@@ -44,7 +44,7 @@ changes listed next. Every decision in it is his and is not re-asked.
 | Pol = `SHIFT` `+` | confirmed |
 | comma = `SHIFT` `)` | confirmed |
 | negative with `(−)` | confirmed |
-| Rec = `SHIFT` `−` | not in the text extract (the key symbol is lost); check on the keypad drawing in the guide when slide 03 is built |
+| Rec = `SHIFT` `−` | confirmed 2026-10-11 (Casio's HTML manual: Rec's key picture is a minus) |
 | θ of Pol | shown between −180° and 180°: his "Negative? Add 360" is needed |
 
 ## Slides (his content; Manim notes in brackets)

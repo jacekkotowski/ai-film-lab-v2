@@ -1,0 +1,125 @@
+{
+  "lines": [
+    {
+      "text": "The round missed.",
+      "start": 0.6,
+      "end": 1.69,
+      "words": [
+        0.6,
+        0.82,
+        1.15
+      ]
+    },
+    {
+      "text": "Burst 20 mils left,",
+      "start": 2.32,
+      "end": 3.66,
+      "words": [
+        2.32,
+        2.84,
+        3.1,
+        3.44
+      ]
+    },
+    {
+      "text": "target 3 kilometres from you, seen through binoculars.",
+      "start": 4.24,
+      "end": 7.39,
+      "words": [
+        4.24,
+        4.48,
+        4.9,
+        5.28,
+        5.57,
+        6.04,
+        6.38,
+        6.7
+      ]
+    },
+    {
+      "text": "Metres are kilometres times mils:",
+      "start": 8.13,
+      "end": 9.95,
+      "words": [
+        8.13,
+        8.39,
+        8.72,
+        9.22
+      ]
+    },
+    {
+      "text": "1 mil is about 1 metre at 1 kilometre.",
+      "start": 10.28,
+      "end": 11.75,
+      "words": [
+        10.28,
+        10.42,
+        10.58,
+        10.8,
+        10.99,
+        11.23,
+        11.5
+      ]
+    },
+    {
+      "text": "Send the opposite: 3 times 20 is 60 metres,",
+      "start": 12.9,
+      "end": 15.98,
+      "words": [
+        12.9,
+        13.08,
+        13.3,
+        14.15,
+        14.32,
+        14.55,
+        14.95,
+        15.28,
+        15.67
+      ]
+    },
+    {
+      "text": "so call right 60.",
+      "start": 16.29,
+      "end": 17.63,
+      "words": [
+        16.29,
+        16.39,
+        16.71,
+        17.12
+      ]
+    },
+    {
+      "text": "Too far, drop.",
+      "start": 18.16,
+      "end": 19.07,
+      "words": [
+        18.16,
+        18.22,
+        18.74
+      ]
+    },
+    {
+      "text": "Too short, add.",
+      "start": 19.49,
+      "end": 20.38,
+      "words": [
+        19.49,
+        19.57,
+        20.23
+      ]
+    },
+    {
+      "text": "Always opposite the burst.",
+      "start": 20.8,
+      "end": 22.3,
+      "words": [
+        20.8,
+        21.09,
+        21.62,
+        22.05
+      ]
+    }
+  ],
+  "total": 23.16,
+  "source": "film.yaml s06"
+}

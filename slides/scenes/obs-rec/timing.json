@@ -1,0 +1,171 @@
+{
+  "lines": [
+    {
+      "text": "I see the target.",
+      "start": 0.24,
+      "end": 1.14,
+      "words": [
+        0.24,
+        0.49,
+        0.73,
+        0.86
+      ]
+    },
+    {
+      "text": "My position, the rangefinder distance,",
+      "start": 1.6,
+      "end": 4.02,
+      "words": [
+        1.6,
+        1.74,
+        2.65,
+        2.84,
+        3.27,
+        3.67
+      ]
+    },
+    {
+      "text": "the map azimuth:",
+      "start": 4.6,
+      "end": 5.41,
+      "words": [
+        4.6,
+        4.71,
+        4.92
+      ]
+    },
+    {
+      "text": "2400 metres at 65 degrees.",
+      "start": 5.64,
+      "end": 8.37,
+      "words": [
+        5.64,
+        6.58,
+        6.89,
+        7.45,
+        7.99
+      ]
+    },
+    {
+      "text": "Press SHIFT, minus for Rec,",
+      "start": 9.12,
+      "end": 11.09,
+      "words": [
+        9.12,
+        9.26,
+        10.24,
+        10.47,
+        10.78
+      ]
+    },
+    {
+      "text": "then 2400, comma, 65.",
+      "start": 11.44,
+      "end": 14.24,
+      "words": [
+        11.44,
+        11.64,
+        13.24
+      ]
+    },
+    {
+      "text": "The comma is SHIFT, close bracket.",
+      "start": 15.0,
+      "end": 17.19,
+      "words": [
+        15.0,
+        15.1,
+        15.34,
+        15.64,
+        16.56,
+        16.81
+      ]
+    },
+    {
+      "text": "Add the shifts: x is the step north,",
+      "start": 17.68,
+      "end": 20.15,
+      "words": [
+        17.68,
+        17.96,
+        18.14,
+        19.0,
+        19.29,
+        19.54,
+        19.7,
+        19.9
+      ]
+    },
+    {
+      "text": "y the step east.",
+      "start": 20.6,
+      "end": 22.1,
+      "words": [
+        20.6,
+        20.89,
+        21.32,
+        21.54,
+        21.78
+      ]
+    },
+    {
+      "text": "Equals: 1014 north,",
+      "start": 22.52,
+      "end": 24.64,
+      "words": [
+        22.52,
+        22.94,
+        23.83
+      ]
+    },
+    {
+      "text": "2175 east,",
+      "start": 25.22,
+      "end": 27.44,
+      "words": [
+        25.22,
+        26.8
+      ]
+    },
+    {
+      "text": "the two legs on the map.",
+      "start": 27.84,
+      "end": 29.35,
+      "words": [
+        27.84,
+        27.98,
+        28.22,
+        28.6,
+        28.97,
+        29.1
+      ]
+    },
+    {
+      "text": "Add them to my position: the target.",
+      "start": 29.64,
+      "end": 31.78,
+      "words": [
+        29.64,
+        29.85,
+        30.17,
+        30.36,
+        30.47,
+        31.36,
+        31.46
+      ]
+    },
+    {
+      "text": "North-east: both positive.",
+      "start": 32.32,
+      "end": 33.99,
+      "words": [
+        32.32,
+        32.5,
+        33.24,
+        33.43
+      ]
+    }
+  ],
+  "total": 34.8,
+  "source": "film.yaml s04"
+}

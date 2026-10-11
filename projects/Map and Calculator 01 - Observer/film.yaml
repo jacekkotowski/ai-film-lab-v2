@@ -92,6 +92,7 @@ shots:
 
   - id: s02
     src: media/01_obs-mode.png
+    clip: clips/01_obs-mode.mp4
     voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
     in: "00:00.00"
     out: "00:22.95"
@@ -133,6 +134,7 @@ shots:
 
   - id: s03
     src: media/02_obs-compass.png
+    clip: clips/02_obs-compass.mp4
     voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
     in: "00:22.95"
     out: "00:46.75"
@@ -179,6 +181,7 @@ shots:
 
   - id: s04
     src: media/03_obs-rec.png
+    clip: clips/03_obs-rec.mp4
     voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
     in: "00:53.00"
     out: "01:36.00"
@@ -260,6 +263,7 @@ shots:
 
   - id: s05
     src: media/04_obs-pol.png
+    clip: clips/04_obs-pol.mp4
     voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
     in: "01:40.80"
     out: "02:40.85"
@@ -371,6 +375,7 @@ shots:
 
   - id: s06
     src: media/05_obs-correction.png
+    clip: clips/05_obs-correction.mp4
     voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
     in: "02:46.05"
     out: "03:14.50"

@@ -1,0 +1,85 @@
+{
+  "lines": [
+    {
+      "text": "Wrong mode, wrong answer.",
+      "start": 0.8,
+      "end": 2.43,
+      "words": [
+        0.8,
+        1.01,
+        1.62,
+        1.95
+      ]
+    },
+    {
+      "text": "An R on the screen means the calculator works in radians:",
+      "start": 2.93,
+      "end": 6.21,
+      "words": [
+        2.93,
+        3.03,
+        3.35,
+        3.54,
+        3.67,
+        3.91,
+        4.18,
+        4.47,
+        4.85,
+        5.36,
+        5.59
+      ]
+    },
+    {
+      "text": "tan 45 gives 1.62, not 1.",
+      "start": 6.76,
+      "end": 9.93,
+      "words": [
+        6.76,
+        7.25,
+        7.86,
+        8.24,
+        8.48,
+        9.44,
+        9.57
+      ]
+    },
+    {
+      "text": "Set degrees with four keys: SHIFT, MENU, two, one.",
+      "start": 10.36,
+      "end": 12.39,
+      "words": [
+        10.36,
+        10.62,
+        11.04,
+        11.41,
+        11.65,
+        12.19
+      ]
+    },
+    {
+      "text": "Now D shows,",
+      "start": 14.4,
+      "end": 15.37,
+      "words": [
+        14.4,
+        14.69,
+        15.02
+      ]
+    },
+    {
+      "text": "and tan 45 gives 1.",
+      "start": 15.38,
+      "end": 17.95,
+      "words": [
+        15.38,
+        15.88,
+        16.0,
+        16.4,
+        16.95,
+        17.49
+      ]
+    }
+  ],
+  "total": 18.76,
+  "source": "film.yaml s02"
+}

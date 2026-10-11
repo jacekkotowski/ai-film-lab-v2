@@ -67,6 +67,34 @@ section with the commit id -- do not delete it.
   recomputed in Python: all match. The two script files are still NOT committed (repo
   is public, his call). NEXT: step 4 (Rec on SHIFT − on a real fx-85GT X, his two
   flags), then publish (ask; run `film new` by hand for .vertical).
+  STEP 4, WHAT COULD BE CHECKED WITHOUT HIM (session 4): Rec = SHIFT − CONFIRMED
+  from Casio's HTML manual for the GT X (its key picture is a minus;
+  slides/docs/tech/casio-fx-85gtx.md). No emulator of the GT X exists online. Still
+  open, on the real calculator: whether Pol shows r=300√89 (in MathI/MathO `=` gives the
+  √ form, SHIFT = the decimal), and his two flags. PUBLISHED on his "yes, run them":
+  `film new` wrote .vertical and .lastfilm; `publish` (needs the slug
+  map-and-calculator-01-observer, not the title) wrote 5 stills 1080x1920 (ffprobe),
+  narration.txt (5 paragraphs), script_intro/outro.txt, 321 words. NEXT: he records
+  ([04] again if Pol shows 300√89), `film go`, "narrated" → clips.
+  RECORDED (his take 11:25, words = the approved script; `film go` draft 171.2 s, 8
+  shots, ca86ab7). THE MAP (his note: "we did not use maps, the viewer will be
+  confused"; measured: the map was on 2 of 11 steps of 03, 2 of 12 of 04, in no still).
+  Measured: map + calculator do not fit at 56 (8.3 units under the title; keys+screen
+  6.4, B card + ✓ 7.1, a readable map >= 3.7). His choice: "map as background". Now:
+  03 the map from "2400" to the end, panels stand on the bottom edge over it, ME / line /
+  TARGET in the band under the headline (1 km = 0.95 units; the B card leaves 1.2
+  units of band); 04 the map on steps 3-4 and 10-12, only the grid while keys+screen are
+  up (7.3 tall: 0.8 units of band would be left), and the LAST STEP TRADES THE B CARD
+  FOR THE ✓ LINE (card + ✓ would leave 1.0 unit; "South-west" is read on the map) --
+  tell him; 02 B a map sheet (grid 6 x 2 km, N numbers, border) with the two norths in
+  its margin under the grid. `look draft`: 0 [layout] notes on every step of all three.
+  Slides suite 128 OK (3 skipped). CLIPS (his "recordings are done, you can generate
+  the slides"): `clips` put all five in film.yaml, 1080x1920 (ffprobe): 01 18.75 s
+  (slide 18.76), 02 19.42 (19.44), 03 34.79 (34.80), 04 48.42 (48.44), 05 23.12
+  (23.16); speed: 1.25 kept on every shot. Notes: obs-mode steps 7 and 9 start 0.16 /
+  0.30 s after their sentence (slide 01 not changed here). Last frames of 02-04 looked
+  at. NOT done: `film draft` with the clips (he renders and watches); the Pol √ check
+  on the calculator; his two flags.
 - 2026-10-10 [slides] Two-column boards offline (Jacek: not only Excel, also
   Power Query, R code; works with no network). BUILT: slides/boards/ pan_kit.py
   (stdlib; `code()` card for M/R/VBA/DAX that shrinks or refuses a line that

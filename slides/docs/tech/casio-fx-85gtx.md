@@ -25,11 +25,25 @@ is NOT in this note.
 
 ## NOT confirmed (check on the calculator itself)
 
-- The key of Rec: the extract lost the symbol. `SHIFT` `−` is Casio's usual
-  and what the plan says; unproven for this model.
 - That the model is non-programmable (not in the extract).
 - The exact look of the Pol / Rec result in natural (Math) display, and the
   number of digits shown (10 significant is reasoned, not seen).
+- Whether Pol shows r in √ form: Pol(−1500,−2400) has r = 300√89 exactly.
+  The manual's Pol examples all give a whole r (2), so they don't say.
+
+## Confirmed 2026-10-11 from Casio's HTML manual for this model
+
+https://support.casio.com/global/en/calc/manual/fx-83GTX_85GTX_en/ (one page
+per topic; key legends are small PNGs in `img/key/`, read as pixels: the
+built-in browser could not screenshot them).
+- **Rec = `SHIFT` `−`.** Rec example keys: 57398 (SHIFT), 57361 (Rec), and
+  57361.png is drawn as a minus. Pol's key 57360.png is drawn as a plus.
+  Other codes: 57359 `=`, 57365 `)`, 57346 the right arrow (cursor out of √).
+- Irrational form (page inputting_expressions_values/calculation_results.html):
+  in MathI/MathO, `=` gives the √/π form and `SHIFT` `=` (≈) gives the decimal.
+  In MathI/DecimalO or LineI/DecimalO the result is always decimal.
+- No emulator for the GT X: Casio's emulators are for the graphing models
+  and the ClassWiz range on ClassPad.net (account needed).
 
 ## Traps
 

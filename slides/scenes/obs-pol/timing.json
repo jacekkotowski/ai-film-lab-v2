@@ -1,0 +1,216 @@
+{
+  "lines": [
+    {
+      "text": "Target minus me: north difference first,",
+      "start": 0.24,
+      "end": 2.64,
+      "words": [
+        0.24,
+        0.54,
+        0.79,
+        1.56,
+        1.88,
+        2.3
+      ]
+    },
+    {
+      "text": "then east.",
+      "start": 2.89,
+      "end": 3.52,
+      "words": [
+        2.89,
+        3.15
+      ]
+    },
+    {
+      "text": "Target at E 32100,",
+      "start": 4.01,
+      "end": 6.05,
+      "words": [
+        4.01,
+        4.23,
+        4.55,
+        5.13
+      ]
+    },
+    {
+      "text": "N 20300:",
+      "start": 6.6,
+      "end": 8.4,
+      "words": [
+        6.6,
+        7.32
+      ]
+    },
+    {
+      "text": "minus 1500,",
+      "start": 9.24,
+      "end": 10.47,
+      "words": [
+        9.24,
+        9.69
+      ]
+    },
+    {
+      "text": "minus 2400.",
+      "start": 10.47,
+      "end": 13.14,
+      "words": [
+        10.47,
+        11.45
+      ]
+    },
+    {
+      "text": "SHIFT, plus for Pol,",
+      "start": 13.64,
+      "end": 15.15,
+      "words": [
+        13.64,
+        13.91,
+        14.52,
+        14.76
+      ]
+    },
+    {
+      "text": "then minus 1500, comma,",
+      "start": 15.53,
+      "end": 17.72,
+      "words": [
+        15.53,
+        15.77,
+        16.28,
+        17.18
+      ]
+    },
+    {
+      "text": "minus 2400.",
+      "start": 17.72,
+      "end": 19.73,
+      "words": [
+        17.72,
+        18.47
+      ]
+    },
+    {
+      "text": "Type minus with the (−) key.",
+      "start": 20.24,
+      "end": 21.63,
+      "words": [
+        20.24,
+        20.38,
+        20.73,
+        20.95,
+        21.1,
+        21.29
+      ]
+    },
+    {
+      "text": "Negative?",
+      "start": 21.9,
+      "end": 22.2,
+      "words": [
+        21.9
+      ]
+    },
+    {
+      "text": "Add 360.",
+      "start": 22.76,
+      "end": 23.78,
+      "words": [
+        22.76,
+        23.0
+      ]
+    },
+    {
+      "text": "r is the distance, theta the azimuth.",
+      "start": 24.48,
+      "end": 26.9,
+      "words": [
+        24.48,
+        24.7,
+        24.94,
+        25.11,
+        25.48,
+        26.04,
+        26.41
+      ]
+    },
+    {
+      "text": "Equals:",
+      "start": 27.28,
+      "end": 27.73,
+      "words": [
+        27.28
+      ]
+    },
+    {
+      "text": "2830 metres and minus 122.",
+      "start": 28.0,
+      "end": 31.84,
+      "words": [
+        28.0,
+        29.51,
+        29.85,
+        30.2,
+        30.58
+      ]
+    },
+    {
+      "text": "Plus 360 makes 238 degrees,",
+      "start": 32.32,
+      "end": 36.45,
+      "words": [
+        32.32,
+        32.57,
+        33.4,
+        34.1,
+        36.14
+      ]
+    },
+    {
+      "text": "clockwise from north.",
+      "start": 36.46,
+      "end": 37.86,
+      "words": [
+        36.46,
+        37.13,
+        37.53
+      ]
+    },
+    {
+      "text": "Times 17.78 makes 4232 mils.",
+      "start": 38.28,
+      "end": 42.78,
+      "words": [
+        38.28,
+        38.54,
+        39.24,
+        39.98,
+        40.62,
+        42.57
+      ]
+    },
+    {
+      "text": "South-west:",
+      "start": 43.52,
+      "end": 44.21,
+      "words": [
+        43.52,
+        43.77
+      ]
+    },
+    {
+      "text": "between 180 and 270.",
+      "start": 44.22,
+      "end": 47.35,
+      "words": [
+        44.22,
+        44.76,
+        45.71,
+        46.64
+      ]
+    }
+  ],
+  "total": 48.44,
+  "source": "film.yaml s05"
+}

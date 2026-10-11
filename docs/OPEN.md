@@ -6,6 +6,17 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-11 [slides] "Map and Calculator 02" (the gun; his ask: the triangle
+  observer - target - gun; he has no plan, Claude leads). RESEARCH ONLY:
+  slides/docs/tech/artillery-triangle.md (FM 6-30 1991, FM 6-40 1996, USMC TBS
+  B2C2497; local copies in models/manuals/, not in git). Firecrawl credits ran
+  out (his account). WORKED EXAMPLE (his "go, pick the gun position"; Claude's
+  choice): GUN E 33000 N 16000, ME and TARGET from video 01; the calculations
+  are at the gun from what the observer sends (grid, DIRECTION 1160, RIGHT 40
+  ADD 100). Python, not the calculator: Pol(6814, 3675) r 7741.85 m, θ 28.34° =
+  503.9 mils; angle T 652 mils (ANGLE T 700); new point E 36782.6 N 22819.6;
+  gun change +56.5 m, +12.0 mils; seen from the gun ADD 56 RIGHT 92. The gun
+  divides 1160 by 17.78 (65.24°): the Casio has no mils. Nothing drawn, no script.
 - 2026-10-11 [slides] "Map and Calculator 01 - Observer" (artillery observer for
   teenagers, ENGLISH -- Polish was the online Claude's default, never his choice;
   ONE video 2-3 min: map + Casio fx-85GT X keys). PLAN only,

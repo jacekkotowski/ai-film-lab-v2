@@ -51,6 +51,23 @@ section with the commit id -- do not delete it.
   paragraph by paragraph beside each still; then on a real fx-85GT X: the keys,
   and whether Pol(6814,3675) shows r as √59936221 (manual: √ form possible below
   10⁶; no square factor); then publish (ask; `film new` by hand for .vertical).
+  RECORDED (his, 15:24-15:43: `film new`, publish, intro, voice-over, outro, `film
+  go`; narration.txt = the draft's [01]-[05] word for word; draft.mp4 192.8 s,
+  ffprobe: 12.8 s OVER 3:00, not cut, his call). CLIPS (his "sound is ok, match
+  the slides"): 5 clips 1080x1920 (ffprobe) 22.08 / 40.67 / 26.21 / 38.96 / 39.00 s
+  = their slides within 1 frame; 5 `clip:` lines, speed 1.25 kept. FAULT [film],
+  found: film go's captions on picture 3 lost a whole sentence ("1160 minus 504 is
+  656 mils.") and put "Between them: angle T." 11 s late (on "angle T 700"), so
+  the clip's angle and card came 8.8 / 6.6 s after his words, and `clips` saw
+  only 1.0-1.8 s (it trusts the captions). Picture 2: "22814 minus 16000," 2.2 s
+  late, "North-east..." 1.0 s late. Fixed in film.yaml (fix-captions): placed on
+  his speech, measured by loudness every 0.1 s and whisper small on the whole take
+  (scratchpad cues_vs_voice.py); clips again: 0 notes on 03; every step within
+  0.5 s of his word except transcriber mishearings. Cause in voice.align_to_script
+  NOT looked at (numbers misheard; "the gun's at 504." got 91.4-104.3 s). Left,
+  flagged by `film check`, no slide step on them: 3 half-heard captions (s03 SHIFT
+  Pol, s05 "Rec 40, comma,", s06 SHIFT Pol). NEXT: he renders `film draft` and
+  watches; the length; the fx-85GT X checks.
 - 2026-10-11 [slides] "Map and Calculator 01 - Observer" (artillery observer for
   teenagers, ENGLISH -- Polish was the online Claude's default, never his choice;
   ONE video 2-3 min: map + Casio fx-85GT X keys). PLAN only,

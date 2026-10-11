@@ -1,0 +1,474 @@
+# Written by `film init`. Everything here is a starting point.
+# Change the numbers. That is what this file is for.
+#
+# Filename hints `init` understood, if you used any:
+#   00_ 01_ ...     explicit order
+#   open_ close_    which shot opens / closes the film
+#   open_close_     the SAME image opens AND closes it
+#   quote_          held longer, filename becomes a centered title
+#
+#   uv run film peek    seconds    -- is the ORDER right?
+#   uv run film draft   <1 min     -- does the MOTION feel right?
+#   uv run film final   minutes    -- ship it
+
+fps: 24
+resolution: [1080, 1920]   # vertical, for YouTube Shorts
+# Each picture carries its own piece of
+# media/voiceover_20261011-112533.wav -- see `voice:` below.
+# title: the words on the thumbnail. Left out, the film is
+#        called what its folder is called.
+# music: found on its own -- this project's music/ folder if it
+#        has one, otherwise your library/music/ folder.
+music_volume: 0.6      # the level when nobody is talking
+music_fade: 2.0        # seconds of fade in and out
+music_duck: 0.5        # how far the music drops while you talk
+                       # 0 = never drops. 1 = gets right out of the way
+
+look:
+  preset: old_film      # clean | warm | old_film | projector
+  glow: 0.25            # lifts shadows -- better lighting
+
+# Uncomment if a wide clip is losing too much to a tall frame.
+# `blur` keeps the picture whole on a blurred copy of itself
+# instead of cropping it. fill_aspect is the shape of the sharp
+# part: 1.0 square, 0.8 taller and bigger, 1.33 shorter and safer.
+# fill: blur
+# fill_aspect: 1.0
+
+# The room behind you softly blurred, you sharp -- on your own
+# recordings (rec_*) only. 0 = off, 2 = twice as soft. About +45%
+# render time. Barely shows in a vertical close-up: the crop is
+# nearly all face. Another clip can ask for it with its own `bokeh:`.
+bokeh: 1
+
+# Photographs with depth: as the camera moves, what is near
+# slides past what is far (parallax). 0 = flat. Photos only;
+# a .png .gif .svg is a chart and stays flat by itself.
+# 0.8 smears. Needs `uv sync --extra depth` once, flat without
+# it; see docs/decisions/0013.
+depth: 0.5
+
+shots:
+
+  - id: s00
+    src: analysis/title.jpg
+    duration: 2.0
+    move: static
+    note: "the opening card -- the same picture and the same words
+      as the thumbnail, so clicking the miniature lands you on the
+      frame you clicked. Made from your library; delete this whole
+      block if you would rather open on yourself talking."
+
+  - id: s01
+    src: media/rec_20261011-110625.mp4
+    in: "00:03.07"
+    out: "00:19.38"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.502, 0.346]
+    note: "kept whole -- there is sound on this one, so none of what you said is cut. Trim in:/out: if it drags"
+    captions:
+      - text: "You forgot your school trigonometry,"
+        at: 0.24
+        dur: 2.30
+        pos: lower_third
+        words: [0.00, 0.18, 0.56, 0.93, 1.76]
+      - text: "and now you are called up as an observer."
+        at: 3.04
+        dur: 2.19
+        pos: lower_third
+        words: [0.00, 0.19, 0.51, 0.77, 0.91, 1.17, 1.42, 1.63, 1.82]
+      - text: "You need one map,"
+        at: 6.32
+        dur: 0.75
+        pos: lower_third
+        words: [0.00, 0.08, 0.26, 0.43]
+      - text: "one Casio fx-85GT X and five moves."
+        at: 7.43
+        dur: 4.43
+        pos: lower_third
+        words: [0.00, 0.18, 0.66, 0.94, 1.86, 3.74, 3.86, 4.10]
+
+  - id: s02
+    src: media/01_obs-mode.png
+    voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
+    in: "00:00.00"
+    out: "00:22.95"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: tilt_up
+    focus: [0.415, 0.269]
+    note: "picture 1 of 5 -- holds while these words are said"
+    captions:
+      - text: "Wrong mode, wrong answer."
+        at: 0.80
+        dur: 1.63
+        pos: lower_third
+        words: [0.00, 0.21, 0.82, 1.15]
+      - text: "An R on the screen means the calculator works in radians:"
+        at: 2.93
+        dur: 3.28
+        pos: lower_third
+        words: [0.00, 0.10, 0.42, 0.61, 0.74, 0.98, 1.25, 1.54, 1.92, 2.43, 2.66]
+      - text: "tan 45 gives 1.62, not 1."
+        at: 6.76
+        dur: 3.17
+        pos: lower_third
+        words: [0.00, 0.49, 1.10, 1.48, 1.72, 2.68, 2.81]
+      - text: "Set degrees with four keys: SHIFT, MENU, two, one."
+        at: 10.36
+        dur: 2.03
+        pos: lower_third
+        words: [0.00, 0.26, 0.68, 1.05, 1.29, 1.83]
+      - text: "Now D shows,"
+        at: 14.40
+        dur: 0.97
+        pos: lower_third
+        words: [0.00, 0.29, 0.62]
+      - text: "and tan 45 gives 1."
+        at: 15.38
+        dur: 2.57
+        pos: lower_third
+        words: [0.00, 0.50, 0.62, 1.02, 1.57, 2.11]
+
+  - id: s03
+    src: media/02_obs-compass.png
+    voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
+    in: "00:22.95"
+    out: "00:46.75"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.363, 0.330]
+    note: "picture 2 of 5 -- holds while these words are said"
+    captions:
+      - text: "The compass isn't the map."
+        at: 1.48
+        dur: 1.37
+        pos: lower_third
+        words: [0.00, 0.08, 0.42, 0.96, 1.10]
+      - text: "A compass gives a magnetic azimuth: 61 degrees."
+        at: 3.12
+        dur: 2.67
+        pos: lower_third
+        words: [0.00, 0.10, 0.34, 0.66, 0.86, 1.21, 2.00, 2.38]
+      - text: "Don't type it in as it is."
+        at: 6.52
+        dur: 1.72
+        pos: lower_third
+        words: [0.00, 0.26, 0.51, 0.70, 0.99, 1.31, 1.47]
+      - text: "Add the correction:"
+        at: 8.72
+        dur: 0.74
+        pos: lower_third
+        words: [0.00, 0.28, 0.46]
+      - text: "its value and sign are in the map margin."
+        at: 10.08
+        dur: 2.03
+        pos: lower_third
+        words: [0.00, 0.12, 0.41, 0.58, 0.89, 1.18, 1.34, 1.50, 1.70]
+      - text: "Map azimuth equals compass azimuth plus correction."
+        at: 12.68
+        dur: 2.75
+        pos: lower_third
+        words: [0.00, 0.16, 0.66, 1.01, 1.41, 2.16, 2.27]
+      - text: "From here on, only the map azimuth."
+        at: 16.20
+        dur: 2.54
+        pos: lower_third
+        words: [0.00, 0.18, 0.43, 1.32, 1.57, 1.74, 1.97]
+
+  - id: s04
+    src: media/03_obs-rec.png
+    voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
+    in: "00:53.00"
+    out: "01:36.00"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: pull_out
+    focus: [0.353, 0.304]
+    note: "picture 3 of 5 -- holds while these words are said"
+    captions:
+      - text: "I see the target."
+        at: 0.24
+        dur: 0.90
+        pos: lower_third
+        words: [0.00, 0.25, 0.49, 0.62]
+      - text: "My position, the rangefinder distance,"
+        at: 1.60
+        dur: 2.42
+        pos: lower_third
+        words: [0.00, 0.14, 1.05, 1.24, 1.67, 2.07]
+      - text: "the map azimuth:"
+        at: 4.60
+        dur: 0.81
+        pos: lower_third
+        words: [0.00, 0.11, 0.32]
+      - text: "2400 metres at 65 degrees."
+        at: 5.64
+        dur: 2.73
+        pos: lower_third
+        words: [0.00, 0.94, 1.25, 1.81, 2.35]
+      - text: "Press SHIFT, minus for Rec,"
+        at: 9.12
+        dur: 1.97
+        pos: lower_third
+        words: [0.00, 0.14, 1.12, 1.35, 1.66]
+      - text: "then 2400, comma, 65."
+        at: 11.44
+        dur: 2.80
+        pos: lower_third
+        words: [0.00, 0.20, 1.80]
+      - text: "The comma is SHIFT, close bracket."
+        at: 15.00
+        dur: 2.19
+        pos: lower_third
+        words: [0.00, 0.10, 0.34, 0.64, 1.56, 1.81]
+      - text: "Add the shifts: x is the step north,"
+        at: 17.68
+        dur: 2.47
+        pos: lower_third
+        words: [0.00, 0.28, 0.46, 1.32, 1.61, 1.86, 2.02, 2.22]
+      - text: "y the step east."
+        at: 20.60
+        dur: 1.50
+        pos: lower_third
+        words: [0.00, 0.29, 0.72, 0.94, 1.18]
+      - text: "Equals: 1014 north,"
+        at: 22.52
+        dur: 2.12
+        pos: lower_third
+        words: [0.00, 0.42, 1.31]
+      - text: "2175 east,"
+        at: 25.22
+        dur: 2.22
+        pos: lower_third
+        words: [0.00, 1.58]
+      - text: "the two legs on the map."
+        at: 27.84
+        dur: 1.51
+        pos: lower_third
+        words: [0.00, 0.14, 0.38, 0.76, 1.13, 1.26]
+      - text: "Add them to my position: the target."
+        at: 29.64
+        dur: 2.14
+        pos: lower_third
+        words: [0.00, 0.21, 0.53, 0.72, 0.83, 1.72, 1.82]
+      - text: "North-east: both positive."
+        at: 32.32
+        dur: 1.67
+        pos: lower_third
+        words: [0.00, 0.18, 0.92, 1.11]
+
+  - id: s05
+    src: media/04_obs-pol.png
+    voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
+    in: "01:40.80"
+    out: "02:40.85"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    focus: [0.168, 0.174]
+    note: "picture 4 of 5 -- holds while these words are said"
+    captions:
+      - text: "Target minus me: north difference first,"
+        at: 0.24
+        dur: 2.40
+        pos: lower_third
+        words: [0.00, 0.30, 0.55, 1.32, 1.64, 2.06]
+      - text: "then east."
+        at: 2.89
+        dur: 0.63
+        pos: lower_third
+        words: [0.00, 0.26]
+      - text: "Target at E 32100,"
+        at: 4.01
+        dur: 2.04
+        pos: lower_third
+        words: [0.00, 0.22, 0.54, 1.12]
+      - text: "N 20300:"
+        at: 6.60
+        dur: 1.80
+        pos: lower_third
+        words: [0.00, 0.72]
+      - text: "minus 1500,"
+        at: 9.24
+        dur: 1.23
+        pos: lower_third
+        words: [0.00, 0.45]
+      - text: "minus 2400."
+        at: 10.47
+        dur: 2.67
+        pos: lower_third
+        words: [0.00, 0.98]
+      - text: "SHIFT, plus for Pol,"
+        at: 13.64
+        dur: 1.51
+        pos: lower_third
+        words: [0.00, 0.27, 0.88, 1.12]
+      - text: "then minus 1500, comma,"
+        at: 15.53
+        dur: 2.19
+        pos: lower_third
+        words: [0.00, 0.24, 0.75, 1.65]
+      - text: "minus 2400."
+        at: 17.72
+        dur: 2.01
+        pos: lower_third
+        words: [0.00, 0.75]
+      - text: "Type minus with the (−) key."
+        at: 20.24
+        dur: 1.39
+        pos: lower_third
+        words: [0.00, 0.14, 0.49, 0.71, 0.86, 1.05]
+      - text: "Negative?"
+        at: 21.90
+        dur: 0.30
+        pos: lower_third
+        words: [0.00]
+      - text: "Add 360."
+        at: 22.76
+        dur: 1.02
+        pos: lower_third
+        words: [0.00, 0.24]
+      - text: "r is the distance, theta the azimuth."
+        at: 24.48
+        dur: 2.42
+        pos: lower_third
+        words: [0.00, 0.22, 0.46, 0.63, 1.00, 1.56, 1.93]
+      - text: "Equals:"
+        at: 27.28
+        dur: 0.45
+        pos: lower_third
+        words: [0.00]
+      - text: "2830 metres and minus 122."
+        at: 28.00
+        dur: 3.84
+        pos: lower_third
+        words: [0.00, 1.51, 1.85, 2.20, 2.58]
+      - text: "Plus 360 makes 238 degrees,"
+        at: 32.32
+        dur: 4.13
+        pos: lower_third
+        words: [0.00, 0.25, 1.08, 1.78, 3.82]
+      - text: "clockwise from north."
+        at: 36.46
+        dur: 1.40
+        pos: lower_third
+        words: [0.00, 0.67, 1.07]
+      - text: "Times 17.78 makes 4232 mils."
+        at: 38.28
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 0.26, 0.96, 1.70, 2.34, 4.29]
+      - text: "South-west:"
+        at: 43.52
+        dur: 0.69
+        pos: lower_third
+        words: [0.00, 0.25]
+      - text: "between 180 and 270."
+        at: 44.22
+        dur: 3.13
+        pos: lower_third
+        words: [0.00, 0.54, 1.49, 2.42]
+
+  - id: s06
+    src: media/05_obs-correction.png
+    voice: analysis/tight/voiceover_20261011-112533__tight_32fc879f.wav
+    in: "02:46.05"
+    out: "03:14.50"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.479, 0.238]
+    note: "picture 5 of 5 -- holds while these words are said"
+    captions:
+      - text: "The round missed."
+        at: 0.60
+        dur: 1.09
+        pos: lower_third
+        words: [0.00, 0.22, 0.55]
+      - text: "Burst 20 mils left,"
+        at: 2.32
+        dur: 1.34
+        pos: lower_third
+        words: [0.00, 0.52, 0.78, 1.12]
+      - text: "target 3 kilometres from you, seen through binoculars."
+        at: 4.24
+        dur: 3.15
+        pos: lower_third
+        words: [0.00, 0.24, 0.66, 1.04, 1.33, 1.80, 2.14, 2.46]
+      - text: "Metres are kilometres times mils:"
+        at: 8.13
+        dur: 1.82
+        pos: lower_third
+        words: [0.00, 0.26, 0.59, 1.09]
+      - text: "1 mil is about 1 metre at 1 kilometre."
+        at: 10.28
+        dur: 1.47
+        pos: lower_third
+        words: [0.00, 0.14, 0.30, 0.52, 0.71, 0.95, 1.22]
+      - text: "Send the opposite: 3 times 20 is 60 metres,"
+        at: 12.90
+        dur: 3.08
+        pos: lower_third
+        words: [0.00, 0.18, 0.40, 1.25, 1.42, 1.65, 2.05, 2.38, 2.77]
+      - text: "so call right 60."
+        at: 16.29
+        dur: 1.34
+        pos: lower_third
+        words: [0.00, 0.10, 0.42, 0.83]
+      - text: "Too far, drop."
+        at: 18.16
+        dur: 0.91
+        pos: lower_third
+        words: [0.00, 0.06, 0.58]
+      - text: "Too short, add."
+        at: 19.49
+        dur: 0.89
+        pos: lower_third
+        words: [0.00, 0.08, 0.74]
+      - text: "Always opposite the burst."
+        at: 20.80
+        dur: 1.50
+        pos: lower_third
+        words: [0.00, 0.29, 0.82, 1.25]
+
+  - id: s07
+    src: media/close_rec_20261011-112557.mp4
+    in: "00:01.20"
+    out: "00:15.60"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.558, 0.361]
+    note: "closer"
+    captions:
+      - text: "Five moves: degrees, map azimuth, Rec,"
+        at: 0.24
+        dur: 3.18
+        pos: lower_third
+        words: [0.00, 0.27, 1.20, 2.06, 2.21, 3.00]
+      - text: "Pol and the correction."
+        at: 3.80
+        dur: 1.30
+        pos: lower_third
+        words: [0.00, 0.71, 0.78, 0.90]
+      - text: "Always target minus me, and always the opposite of the burst."
+        at: 5.96
+        dur: 2.95
+        pos: lower_third
+        words: [0.00, 0.25, 0.63, 0.97, 1.27, 1.54, 1.88, 2.09, 2.31, 2.55, 2.66]
+      - text: "See you in the next video."
+        at: 9.60
+        dur: 1.55
+        pos: lower_third
+        words: [0.00, 0.24, 0.80, 0.91, 1.04, 1.22]
+
+# 7 shots, about 222 seconds.
+#
+# 5 slide(s), one per picture, each holding its own piece of
+# the 214s narration. Each `in:`/`out:` is that picture's words, on
+# the narration's own clock. Move a shot and its words move with it;
+# swap `src:` to put a different picture under the same words; hold
+# one longer with `duration:` and the words stay where they were said.
+#
+# Cut where you pressed Next while recording, each cut moved to the
+# nearest pause so no word is split. To change one, move these
+# `in:`/`out:` numbers, or record the narration again.

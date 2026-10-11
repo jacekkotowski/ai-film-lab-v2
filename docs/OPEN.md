@@ -17,6 +17,40 @@ section with the commit id -- do not delete it.
   503.9 mils; angle T 652 mils (ANGLE T 700); new point E 36782.6 N 22819.6;
   gun change +56.5 m, +12.0 mils; seen from the gun ADD 56 RIGHT 92. The gun
   divides 1160 by 17.78 (65.24°): the Casio has no mils. Nothing drawn, no script.
+  OUTLINE AGREED + SLIDES BUILT (his "yes, write the plan and build the slides"):
+  film/docs/plans/2026-10-11/PLAN-map-calculator-02.md (5 slides A/B, ~305 words,
+  intro/outro narration only; named: angle T 656 not 652 -- the gun knows only
+  1160; 01's final 171.2 s for 321 words, so 340 words would be ~181 s). Changed
+  while building: the new point rounded to the metre (E 36783 N 22820), because
+  Pol(6819.6,3782.6) is 7.52 units at 56, wider than the screen; so +57 m, not +56
+  (+12 mils, ≈ 92 m right unchanged). Scenes gun-triangle (9 steps), gun-pol (9),
+  gun-angle-t (8), gun-rec (12), gun-new (9); projects/Map and Calculator 02 -
+  Gun/slides.txt. 0 [layout] notes on every step of all five; `look film`: 5
+  stills 1080x1920 (ffprobe), margins L/R/T/B px 60/61/122/775, 60/109/122/486,
+  60/77/122/486, 60/70/122/486, 60/61/122/554; contact sheet
+  slides/docs/films/map-and-calculator-02-gun.png. Half-size drafts 19.0 / 19.0 /
+  17.0 / 25.0 / 19.0 s, steps spaced evenly (not narrated); steps.png looked at,
+  clips not watched. 5 PROBLEM lines = "no paragraph in the script" (narration is
+  next). Maps: 01 the whole sheet (0.78 units/km); 02 and 05 smaller (0.5) so a
+  card fits under it; 03 a close-up at the target (1.8); 04 100 m squares (1.5 per
+  100 m). Blue (frame.SECOND) = the gun and its line. 02, 03, 04 trade the B card
+  for the ✓ line at the end (as 01's slide 04). Found: `look draft` crashes in
+  ffmpeg (select='') when RUN_TIMES is not a literal list ([1.0] * 9):
+  beats.scene_beats reads literals only. Slides suite 128 OK (3 skipped).
+  NARRATION DRAFTED (his "commit and write the narration"): Claude's draft, NOT his
+  words yet, in projects/Map and Calculator 02 - Gun/slides.script.txt ([intro]
+  [01]-[05] [outro]; on disk, NOT committed, as 01's: the repo is public, his call).
+  316 words by script_parts (intro 24, 50, 39, 45, 65, 59, outro 34): ~169 s at
+  video 01's measured 1.875 words/s (reasoned), over the outline's ~305. Every step
+  has its BEAT_WORDS cue. First rehearsal: 5 steps 0.2-0.6 s late (the step before
+  still running); fixed: gun-pol's map now comes with the headline (8 steps, was
+  9), three cues earlier in their sentence (03 "gun", 04 "add", "east" x2).
+  `look film`: 5 stills 1080x1920, 0 [layout] notes, 0 problem lines, ~126 s at
+  2.5 words/s. The pre-commit hook refuses a commit while a film has rehearsal
+  PROBLEMs ("no paragraph in the script" counts). NEXT: he reads the draft
+  paragraph by paragraph beside each still; then on a real fx-85GT X: the keys,
+  and whether Pol(6814,3675) shows r as √59936221 (manual: √ form possible below
+  10⁶; no square factor); then publish (ask; `film new` by hand for .vertical).
 - 2026-10-11 [slides] "Map and Calculator 01 - Observer" (artillery observer for
   teenagers, ENGLISH -- Polish was the online Claude's default, never his choice;
   ONE video 2-3 min: map + Casio fx-85GT X keys). PLAN only,

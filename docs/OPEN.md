@@ -68,6 +68,19 @@ section with the commit id -- do not delete it.
   flagged by `film check`, no slide step on them: 3 half-heard captions (s03 SHIFT
   Pol, s05 "Rec 40, comma,", s06 SHIFT Pol). NEXT: he renders `film draft` and
   watches; the length; the fx-85GT X checks.
+  OUTRO CUT (his ask, "too long, I want less than 3 min for a short"): shot s07
+  (close_rec_20261011-154043.mp4, 14.2 s, "Five moves ... See you in the next
+  video.") taken out of film.yaml; `film check` 7 shots, 178.6 s (was 192.8), 1.4 s
+  under 3:00. The recording stays in media/; `film go` would put it back at the
+  end (its own warning). script_outro.txt untouched. Not rendered: the draft is his.
+  SKILL BUILT (his "build separate infrastructure, skills ... remember what was
+  used and what worked"): `fire-direction` (.claude/skills/), aimanim/firing.py
+  (stdlib: rec, pol, bearing, mils, OT factor, deviation, angle T, shift,
+  along/across, √ form), tests/test_a_fire_mission_adds_up.py reproduces 01's and
+  02's numbers (13 tests; slides suite 141 OK, 3 skipped); kit.stack_up (the six
+  scene copies left alone, no still changes). The three wrong comments fixed
+  from firing: gun-pol R 7741.848681, θ 28.33935160; gun-new θ 29.0168 (the
+  screens computed them, so no slide was wrong). Not re-rendered.
 - 2026-10-11 [slides] "Map and Calculator 01 - Observer" (artillery observer for
   teenagers, ENGLISH -- Polish was the online Claude's default, never his choice;
   ONE video 2-3 min: map + Casio fx-85GT X keys). PLAN only,

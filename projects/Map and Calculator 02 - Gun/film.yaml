@@ -428,47 +428,6 @@ shots:
         pos: lower_third
         words: [0.00, 0.10, 0.39, 0.70, 1.06]
 
-  - id: s07
-    src: media/close_rec_20261011-154043.mp4
-    in: "00:02.98"
-    out: "00:20.73"
-    speed: 1.25              # 1.0 is the speed you actually spoke at
-    move: static
-    amount: 0.6            # how much of the move to use. 0 = none
-    focus: [0.553, 0.321]
-    note: "closer"
-    captions:
-      - text: "Five moves: grid and direction,"
-        at: 0.24
-        dur: 2.04
-        pos: lower_third
-        words: [0.00, 0.19, 1.00, 1.20, 1.60]
-      - text: "Pol from the gun, angle T,"
-        at: 2.84
-        dur: 2.24
-        pos: lower_third
-        words: [0.00, 0.26, 0.70, 0.87, 1.68, 1.91]
-      - text: "Rec for my correction, Pol again."
-        at: 5.80
-        dur: 1.97
-        pos: lower_third
-        words: [0.00, 0.22, 0.47, 0.65, 1.45, 1.61]
-      - text: "I correct along my line;"
-        at: 8.48
-        dur: 1.44
-        pos: lower_third
-        words: [0.00, 0.10, 0.72, 0.90, 1.12]
-      - text: "the gun fires along its own."
-        at: 9.92
-        dur: 1.90
-        pos: lower_third
-        words: [0.00, 0.32, 0.53, 1.24, 1.42, 1.63]
-      - text: "See you in the next video."
-        at: 12.44
-        dur: 1.32
-        pos: lower_third
-        words: [0.00, 0.18, 0.41, 0.74, 0.86, 1.02]
-
 # 7 shots, about 255 seconds.
 #
 # 5 slide(s), one per picture, each holding its own piece of

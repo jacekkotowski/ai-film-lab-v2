@@ -361,8 +361,53 @@ shots:
         pos: lower_third
         words: [0.00, 0.16, 0.42, 0.62, 0.80, 1.48, 1.60]
 
-# 6 shots, about 133 seconds.
-# You talk for 133s, which is already past the 3s target -- so the pictures were cut to the bone and nothing you said was touched.
+  - id: s07
+    src: media/close_rec_20261012-205233.mp4
+    in: "00:01.34"
+    out: "00:32.80"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.526, 0.335]
+    note: "closer"
+    captions:
+      - text: "My heart desires to be as close to yours as it can,"
+        at: 0.24
+        dur: 3.60
+        pos: lower_third
+        words: [0.00, 0.25, 0.62, 1.02, 1.42, 1.61, 1.88, 2.10, 2.33, 3.08, 3.24, 3.37]
+      - text: "to talk to you"
+        at: 3.85
+        dur: 1.72
+        pos: lower_third
+        words: [0.00, 1.06, 1.31, 1.50]
+      - text: "on the level of heartbeats and heart electricity."
+        at: 5.96
+        dur: 2.84
+        pos: lower_third
+        words: [0.00, 0.13, 0.26, 0.46, 0.64, 0.85, 1.44, 1.66, 2.05]
+      - text: "The position is called a heart-to-heart hug."
+        at: 9.88
+        dur: 2.76
+        pos: lower_third
+        words: [0.00, 0.13, 0.46, 0.70, 1.44, 1.65, 2.03, 2.19, 2.43]
+      - text: "I want you to laugh loudly, sing badly,"
+        at: 13.68
+        dur: 2.51
+        pos: lower_third
+        words: [0.00, 0.22, 0.42, 0.62, 0.74, 1.00, 1.84, 2.12]
+      - text: "dance in the kitchen and tell me what you really think."
+        at: 16.92
+        dur: 3.31
+        pos: lower_third
+        words: [0.00, 0.19, 0.40, 0.53, 0.86, 1.50, 1.78, 2.32, 2.58, 2.75, 2.93]
+      - text: "I want a life where you are happy."
+        at: 21.16
+        dur: 2.84
+        pos: lower_third
+        words: [0.00, 0.14, 0.32, 0.48, 1.08, 1.30, 1.78, 2.32]
+
+# 7 shots, about 158 seconds.
 #
 # 3 slide(s), one per picture, each holding its own piece of
 # the 120s narration. Each `in:`/`out:` is that picture's words, on

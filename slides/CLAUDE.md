@@ -49,9 +49,11 @@ in time with a video.
 | `time-to-words`  | I have narrated over the still → the clip, timed to my sentences |
 | `deliver`        | the clip is approved → say exactly what to copy where           |
 | `shooting-optics` | a script or slide about sights, reticles, zeroing, MOA, mil, ranging: the checked numbers |
+| `fire-direction` | a script or slide about artillery, a map and compass, coordinates, azimuths, mils, the Casio's Rec/Pol, the observer - target - gun triangle ("Map and Calculator") |
 | `binary-diagnostics` | a script or slide about a yes/no outcome: a test, false positives, base rates, a classifier or logistic regression at a cutoff (confusion matrix, sensitivity, PPV, LR) |
 | `two-column-boards` | an A -> B slide (Excel, Power Query, R code, before/after) as a 2160x1920 board made offline in `boards/` (pan_kit, render_png, make_pans), panned by `columns`, the pan on the words with `cross:` |
 | `r-charts`       | a ggplot (R) chart on a slide with Manim callouts on the data: settings, template `r/`, `aimanim/rchart.py` |
+| `evidence-short` | I paste a research plan (speech, photos, bibliography, code) → 5-7 slides for 2.5 min: 2-3 keys as code (≤ 18 chars a line, run first) or a free photo with its link and licence |
 
 ## Commands
 
@@ -142,6 +144,7 @@ the repo's `docs/SETUP.md`. The whole architecture, general: `docs/AGENT-WORKBEN
 | docs, code and history of all three stages, searchable | qmd `v2`, `v2-code`, `v2-history` (refreshed on every commit) |
 | every outside source and how far it was checked | `docs/sources.md` |
 | reusable maths for a yes/no test | `aimanim/diagnostic.py` (stdlib, tested) |
+| map, mils, Rec/Pol, the fire-mission triangle | `aimanim/firing.py` (stdlib, tested) |
 | every fix and slide recipe, generalised (pseudocode, near-ready code) | `docs/patterns/` (issues.md, tasks.md) |
 | plain geometry: rows, columns, dot pitch, scales | `aimanim/layout.py` (stdlib, tested) |
 | R charts: the ggplot template and where its data lands | `r/` (R scripts), `aimanim/rchart.py` (stdlib, tested) |

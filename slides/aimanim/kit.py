@@ -529,6 +529,54 @@ def card(rows, top: float, hl: int | None = None, x: float = 0.0,
     return out
 
 
+@lru_cache(maxsize=None)
+def mono_w(size: int = frame.MIN_FONT) -> float:
+    """One Consolas character's width (0.4216 at 56: 18 fill 8.0, measured
+    2026-10-12, skill evidence-short)."""
+    return Text("M" * 20, font_size=size, font=MONO).width / 20
+
+
+def code_line(s: str, left: float, baseline: float, color=PAPER,
+              size: int = frame.MIN_FONT) -> Text:
+    """One line of code: its leading spaces become an indent of whole
+    characters (Text drops them), so the columns of a sum line up."""
+    n = len(s) - len(s.lstrip(" "))
+    return text(s.lstrip(" "), left + n * mono_w(size), baseline, color, size, "left", MONO)
+
+
+def code(lines, top: float, x: float = 0.0, width: float = BOX_W,
+         size: int = frame.MIN_FONT, color=PAPER) -> VGroup:
+    """A code card (The Social Reckoning, 2026-10-12): `lines` as written,
+    indents kept, one under another on the card's fill. Each line at most
+    18 characters at 56. VGroup(back, *lines); .lines[i] = line i,
+    .left / .baselines[i] to put a changed line in its place (code_line)."""
+    # | ) j reach past a text row: at row_step "5 * emoji +" touched
+    # "30 * comment) |>" (sr-points, 2026-10-12); 0.1 more keeps them apart.
+    k = size / frame.MIN_FONT
+    h, step, pad = cap(size, MONO), row_step(size) + 0.1 * k, 0.13
+    left = x - width / 2 + pad
+    bases = [top - pad - 0.1 - h - i * step for i in range(len(lines))]
+    bottom = bases[-1] - DESCENT * k - pad - 0.1
+    back = RoundedRectangle(width=width, height=top - bottom, corner_radius=0.18)
+    back.move_to((x, (top + bottom) / 2, 0)).set_fill(CARD_FILL, 1).set_stroke(RULE, 3)
+    texts = [code_line(s, left, b, color, size) for s, b in zip(lines, bases)]
+    out = VGroup(under(back), *texts)
+    out.lines, out.left, out.baselines = texts, left, bases
+    return out
+
+
+FLOOR = frame.BOTTOM + 0.05   # panels stand on the bottom edge (Map and Calculator)
+
+
+def stack_up(*mobs, floor: float = FLOOR, gap: float = 0.3) -> None:
+    """Stand the mobjects one on another, the first on `floor`: a card, a
+    screen, keys over a map. Was copied into six obs-/gun- scenes."""
+    y = floor
+    for m in mobs:
+        m.shift((0, y - m.get_bottom()[1], 0))
+        y = m.get_top()[1] + gap
+
+
 def command(s: str, y: float, x: float = 0.0, size: int = 120, color=GREEN) -> VGroup:
     """pan_kit's big command ("RIGHT 60"): bold mono in an outline,
     centred on (x, y). "RIGHT 60" at 120 is 7.12 wide."""

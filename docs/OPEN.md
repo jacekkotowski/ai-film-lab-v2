@@ -6,6 +6,29 @@ names its stage. An entry stays until it is measured or fixed AND Jacek
 has seen it work in a real render. When fixed: move it to the bottom
 section with the commit id -- do not delete it.
 
+- 2026-10-12 [slides] "The Social Reckoning" (his pasted plan: Kosiński's likes,
+  Kogan's quiz, Haugen's points; 270 words, wc). Skill `evidence-short` BUILT on
+  his ask (2-3 keys + 2a/3a, 5-7 slides for 2.5 min, code as legible tidyverse,
+  a free photo where it says more). Measured: Consolas at 56 = 0.4216 units a
+  character, 18 fit on 8.0 units. PLAN only: film/docs/plans/2026-10-12/
+  PLAN-social-reckoning.md, 6 slides (01 code, 02 code, 02a Nix, 03a Haugen,
+  03 code, 04 outro code); code run on toy data (Rscript 4.6.1), longest line 18.
+  Photos from Commons' API: Nix 1316x1872 and Haugen 1375x1892 CC BY 2.0 crops,
+  Kosiński 4658x6501 CC BY-SA 3.0 PL (the pasted plan said none existed); not
+  downloaded, crops not looked at. NEXT: his go on the plan, then script + scenes.
+  BUILT (his "go, download the photos and build the slides"): projects/The Social
+  Reckoning/ (new, `film new` NOT run yet: no .vertical); media/03_nix.jpg
+  1316x1872, 04_haugen.jpg 1375x1892 (ffprobe; looked at: Nix, Haugen); slides.txt
+  01 sr-likes, 02 sr-quiz, 05 sr-points, 06 sr-anger; slides.script.txt = his speech
+  word for word, [02]/[03] and [04]/[05] split at a sentence, outro paragraph as
+  [06] over sr-anger, NO [outro] section (publish will print a PROBLEM: his call).
+  kit.code / code_line / mono_w (code card, indents kept; code rows row_step + 0.1:
+  at row_step "|" and "j" touched). Full stills 1080x1920, 0 [layout] notes,
+  margins L/R/T/B 60/61/122/484, 60/61/122/533, 60/61/122/554, 60/61/122/484;
+  contact sheet slides/docs/films/the-social-reckoning.png; `film check` 0 PROBLEM,
+  ~98 s at 2.5 words/s (slides only, intro not counted). Slides suite 141 OK (3
+  skipped). Not done: draft clips, publish (ask), `film new`. This session's shell
+  had no ffmpeg on PATH (WinGet ...\ffmpeg-9.0.2-full_build\bin, added per command).
 - 2026-10-11 [slides] "Map and Calculator 02" (the gun; his ask: the triangle
   observer - target - gun; he has no plan, Claude leads). RESEARCH ONLY:
   slides/docs/tech/artillery-triangle.md (FM 6-30 1991, FM 6-40 1996, USMC TBS

@@ -407,6 +407,12 @@ shots:
         pos: lower_third
         words: [0.00, 0.14, 0.32, 0.48, 1.08, 1.30, 1.78, 2.32]
 
+  - id: s08
+    src: analysis/title.jpg
+    duration: 3.0
+    move: static
+    note: "the thumbnail at the end, 3 s -- Jacek's ask 2026-10-12"
+
 # 7 shots, about 158 seconds.
 #
 # 3 slide(s), one per picture, each holding its own piece of

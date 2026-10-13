@@ -29,6 +29,14 @@ section with the commit id -- do not delete it.
   ~98 s at 2.5 words/s (slides only, intro not counted). Slides suite 141 OK (3
   skipped). Not done: draft clips, publish (ask), `film new`. This session's shell
   had no ffmpeg on PATH (WinGet ...\ffmpeg-9.0.2-full_build\bin, added per command).
+  PUBLISHED 2026-10-13 (his "publish and make it ready for recording"): [outro]
+  WRITTEN BY CLAUDE on his ask (summary; Polish school knife attacks named as "a
+  wave", no number checked; "no formula handed out the knives"), 62 words.
+  `film new` made the folders but NO .vertical (media/ existed: cli.py:141-145);
+  .vertical written by hand ("1", as make_project writes it). publish: 4 stills
+  1080x1920 + photos 03, 04; narration.txt 6 paragraphs 225 words, intro 45,
+  outro 62 = 332 words; .lastfilm = The Social Reckoning. NEXT: he records,
+  `film go`, "narrated" -> clips.
 - 2026-10-11 [slides] "Map and Calculator 02" (the gun; his ask: the triangle
   observer - target - gun; he has no plan, Claude leads). RESEARCH ONLY:
   slides/docs/tech/artillery-triangle.md (FM 6-30 1991, FM 6-40 1996, USMC TBS

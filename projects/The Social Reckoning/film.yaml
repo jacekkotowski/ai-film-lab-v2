@@ -1,0 +1,438 @@
+# Written by `film init`. Everything here is a starting point.
+# Change the numbers. That is what this file is for.
+#
+# Filename hints `init` understood, if you used any:
+#   00_ 01_ ...     explicit order
+#   open_ close_    which shot opens / closes the film
+#   open_close_     the SAME image opens AND closes it
+#   quote_          held longer, filename becomes a centered title
+#
+#   uv run film peek    seconds    -- is the ORDER right?
+#   uv run film draft   <1 min     -- does the MOTION feel right?
+#   uv run film final   minutes    -- ship it
+
+fps: 24
+resolution: [1080, 1920]   # vertical, for YouTube Shorts
+# Each picture carries its own piece of
+# media/voiceover_20261013-101120.wav -- see `voice:` below.
+# title: the words on the thumbnail. Left out, the film is
+#        called what its folder is called.
+# music: found on its own -- this project's music/ folder if it
+#        has one, otherwise your library/music/ folder.
+music_volume: 0.6      # the level when nobody is talking
+music_fade: 2.0        # seconds of fade in and out
+music_duck: 0.5        # how far the music drops while you talk
+                       # 0 = never drops. 1 = gets right out of the way
+
+look:
+  preset: old_film      # clean | warm | old_film | projector
+  glow: 0.25            # lifts shadows -- better lighting
+
+# Uncomment if a wide clip is losing too much to a tall frame.
+# `blur` keeps the picture whole on a blurred copy of itself
+# instead of cropping it. fill_aspect is the shape of the sharp
+# part: 1.0 square, 0.8 taller and bigger, 1.33 shorter and safer.
+# fill: blur
+# fill_aspect: 1.0
+
+# The room behind you softly blurred, you sharp -- on your own
+# recordings (rec_*) only. 0 = off, 2 = twice as soft. About +45%
+# render time. Barely shows in a vertical close-up: the crop is
+# nearly all face. Another clip can ask for it with its own `bokeh:`.
+bokeh: 1
+
+# Photographs with depth: as the camera moves, what is near
+# slides past what is far (parallax). 0 = flat. Photos only;
+# a .png .gif .svg is a chart and stays flat by itself.
+# 0.8 smears. Needs `uv sync --extra depth` once, flat without
+# it; see docs/decisions/0013.
+depth: 0.5
+
+shots:
+
+  - id: s00
+    src: analysis/title.jpg
+    duration: 2.0
+    move: static
+    note: "the opening card -- the same picture and the same words
+      as the thumbnail, so clicking the miniature lands you on the
+      frame you clicked. Made from your library; delete this whole
+      block if you would rather open on yourself talking."
+
+  - id: s01
+    src: media/rec_20261013-095232.mp4
+    in: "00:01.18"
+    out: "00:18.68"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.511, 0.293]
+    note: "part 1 of 2 -- one take with the long pauses cut out. Every word is kept"
+    captions:
+      - text: "When people hear Cambridge Analytica"
+        at: 0.24
+        dur: 2.28
+        pos: lower_third
+        words: [0.00, 0.20, 0.79, 1.24, 1.58]
+      - text: "or the Facebook algorithm,"
+        at: 2.52
+        dur: 1.39
+        pos: lower_third
+        words: [0.00, 0.35, 0.59, 0.90]
+      - text: "they picture a mind-reading artificial intelligence."
+        at: 4.36
+        dur: 2.38
+        pos: lower_third
+        words: [0.00, 0.10, 0.50, 0.74, 0.99, 1.23, 1.63]
+      - text: "Aaron Sorkin’s new film"
+        at: 8.06
+        dur: 0.89
+        pos: lower_third
+        words: [0.00, 0.51, 0.64]
+      - text: "The Social Reckoning shows a Facebook engineer leaking the"
+        at: 9.27
+        dur: 3.02
+        pos: lower_third
+        words: [0.00, 0.10, 0.43, 1.15, 1.44, 1.68, 1.97, 2.38, 2.80]
+      - text: "formula behind the news feed."
+        at: 12.30
+        dur: 1.35
+        pos: lower_third
+        words: [0.00, 0.37, 0.64, 0.88, 1.04]
+
+  - id: s02
+    src: media/rec_20261013-095232.mp4
+    in: "00:19.63"
+    out: "00:26.68"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: drift_right
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.511, 0.293]
+    dissolve: 0.3      # blends in from the shot before. 0 = a hard cut
+    note: "part 2 of 2 -- one take with the long pauses cut out. Every word is kept"
+    captions:
+      - text: "Both stories run on ordinary statistics and numbers"
+        at: 0.24
+        dur: 3.18
+        pos: lower_third
+        words: [0.00, 0.14, 0.53, 0.91, 1.25, 1.63, 2.22, 2.77]
+      - text: "typed in by people."
+        at: 3.43
+        dur: 1.21
+        pos: lower_third
+        words: [0.00, 0.58, 0.90]
+
+  - id: s03
+    src: media/01_sr-likes.png
+    voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
+    in: "00:04.80"
+    out: "00:36.75"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.376, 0.433]
+    note: "picture 1 of 6 -- holds while these words are said"
+    captions:
+      - text: "In 2013 Michał Kosiński,"
+        at: 0.24
+        dur: 2.67
+        pos: lower_third
+        words: [0.00, 0.18, 1.98, 2.29]
+      - text: "then a psychologist at Cambridge University,"
+        at: 3.36
+        dur: 2.20
+        pos: lower_third
+        words: [0.00, 0.27, 0.59, 0.96, 1.31, 1.54]
+      - text: "collected the Facebook likes of 58,000 American volunteers who"
+        at: 6.12
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 0.30, 0.57, 0.87, 1.21, 1.66, 2.30, 2.90, 3.27, 3.82]
+      - text: "also took personality tests."
+        at: 10.69
+        dur: 1.61
+        pos: lower_third
+        words: [0.00, 0.40, 0.66, 1.20]
+      - text: "He squeezed the table of people and pages into a hundred"
+        at: 12.80
+        dur: 2.84
+        pos: lower_third
+        words: [0.00, 0.16, 0.46, 0.80, 1.04, 1.20, 1.44, 1.62, 1.94, 2.35, 2.59]
+      - text: "columns and fed them to a simple"
+        at: 15.65
+        dur: 1.72
+        pos: lower_third
+        words: [0.00, 0.42, 0.78, 1.02, 1.23, 1.38, 1.54]
+      - text: "formula from first-year statistics."
+        at: 17.38
+        dur: 2.20
+        pos: lower_third
+        words: [0.00, 0.74, 0.99, 1.31, 1.55]
+      - text: "Shown a Democrat and a Republican,"
+        at: 20.00
+        dur: 2.03
+        pos: lower_third
+        words: [0.00, 0.27, 0.59, 0.96, 1.41, 1.68]
+      - text: "it picked correctly 85 times in 100."
+        at: 22.03
+        dur: 3.07
+        pos: lower_third
+        words: [0.00, 0.45, 0.70, 1.30, 1.84, 2.19, 2.53]
+
+  - id: s04
+    src: media/02_sr-quiz.png
+    voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
+    in: "00:41.60"
+    out: "01:06.90"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    focus: [0.308, 0.237]
+    note: "picture 2 of 6 -- holds while these words are said"
+    captions:
+      - text: "In 2014 Aleksandr Kogan,"
+        at: 0.24
+        dur: 2.72
+        pos: lower_third
+        words: [0.00, 0.20, 1.85, 2.23]
+      - text: "another Cambridge psychologist,"
+        at: 3.29
+        dur: 1.42
+        pos: lower_third
+        words: [0.00, 0.29, 0.62]
+      - text: "paid about 270,000 people to take a"
+        at: 5.08
+        dur: 3.08
+        pos: lower_third
+        words: [0.00, 0.19, 0.50, 1.38, 2.14, 2.50, 2.74, 2.91]
+      - text: "personality quiz on Facebook."
+        at: 8.17
+        dur: 1.48
+        pos: lower_third
+        words: [0.00, 0.45, 0.75, 1.10]
+      - text: "His app also copied their friends’ likes,"
+        at: 10.12
+        dur: 2.36
+        pos: lower_third
+        words: [0.00, 0.14, 0.43, 0.78, 1.17, 1.54, 2.11]
+      - text: "tens of millions of people who never took the quiz."
+        at: 12.84
+        dur: 2.63
+        pos: lower_third
+        words: [0.00, 0.14, 0.37, 0.61, 0.85, 1.68, 1.81, 2.00, 2.26, 2.42]
+      - text: "The quiz-takers trained the formula,"
+        at: 16.00
+        dur: 1.71
+        pos: lower_third
+        words: [0.00, 0.10, 0.26, 0.66, 1.05, 1.40]
+      - text: "and the friends got scores."
+        at: 18.08
+        dur: 1.54
+        pos: lower_third
+        words: [0.00, 0.12, 0.36, 0.70, 1.00]
+
+  - id: s05
+    src: media/03_nix.jpg
+    voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
+    in: "01:10.95"
+    out: "01:17.90"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    from: {cx: 0.420, cy: 0.500, scale: 1.00}
+    to:   {cx: 0.580, cy: 0.500, scale: 1.00}
+    ease: linear
+    focus: [0.434, 0.300]
+    note: "picture 3 of 6 -- holds while these words are said. This picture is 1316x1872; the frame shows about 0.84 of its width at a time, so it is swept across instead of cropped."
+    captions:
+      - text: "Cambridge Analytica, a political consultancy,"
+        at: 0.24
+        dur: 2.35
+        pos: lower_third
+        words: [0.00, 0.22, 1.14, 1.28, 1.54]
+      - text: "used those scores to target ads."
+        at: 2.85
+        dur: 2.33
+        pos: lower_third
+        words: [0.00, 0.26, 0.62, 1.06, 1.46, 1.86]
+
+  - id: s06
+    src: media/04_haugen.jpg
+    voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
+    in: "01:22.40"
+    out: "01:31.95"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: pull_out
+    from: {cx: 0.407, cy: 0.500, scale: 1.00}
+    to:   {cx: 0.593, cy: 0.500, scale: 1.00}
+    ease: linear
+    focus: [0.617, 0.281]
+    note: "picture 4 of 6 -- holds while these words are said. This picture is 1375x1892; the frame shows about 0.81 of its width at a time, so it is swept across instead of cropped."
+    captions:
+      - text: "In 2021 Frances Haugen,"
+        at: 0.24
+        dur: 2.32
+        pos: lower_third
+        words: [0.00, 0.17, 1.67, 1.96]
+      - text: "a Facebook product manager,"
+        at: 2.95
+        dur: 1.13
+        pos: lower_third
+        words: [0.00, 0.14, 0.37, 0.70]
+      - text: "leaked tens of thousands of internal documents."
+        at: 4.44
+        dur: 2.33
+        pos: lower_third
+        words: [0.00, 0.27, 0.66, 0.99, 1.31, 1.54, 1.84]
+
+  - id: s07
+    src: media/05_sr-points.png
+    voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
+    in: "01:35.90"
+    out: "01:58.95"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: drift_right
+    focus: [0.383, 0.373]
+    note: "picture 5 of 6 -- holds while these words are said"
+    captions:
+      - text: "From 2018 the news feed ranked posts by points."
+        at: 0.24
+        dur: 4.12
+        pos: lower_third
+        words: [0.00, 0.22, 1.66, 1.86, 2.32, 2.78, 3.26, 3.70]
+      - text: "Models guess how likely you are to like or comment,"
+        at: 4.84
+        dur: 2.88
+        pos: lower_third
+        words: [0.00, 0.36, 0.62, 1.18, 1.48, 1.70, 1.86, 2.10, 2.33, 2.57]
+      - text: "and staff chose by hand what each action is worth."
+        at: 8.24
+        dur: 2.89
+        pos: lower_third
+        words: [0.00, 0.19, 0.50, 0.91, 1.12, 1.72, 1.87, 2.19, 2.46, 2.64]
+      - text: "A like scored one point, an emoji five,"
+        at: 11.65
+        dur: 2.92
+        pos: lower_third
+        words: [0.00, 0.16, 0.43, 0.85, 1.22, 1.87, 1.98, 2.64]
+      - text: "a comment of five words or more thirty."
+        at: 15.08
+        dur: 1.54
+        pos: lower_third
+        words: [0.00, 0.12, 0.44, 0.68, 0.90, 1.18, 1.32]
+
+  - id: s08
+    src: media/06_sr-anger.png
+    voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
+    in: "02:02.55"
+    out: "02:32.85"
+    speed: 1.25              # 1.0 is the speed you actually read at
+    move: push_in
+    focus: [0.382, 0.337]
+    note: "picture 6 of 6 -- holds while these words are said"
+    captions:
+      - text: "The angry emoji also started at five points."
+        at: 0.24
+        dur: 2.87
+        pos: lower_third
+        words: [0.00, 0.29, 0.98, 1.44, 1.76, 2.11, 2.29, 2.48]
+      - text: "In 2019 Facebook’s data scientists found that posts drawing"
+        at: 3.60
+        dur: 4.50
+        pos: lower_third
+        words: [0.00, 0.14, 1.84, 2.30, 2.43, 3.06, 3.50, 3.89, 4.19]
+      - text: "angry reactions carried more misinformation,"
+        at: 8.30
+        dur: 2.17
+        pos: lower_third
+        words: [0.00, 0.43, 0.94, 1.36, 1.65]
+      - text: "and representative of a Polish political party told company"
+        at: 11.16
+        dur: 3.07
+        pos: lower_third
+        words: [0.00, 0.22, 0.65, 1.11, 1.27, 1.50, 1.96, 2.38, 2.68]
+      - text: "researchers its posts had gone from half"
+        at: 14.24
+        dur: 2.75
+        pos: lower_third
+        words: [0.00, 0.82, 1.22, 1.62, 2.00, 2.27, 2.48]
+      - text: "negative to eighty percent."
+        at: 16.99
+        dur: 0.70
+        pos: lower_third
+        words: [0.00, 0.45]
+      - text: "In 2020 staff set anger’s weight to zero"
+        at: 18.88
+        dur: 3.47
+        pos: lower_third
+        words: [0.00, 0.16, 1.42, 1.66, 2.16, 2.70, 2.88, 3.15]
+      - text: "by changing one number."
+        at: 22.35
+        dur: 1.53
+        pos: lower_third
+        words: [0.00, 0.40, 0.88, 1.15]
+
+  - id: s09
+    src: media/close_rec_20261013-101421.mp4
+    in: "00:01.25"
+    out: "00:31.95"
+    speed: 1.25              # 1.0 is the speed you actually spoke at
+    move: static
+    amount: 0.6            # how much of the move to use. 0 = none
+    focus: [0.493, 0.343]
+    note: "closer"
+    captions:
+      - text: "So nobody read minds."
+        at: 0.24
+        dur: 1.85
+        pos: lower_third
+        words: [0.00, 0.88, 1.18, 1.50]
+      - text: "People typed in the numbers, and the numbers paid for anger."
+        at: 2.72
+        dur: 3.05
+        pos: lower_third
+        words: [0.00, 0.22, 0.53, 0.74, 0.91, 1.64, 1.73, 1.87, 2.14, 2.40, 2.66]
+      - text: "Newspapers and television learned the same sum:"
+        at: 6.88
+        dur: 2.07
+        pos: lower_third
+        words: [0.00, 0.46, 0.64, 0.93, 1.34, 1.57, 1.81]
+      - text: "hate holds attention, and attention pays."
+        at: 9.33
+        dur: 2.24
+        pos: lower_third
+        words: [0.00, 0.19, 0.53, 0.93, 1.33, 1.71]
+      - text: "Polish schools now see a wave of knife attacks."
+        at: 12.72
+        dur: 2.19
+        pos: lower_third
+        words: [0.00, 0.19, 0.56, 0.83, 1.09, 1.28, 1.41, 1.58, 1.82]
+      - text: "No formula handed out the knives,"
+        at: 15.56
+        dur: 1.59
+        pos: lower_third
+        words: [0.00, 0.20, 0.52, 0.87, 1.13, 1.30]
+      - text: "but children grow up inside that anger."
+        at: 17.44
+        dur: 1.96
+        pos: lower_third
+        words: [0.00, 0.16, 0.46, 0.74, 0.98, 1.36, 1.63]
+      - text: "Anger’s weight is a number someone chose."
+        at: 20.20
+        dur: 2.16
+        pos: lower_third
+        words: [0.00, 0.39, 0.62, 1.06, 1.18, 1.45, 1.80]
+      - text: "It can be chosen again."
+        at: 23.20
+        dur: 0.87
+        pos: lower_third
+        words: [0.00, 0.06, 0.21, 0.34, 0.58]
+
+# 9 shots, about 178 seconds.
+#
+# 6 slide(s), one per picture, each holding its own piece of
+# the 158s narration. Each `in:`/`out:` is that picture's words, on
+# the narration's own clock. Move a shot and its words move with it;
+# swap `src:` to put a different picture under the same words; hold
+# one longer with `duration:` and the words stay where they were said.
+#
+# Cut where you pressed Next while recording, each cut moved to the
+# nearest pause so no word is split. To change one, move these
+# `in:`/`out:` numbers, or record the narration again.

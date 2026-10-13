@@ -124,6 +124,7 @@ shots:
 
   - id: s03
     src: media/01_sr-likes.png
+    clip: clips/01_sr-likes.mp4
     voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
     in: "00:04.80"
     out: "00:36.75"
@@ -180,6 +181,7 @@ shots:
 
   - id: s04
     src: media/02_sr-quiz.png
+    clip: clips/02_sr-quiz.mp4
     voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
     in: "00:41.60"
     out: "01:06.90"
@@ -284,6 +286,7 @@ shots:
 
   - id: s07
     src: media/05_sr-points.png
+    clip: clips/05_sr-points.mp4
     voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
     in: "01:35.90"
     out: "01:58.95"
@@ -320,6 +323,7 @@ shots:
 
   - id: s08
     src: media/06_sr-anger.png
+    clip: clips/06_sr-anger.mp4
     voice: analysis/tight/voiceover_20261013-101120__tight_6b652d49.wav
     in: "02:02.55"
     out: "02:32.85"
